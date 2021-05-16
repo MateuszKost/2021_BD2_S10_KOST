@@ -193,27 +193,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\serus\\.nuget\\packages\\": {},
-    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
-    "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
+    "C:\\Users\\reosk\\.nuget\\packages\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\serus\\Source\\Repos\\SmartCollection\\Server\\SmartCollection.csproj",
+      "projectUniqueName": "C:\\Users\\reosk\\Documents\\GitHub\\2021_BD2_S10_KOST\\Server\\SmartCollection.csproj",
       "projectName": "SmartCollection",
-      "projectPath": "C:\\Users\\serus\\Source\\Repos\\SmartCollection\\Server\\SmartCollection.csproj",
-      "packagesPath": "C:\\Users\\serus\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\serus\\Source\\Repos\\SmartCollection\\Server\\obj\\",
+      "projectPath": "C:\\Users\\reosk\\Documents\\GitHub\\2021_BD2_S10_KOST\\Server\\SmartCollection.csproj",
+      "packagesPath": "C:\\Users\\reosk\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\reosk\\Documents\\GitHub\\2021_BD2_S10_KOST\\Server\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
-        "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        "C:\\Microsoft\\Xamarin\\NuGet\\"
       ],
       "configFilePaths": [
-        "C:\\Users\\serus\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\reosk\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
@@ -261,7 +259,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.202\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.103\\RuntimeIdentifierGraph.json"
       }
     }
   }
