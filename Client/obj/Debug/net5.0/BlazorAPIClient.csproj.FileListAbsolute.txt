@@ -1913,3 +1913,7 @@ C:\Users\reosk\Documents\GitHub\2021_BD2_S10_KOST\Client\obj\Debug\net5.0\ref\Bl
 C:\Users\reosk\Documents\GitHub\2021_BD2_S10_KOST\Client\obj\Debug\net5.0\BlazorAPIClient.pdb
 C:\Users\reosk\Documents\GitHub\2021_BD2_S10_KOST\Client\obj\Debug\net5.0\RazorDeclaration\Pages\Pictures.razor.g.cs
 C:\Users\reosk\Documents\GitHub\2021_BD2_S10_KOST\Client\obj\Debug\net5.0\Razor\Pages\Pictures.razor.g.cs
+C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Client\obj\Debug\net5.0\RazorDeclaration\Pages\Album.razor.g.cs
+C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Client\obj\Debug\net5.0\RazorDeclaration\Pages\Pictures.razor.g.cs
+C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Client\obj\Debug\net5.0\Razor\Pages\Album.razor.g.cs
+C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Client\obj\Debug\net5.0\Razor\Pages\Pictures.razor.g.cs

@@ -21,6 +21,8 @@ namespace BlazorAPIClient
 
             await builder.Build().RunAsync();
 
+
+
         }
     }
 }

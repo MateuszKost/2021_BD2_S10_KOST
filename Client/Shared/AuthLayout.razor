@@ -1,20 +1,21 @@
 ﻿@inherits LayoutComponentBase
 @layout Layout
+@inject NavigationManager NavigationManager
 @*@page "/authentication"*@
 
 
 <div class="row">
     <div class="col-md-6 offset-4">
         <div class="card login-logout-tab">
-            <div class="card-header">
+            <div class="card-header text-center">
                 <ul class="nav nav-tabs card-header-tabs">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/login">
+                    <li class="nav-item col-6">
+                        <a class="nav-link @SignInTabClass" @ref="signInTab" @onclick="@(async () => SetActiveTab(@signInTab) )" href="/login">
                             Sign In
                         </a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/register">
+                    <li class="nav-item col-6">
+                        <a class="nav-link @SignUpTabClass" @ref="signUpTab" @onclick="@(async () => SetActiveTab(@signUpTab) )" href="/register">
                             Sign Up
                         </a>
                     </li>
@@ -32,5 +33,70 @@
 </div>
 
 @code {
+
+    private ElementReference signInTab;
+    private ElementReference signUpTab;
+
+    private string SignInTabClass;
+    private string SignUpTabClass;
+
+    private string currentLocation;
+
+    protected override void OnInitialized()
+    {
+        currentLocation = NavigationManager.Uri;
+        ChangeTabsStates(currentLocation);
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        Dictionary<string, int> keyValuesPairs;
+        string currentLocation;
+        keyValuesPairs = new Dictionary<string, int>();
+
+        NavigationManager.LocationChanged += (obj, lcea) =>
+        {
+            currentLocation = lcea.Location;
+            if (keyValuesPairs.ContainsKey(currentLocation))
+            {
+                keyValuesPairs[currentLocation]++;
+            }
+            else
+            {
+                keyValuesPairs.Add(currentLocation, 1);
+            }
+
+            ChangeTabsStates(currentLocation);
+            StateHasChanged();
+        };
+    }
+
+    private void SetActiveTab(ElementReference element)
+    {
+        if (element.Equals(signInTab))
+        {
+            SignInTabClass = "active";
+            SignUpTabClass = null;
+        }
+        else if (element.Equals(signUpTab))
+        {
+            SignInTabClass = null;
+            SignUpTabClass = "active";
+        }
+    }
+
+    private void ChangeTabsStates(string currentLocation)
+    {
+        if (currentLocation.Contains("/login"))
+        {
+            SignInTabClass = "active";
+            SignUpTabClass = null;
+        }
+        else if (currentLocation.Contains("/register"))
+        {
+            SignInTabClass = null;
+            SignUpTabClass = "active";
+        }
+    }
 
 }

@@ -13,70 +13,70 @@ namespace BlazorAPIClient.Shared
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Components;
 #nullable restore
-#line 1 "C:\Users\reosk\Documents\GitHub\2021_BD2_S10_KOST\Client\_Imports.razor"
+#line 1 "C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Client\_Imports.razor"
 using System.Net.Http;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 2 "C:\Users\reosk\Documents\GitHub\2021_BD2_S10_KOST\Client\_Imports.razor"
+#line 2 "C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Client\_Imports.razor"
 using System.Net.Http.Json;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 3 "C:\Users\reosk\Documents\GitHub\2021_BD2_S10_KOST\Client\_Imports.razor"
+#line 3 "C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Client\_Imports.razor"
 using Microsoft.AspNetCore.Components.Forms;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 4 "C:\Users\reosk\Documents\GitHub\2021_BD2_S10_KOST\Client\_Imports.razor"
+#line 4 "C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Client\_Imports.razor"
 using Microsoft.AspNetCore.Components.Routing;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 5 "C:\Users\reosk\Documents\GitHub\2021_BD2_S10_KOST\Client\_Imports.razor"
+#line 5 "C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Client\_Imports.razor"
 using Microsoft.AspNetCore.Components.Web;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 6 "C:\Users\reosk\Documents\GitHub\2021_BD2_S10_KOST\Client\_Imports.razor"
+#line 6 "C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Client\_Imports.razor"
 using Microsoft.AspNetCore.Components.Web.Virtualization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 7 "C:\Users\reosk\Documents\GitHub\2021_BD2_S10_KOST\Client\_Imports.razor"
+#line 7 "C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Client\_Imports.razor"
 using Microsoft.AspNetCore.Components.WebAssembly.Http;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 8 "C:\Users\reosk\Documents\GitHub\2021_BD2_S10_KOST\Client\_Imports.razor"
+#line 8 "C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Client\_Imports.razor"
 using Microsoft.JSInterop;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 9 "C:\Users\reosk\Documents\GitHub\2021_BD2_S10_KOST\Client\_Imports.razor"
+#line 9 "C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Client\_Imports.razor"
 using BlazorAPIClient;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
-#line 10 "C:\Users\reosk\Documents\GitHub\2021_BD2_S10_KOST\Client\_Imports.razor"
+#line 10 "C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Client\_Imports.razor"
 using BlazorAPIClient.Shared;
 
 #line default
@@ -90,6 +90,88 @@ using BlazorAPIClient.Shared;
         {
         }
         #pragma warning restore 1998
+#nullable restore
+#line 35 "C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Client\Shared\AuthLayout.razor"
+       
+
+    private ElementReference signInTab;
+    private ElementReference signUpTab;
+
+    private string SignInTabClass;
+    private string SignUpTabClass;
+
+    private string currentLocation;
+
+    protected override void OnInitialized()
+    {
+        //NavigationManager.LocationChanged += (obj, lcea) =>
+        //{
+        //    currentLocation = lcea.Location;
+        //};
+        currentLocation = NavigationManager.Uri;
+
+        ChangeTabsStates(currentLocation);
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        //Console.WriteLine(currentUrl + " afterRender start");
+        Dictionary<string, int> keyValuesPairs;
+        string currentLocation;
+        //currentUrl = NavigationManager.Uri;
+        keyValuesPairs = new Dictionary<string, int>();
+
+        NavigationManager.LocationChanged += (obj, lcea) =>
+        {
+            currentLocation = lcea.Location;
+            if (keyValuesPairs.ContainsKey(currentLocation))
+            {
+                keyValuesPairs[currentLocation]++;
+            }
+            else
+            {
+                keyValuesPairs.Add(currentLocation, 1);
+            }
+
+            ChangeTabsStates(currentLocation);
+
+            StateHasChanged();
+        };
+    }
+
+    private void SetActiveTab(ElementReference element)
+    {
+        if (element.Equals(signInTab))
+        {
+            SignInTabClass = "active";
+            SignUpTabClass = null;
+        }
+        else if (element.Equals(signUpTab))
+        {
+            SignInTabClass = null;
+            SignUpTabClass = "active";
+        }
+    }
+
+    private void ChangeTabsStates(string currentLocation)
+    {
+        if (currentLocation.Contains("/login"))
+        {
+            SignInTabClass = "active";
+            SignUpTabClass = null;
+        }
+        else if (currentLocation.Contains("/register"))
+        {
+            SignInTabClass = null;
+            SignUpTabClass = "active";
+        }
+    }
+
+
+#line default
+#line hidden
+#nullable disable
+        [global::Microsoft.AspNetCore.Components.InjectAttribute] private NavigationManager NavigationManager { get; set; }
     }
 }
 #pragma warning restore 1591

@@ -1144,25 +1144,20 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\reosk\\.nuget\\packages\\": {},
-    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
+    "C:\\Users\\krzys\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\reosk\\Documents\\GitHub\\2021_BD2_S10_KOST\\Client\\BlazorAPIClient.csproj",
+      "projectUniqueName": "C:\\Users\\krzys\\OneDrive\\Dokumenty\\GitHub\\2021_BD2_S10_KOST\\Client\\BlazorAPIClient.csproj",
       "projectName": "BlazorAPIClient",
-      "projectPath": "C:\\Users\\reosk\\Documents\\GitHub\\2021_BD2_S10_KOST\\Client\\BlazorAPIClient.csproj",
-      "packagesPath": "C:\\Users\\reosk\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\reosk\\Documents\\GitHub\\2021_BD2_S10_KOST\\Client\\obj\\",
+      "projectPath": "C:\\Users\\krzys\\OneDrive\\Dokumenty\\GitHub\\2021_BD2_S10_KOST\\Client\\BlazorAPIClient.csproj",
+      "packagesPath": "C:\\Users\\krzys\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\krzys\\OneDrive\\Dokumenty\\GitHub\\2021_BD2_S10_KOST\\Client\\obj\\",
       "projectStyle": "PackageReference",
-      "fallbackFolders": [
-        "C:\\Microsoft\\Xamarin\\NuGet\\"
-      ],
       "configFilePaths": [
-        "C:\\Users\\reosk\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        "C:\\Users\\krzys\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
@@ -1214,7 +1209,7 @@
         "downloadDependencies": [
           {
             "name": "Microsoft.NETCore.App.Runtime.browser-wasm",
-            "version": "[5.0.3, 5.0.3]"
+            "version": "[5.0.4, 5.0.4]"
           }
         ],
         "frameworkReferences": {
@@ -1222,7 +1217,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.103\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.104\\RuntimeIdentifierGraph.json"
       }
     },
     "runtimes": {
