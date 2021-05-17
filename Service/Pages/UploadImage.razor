@@ -1,0 +1,62 @@
+﻿@page "/uploadimage"
+
+<div class="container">
+
+    <!-- Outer Row -->
+    <div class="row">
+
+        <div class="mx-auto">
+
+            @if (isImageLoaded)
+            {
+                <row class="h-50">
+                    <div class="card mb-3">
+                        <img class="card-img-top h-100" src="@ImageUri" alt="Card image cap">
+                        <div class="card-body">
+                            <h5 class="card-title">@ImageName</h5>
+                        </div>
+                    </div>
+                </row>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-12 mx-auto py-5 text-center">
+                        <p>There is no image</p>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 mx-auto pb-5 text-center">
+            <div class="default-input-area">
+                <InputFile OnChange="LoadImage" />
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    string ImageUri;
+    string ImageName;
+    bool isImageLoaded = false;
+    long maxFileSize = 1024 * 1024 * 15;
+
+    async Task LoadImage(InputFileChangeEventArgs eventArgs)
+    {
+        var imgFile = await eventArgs.File.RequestImageFileAsync("image/jpeg", 6000, 6000);
+        using System.IO.Stream fileStream = imgFile.OpenReadStream(maxFileSize);
+        using System.IO.MemoryStream ms = new();
+
+        await fileStream.CopyToAsync(ms);
+        var convertedStream = Convert.ToBase64String(ms.ToArray());
+
+        ImageUri = "data:image/jpeg;base64," + convertedStream;
+        ImageName = imgFile.Name;
+        isImageLoaded = true;
+    }
+
+}

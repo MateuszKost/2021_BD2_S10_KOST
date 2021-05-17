@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "LmBdqdp+1VGXek9wXi9fw9yb3GT0wF5RQ8nGg5G+HW0ztwLnMH0bFDkHXIk9ZkB49aMlSsg6JK/k+n/lSSOEsw==",
+  "dgSpecHash": "PXw1zt+qkXjbUmmEkb6EeA09qMobcdlQJ9DIjUkxDy/MvG32NnEFwPyjR/7F6dh7DLU6KRVDNGLeIg21cXPsYQ==",
   "success": true,
-  "projectFilePath": "C:\\Users\\krzys\\OneDrive\\Dokumenty\\GitHub\\2021_BD2_S10_KOST\\Client\\BlazorAPIClient.csproj",
+  "projectFilePath": "C:\\Users\\krzys\\OneDrive\\Dokumenty\\GitHub\\2021_BD2_S10_KOST\\Service\\BlazorAPIClient.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\krzys\\.nuget\\packages\\microsoft.aspnetcore.authorization\\5.0.4\\microsoft.aspnetcore.authorization.5.0.4.nupkg.sha512",
     "C:\\Users\\krzys\\.nuget\\packages\\microsoft.aspnetcore.components\\5.0.4\\microsoft.aspnetcore.components.5.0.4.nupkg.sha512",

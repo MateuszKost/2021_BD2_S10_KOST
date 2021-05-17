@@ -4,7 +4,7 @@
 #pragma warning disable 0649
 #pragma warning disable 0169
 
-namespace BlazorAPIClient.Shared
+namespace BlazorAPIClient.Pages
 {
     #line hidden
     using System;
@@ -82,13 +82,41 @@ using BlazorAPIClient.Shared;
 #line default
 #line hidden
 #nullable disable
-    public partial class Layout : LayoutComponentBase
+    [Microsoft.AspNetCore.Components.RouteAttribute("/uploadimage")]
+    public partial class UploadImage : Microsoft.AspNetCore.Components.ComponentBase
     {
         #pragma warning disable 1998
         protected override void BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
         {
         }
         #pragma warning restore 1998
+#nullable restore
+#line 42 "C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\Pages\UploadImage.razor"
+       
+
+    string ImageUri;
+    string ImageName;
+    bool isImageLoaded = false;
+    long maxFileSize = 1024 * 1024 * 15;
+
+    async Task LoadImage(InputFileChangeEventArgs eventArgs)
+    {
+        var imgFile = await eventArgs.File.RequestImageFileAsync("image/jpeg", 6000, 6000);
+        using System.IO.Stream fileStream = imgFile.OpenReadStream(maxFileSize);
+        using System.IO.MemoryStream ms = new();
+
+        await fileStream.CopyToAsync(ms);
+        var convertedStream = Convert.ToBase64String(ms.ToArray());
+
+        ImageUri = "data:image/jpeg;base64," + convertedStream;
+        ImageName = imgFile.Name;
+        isImageLoaded = true;
+    }
+
+
+#line default
+#line hidden
+#nullable disable
     }
 }
 #pragma warning restore 1591

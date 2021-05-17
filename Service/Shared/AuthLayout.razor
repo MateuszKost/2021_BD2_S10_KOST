@@ -4,18 +4,18 @@
 @*@page "/authentication"*@
 
 
-<div class="row">
-    <div class="col-md-6 offset-4">
+@*<div class="row">*@
+    <div class="col-md-6 mx-auto">
         <div class="card login-logout-tab">
             <div class="card-header text-center">
                 <ul class="nav nav-tabs card-header-tabs">
                     <li class="nav-item col-6">
-                        <a class="nav-link @SignInTabClass" @ref="signInTab" @onclick="@(async () => SetActiveTab(@signInTab) )" href="/login">
+                        <a class="nav-link @SignInTabClass" @ref="signInTab" @onclick="@( () => SetActiveTab(@signInTab) )" href="/login">
                             Sign In
                         </a>
                     </li>
                     <li class="nav-item col-6">
-                        <a class="nav-link @SignUpTabClass" @ref="signUpTab" @onclick="@(async () => SetActiveTab(@signUpTab) )" href="/register">
+                        <a class="nav-link @SignUpTabClass" @ref="signUpTab" @onclick="@( () => SetActiveTab(@signUpTab) )" href="/register">
                             Sign Up
                         </a>
                     </li>
@@ -30,7 +30,7 @@
             </div>
         </div>
     </div>
-</div>
+@*</div>*@
 
 @code {
 
@@ -50,21 +50,11 @@
 
     protected override void OnAfterRender(bool firstRender)
     {
-        Dictionary<string, int> keyValuesPairs;
         string currentLocation;
-        keyValuesPairs = new Dictionary<string, int>();
 
         NavigationManager.LocationChanged += (obj, lcea) =>
         {
             currentLocation = lcea.Location;
-            if (keyValuesPairs.ContainsKey(currentLocation))
-            {
-                keyValuesPairs[currentLocation]++;
-            }
-            else
-            {
-                keyValuesPairs.Add(currentLocation, 1);
-            }
 
             ChangeTabsStates(currentLocation);
             StateHasChanged();

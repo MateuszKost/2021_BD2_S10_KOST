@@ -2,12 +2,12 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+    <NavLink class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
         <div class="sidebar-brand-icon rotate-n-15">
             <i class="bi bi-camera"></i>
         </div>
         <div class="sidebar-brand-text mx-3">Smart Collection</div>
-    </a>
+    </NavLink>
 
     <!-- Divider -->
     <hr class="sidebar-divider my-0">
@@ -35,6 +35,12 @@
         </NavLink>
     </li>
 
+    <li class="nav-item active">
+        <NavLink class="nav-link" href="/uploadimage">
+            <span>Upload Image</span>
+        </NavLink>
+    </li>
+
     <!-- Divider -->
     <hr class="sidebar-divider">
 
@@ -47,8 +53,10 @@
     <li class="nav-item">
         <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
            aria-expanded="true" aria-controls="collapseTwo">
-            <span>Anything</span>
-            <i class="bi bi-chevron-compact-right"></i>
+            <span class="col col-md-12 text-left">
+                Anything
+                <i class="bi bi-chevron-compact-right d-none d-md-inline"></i>
+            </span>
         </a>
         <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
@@ -73,7 +81,7 @@
            aria-expanded="true" aria-controls="collapsePages">
             <span class="col col-md-12 text-left">
                 Pages
-                <i class="bi bi-chevron-compact-right"></i>
+                <i class="bi bi-chevron-compact-right d-none d-md-inline"></i>
             </span>
 
         </a>

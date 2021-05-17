@@ -1149,11 +1149,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\krzys\\OneDrive\\Dokumenty\\GitHub\\2021_BD2_S10_KOST\\Client\\BlazorAPIClient.csproj",
+      "projectUniqueName": "C:\\Users\\krzys\\OneDrive\\Dokumenty\\GitHub\\2021_BD2_S10_KOST\\Service\\BlazorAPIClient.csproj",
       "projectName": "BlazorAPIClient",
-      "projectPath": "C:\\Users\\krzys\\OneDrive\\Dokumenty\\GitHub\\2021_BD2_S10_KOST\\Client\\BlazorAPIClient.csproj",
+      "projectPath": "C:\\Users\\krzys\\OneDrive\\Dokumenty\\GitHub\\2021_BD2_S10_KOST\\Service\\BlazorAPIClient.csproj",
       "packagesPath": "C:\\Users\\krzys\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\krzys\\OneDrive\\Dokumenty\\GitHub\\2021_BD2_S10_KOST\\Client\\obj\\",
+      "outputPath": "C:\\Users\\krzys\\OneDrive\\Dokumenty\\GitHub\\2021_BD2_S10_KOST\\Service\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\krzys\\AppData\\Roaming\\NuGet\\NuGet.Config",

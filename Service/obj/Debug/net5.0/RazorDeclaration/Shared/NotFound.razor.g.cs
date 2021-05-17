@@ -82,7 +82,7 @@ using BlazorAPIClient.Shared;
 #line default
 #line hidden
 #nullable disable
-    public partial class Layout : LayoutComponentBase
+    public partial class NotFound : Microsoft.AspNetCore.Components.ComponentBase
     {
         #pragma warning disable 1998
         protected override void BuildRenderTree(Microsoft.AspNetCore.Components.Rendering.RenderTreeBuilder __builder)
