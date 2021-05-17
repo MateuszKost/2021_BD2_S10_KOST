@@ -2324,7 +2324,6 @@ C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net
 C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net5.0\BlazorAPIClient.RazorComponent.input.cache
 C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net5.0\RazorDeclaration\App.razor.g.cs
 C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net5.0\RazorDeclaration\Pages\Album.razor.g.cs
-C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net5.0\RazorDeclaration\Pages\Counter.razor.g.cs
 C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net5.0\RazorDeclaration\Pages\FetchData.razor.g.cs
 C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net5.0\RazorDeclaration\Pages\Index.razor.g.cs
 C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net5.0\RazorDeclaration\Pages\Login.razor.g.cs
@@ -2343,7 +2342,6 @@ C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net
 C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net5.0\BlazorAPIClient.RazorCoreGenerate.cache
 C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net5.0\Razor\App.razor.g.cs
 C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net5.0\Razor\Pages\Album.razor.g.cs
-C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net5.0\Razor\Pages\Counter.razor.g.cs
 C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net5.0\Razor\Pages\FetchData.razor.g.cs
 C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net5.0\Razor\Pages\Index.razor.g.cs
 C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net5.0\Razor\Pages\Login.razor.g.cs

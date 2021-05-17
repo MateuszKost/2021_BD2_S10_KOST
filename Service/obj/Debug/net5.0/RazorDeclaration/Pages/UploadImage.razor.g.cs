@@ -91,26 +91,56 @@ using BlazorAPIClient.Shared;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 42 "C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\Pages\UploadImage.razor"
+#line 60 "C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\Pages\UploadImage.razor"
        
 
-    string ImageUri;
-    string ImageName;
-    bool isImageLoaded = false;
+    IReadOnlyList<IBrowserFile> fileList;
+    List<(string Url, string Name)> images;
+
+    string ImageUri, ImageName;
+    int ImageCount = 0;
+    bool isLoaded = false;
     long maxFileSize = 1024 * 1024 * 15;
 
     async Task LoadImage(InputFileChangeEventArgs eventArgs)
     {
-        var imgFile = await eventArgs.File.RequestImageFileAsync("image/jpeg", 6000, 6000);
+
+        if(eventArgs.FileCount > 1)
+        {
+            fileList = eventArgs.GetMultipleFiles();
+            images = new List<(string, string)>();
+
+            foreach(var file in fileList)
+            {
+                images.Add((await GetImageUrl(file), file.Name));
+            }
+
+            ImageCount = eventArgs.FileCount;
+            isLoaded = true;
+        }
+        else
+        {
+            ImageCount = 1;
+            var file = eventArgs.File;
+            images = null;
+            ImageUri = await GetImageUrl(file);
+            ImageName = file.Name;
+            isLoaded = true;
+        }
+    }
+
+    private async Task<string> GetImageUrl(IBrowserFile file)
+    {
+        var imgFile = await file.RequestImageFileAsync("image/jpeg", 6000, 6000);
+
         using System.IO.Stream fileStream = imgFile.OpenReadStream(maxFileSize);
         using System.IO.MemoryStream ms = new();
 
         await fileStream.CopyToAsync(ms);
         var convertedStream = Convert.ToBase64String(ms.ToArray());
+        var uri = "data:image/jpeg;base64," + convertedStream;
 
-        ImageUri = "data:image/jpeg;base64," + convertedStream;
-        ImageName = imgFile.Name;
-        isImageLoaded = true;
+        return uri;
     }
 
 

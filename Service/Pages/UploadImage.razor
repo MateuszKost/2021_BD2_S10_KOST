@@ -2,21 +2,39 @@
 
 <div class="container">
 
-    <!-- Outer Row -->
     <div class="row">
-
+        
         <div class="mx-auto">
 
-            @if (isImageLoaded)
+            @if (isLoaded)
             {
-                <row class="h-50">
-                    <div class="card mb-3">
-                        <img class="card-img-top h-100" src="@ImageUri" alt="Card image cap">
-                        <div class="card-body">
-                            <h5 class="card-title">@ImageName</h5>
+                @if (ImageCount == 1)
+                {
+                    <div class="h-75">
+                        <div class="col-12 col-lg-6 card mb-3 mx-auto">
+                            <img class="card-img-top h-100" src="@ImageUri" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title">@ImageName</h5>
+                            </div>
                         </div>
                     </div>
-                </row>
+                }
+                else
+                {
+                    <div class="row h-50">
+                        @foreach (var image in images)
+                        {
+
+                            <div class="col-xs-12 col-md-4 col-lg-3 card ">
+                                <img class="card-img-top w-100" src="@image.Url" alt="Card image cap">
+                                <div class="card-body">
+                                    <h5 class="card-title">@image.Name</h5>
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+                }
             }
             else
             {
@@ -28,11 +46,12 @@
             }
 
         </div>
+
     </div>
     <div class="row">
-        <div class="col-12 mx-auto pb-5 text-center">
-            <div class="default-input-area">
-                <InputFile OnChange="LoadImage" />
+        <div class="col-6 mx-auto pb-5">
+            <div class="default-input-area d-flex justify-content-center">
+                <InputFile OnChange="LoadImage" accept="image/jpeg, image/jpeg" multiple/>
             </div>
         </div>
     </div>
@@ -40,23 +59,53 @@
 
 @code {
 
-    string ImageUri;
-    string ImageName;
-    bool isImageLoaded = false;
+    IReadOnlyList<IBrowserFile> fileList;
+    List<(string Url, string Name)> images;
+
+    string ImageUri, ImageName;
+    int ImageCount = 0;
+    bool isLoaded = false;
     long maxFileSize = 1024 * 1024 * 15;
 
     async Task LoadImage(InputFileChangeEventArgs eventArgs)
     {
-        var imgFile = await eventArgs.File.RequestImageFileAsync("image/jpeg", 6000, 6000);
+
+        if(eventArgs.FileCount > 1)
+        {
+            fileList = eventArgs.GetMultipleFiles();
+            images = new List<(string, string)>();
+
+            foreach(var file in fileList)
+            {
+                images.Add((await GetImageUrl(file), file.Name));
+            }
+
+            ImageCount = eventArgs.FileCount;
+            isLoaded = true;
+        }
+        else
+        {
+            ImageCount = 1;
+            var file = eventArgs.File;
+            images = null;
+            ImageUri = await GetImageUrl(file);
+            ImageName = file.Name;
+            isLoaded = true;
+        }
+    }
+
+    private async Task<string> GetImageUrl(IBrowserFile file)
+    {
+        var imgFile = await file.RequestImageFileAsync("image/jpeg", 6000, 6000);
+
         using System.IO.Stream fileStream = imgFile.OpenReadStream(maxFileSize);
         using System.IO.MemoryStream ms = new();
 
         await fileStream.CopyToAsync(ms);
         var convertedStream = Convert.ToBase64String(ms.ToArray());
+        var uri = "data:image/jpeg;base64," + convertedStream;
 
-        ImageUri = "data:image/jpeg;base64," + convertedStream;
-        ImageName = imgFile.Name;
-        isImageLoaded = true;
+        return uri;
     }
 
 }
