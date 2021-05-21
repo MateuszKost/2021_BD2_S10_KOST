@@ -91,7 +91,7 @@ using BlazorAPIClient.Shared;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 60 "C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\Pages\UploadImage.razor"
+#line 101 "C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\Pages\UploadImage.razor"
        
 
     IReadOnlyList<IBrowserFile> fileList;
@@ -142,6 +142,22 @@ using BlazorAPIClient.Shared;
 
         return uri;
     }
+
+    public class TempAlbumModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Brief { get; set; }
+        public string PrivacyType { get; set; }
+    }
+
+    List<TempAlbumModel> albums = new List<TempAlbumModel>()
+    {
+        new TempAlbumModel(){ Id = 1, Name = "Dogs", Brief = "Best pets", PrivacyType = "Private" },
+        new TempAlbumModel(){ Id = 2, Name = "Cats", Brief = "All my kitties", PrivacyType = "Private" },
+        new TempAlbumModel(){ Id = 3,Name = "Memes", Brief = "Hehehehehe", PrivacyType = "Public" },
+        new TempAlbumModel(){ Id = 4, Name = "Wedding", Brief = "Wedding 2012", PrivacyType = "Private" }
+    };
 
 
 #line default

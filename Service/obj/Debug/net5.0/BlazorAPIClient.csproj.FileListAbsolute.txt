@@ -2560,3 +2560,11 @@ C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net
 C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net5.0\Razor\Shared\NotFound.razor.g.cs
 C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net5.0\RazorDeclaration\Pages\UploadImage.razor.g.cs
 C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net5.0\Razor\Pages\UploadImage.razor.g.cs
+C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\bin\Debug\net5.0\wwwroot\_framework\Magick.NET-Q16-AnyCPU.dll.gz
+C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\bin\Debug\net5.0\wwwroot\_framework\Magick.NET.Core.dll.gz
+C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\bin\Debug\net5.0\wwwroot\_framework\Magick.NET-Q16-AnyCPU.dll
+C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\bin\Debug\net5.0\wwwroot\_framework\Magick.NET.Core.dll
+C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net5.0\RazorDeclaration\Pages\CreateAlbum.razor.g.cs
+C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net5.0\Razor\Pages\CreateAlbum.razor.g.cs
+C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net5.0\build-gz\inWFrnEH.gz
+C:\Users\krzys\OneDrive\Dokumenty\GitHub\2021_BD2_S10_KOST\Service\obj\Debug\net5.0\build-gz\WLBtBC45.gz

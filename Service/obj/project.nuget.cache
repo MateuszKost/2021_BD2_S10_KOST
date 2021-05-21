@@ -1,9 +1,11 @@
 {
   "version": 2,
-  "dgSpecHash": "PXw1zt+qkXjbUmmEkb6EeA09qMobcdlQJ9DIjUkxDy/MvG32NnEFwPyjR/7F6dh7DLU6KRVDNGLeIg21cXPsYQ==",
+  "dgSpecHash": "FDRbOvyxmdTR7F71bycHRAeb61DyEVWqsoDQAWoaC1xx1SNY/QI34LjhvBrVpGV9QHdXhe8pd8QLj1RcFJ0tDg==",
   "success": true,
   "projectFilePath": "C:\\Users\\krzys\\OneDrive\\Dokumenty\\GitHub\\2021_BD2_S10_KOST\\Service\\BlazorAPIClient.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\krzys\\.nuget\\packages\\magick.net-q16-anycpu\\7.24.0\\magick.net-q16-anycpu.7.24.0.nupkg.sha512",
+    "C:\\Users\\krzys\\.nuget\\packages\\magick.net.core\\7.0.0\\magick.net.core.7.0.0.nupkg.sha512",
     "C:\\Users\\krzys\\.nuget\\packages\\microsoft.aspnetcore.authorization\\5.0.4\\microsoft.aspnetcore.authorization.5.0.4.nupkg.sha512",
     "C:\\Users\\krzys\\.nuget\\packages\\microsoft.aspnetcore.components\\5.0.4\\microsoft.aspnetcore.components.5.0.4.nupkg.sha512",
     "C:\\Users\\krzys\\.nuget\\packages\\microsoft.aspnetcore.components.analyzers\\5.0.4\\microsoft.aspnetcore.components.analyzers.5.0.4.nupkg.sha512",
