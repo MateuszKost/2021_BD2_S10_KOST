@@ -1,0 +1,168 @@
+﻿@page "/uploadimage"
+
+<div class="container">
+
+    <div class="text-center">
+        <div class="h1 rotate-15"><i class="bi bi-card-image"></i></div>
+        <h1 class="h4 text-gray-900 mb-4">
+            Upload One or More of Your Pictures!
+        </h1>
+    </div>
+
+    <div class="row">
+        
+        <div class="mx-auto">
+
+            @if (isLoaded)
+            {
+                @if (ImageCount == 1)
+                {
+                    <div class="h-75">
+                        <div class="col-12 col-lg-6 card mb-3 mx-auto">
+                            <img class="card-img-top h-100" src="@ImageUri" alt="Card image cap">
+                            <div class="card-body">
+                                <h5 class="card-title">@ImageName</h5>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="row h-50">
+                        @foreach (var image in images)
+                        {
+
+                            <div class="col-xs-12 col-md-3 col-lg-2 mt-2">
+                                <div class="card pr-md-1">
+                                    <div class="card-body">
+                                        <p class="card-title">@image.Name</p>
+                                    </div>
+                                    <img class="card-img-bottom w-100" src="@image.Url" alt="Card image cap">
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-12 mx-auto py-5 text-center">
+                        <p>There is no image</p>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6 mx-auto pb-5">
+            <div class="default-input-area d-flex justify-content-center">
+                <InputFile OnChange="LoadImage" accept="image/jpeg, image/png" multiple/>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-12">
+        <!-- TODO FORM jako EditForm + binding do modelu-->
+        <form>
+            <div class="row justify-content-center mb-5">
+                <div class="col-sm-12 col-md-4">
+                    <div class="col-md-8 form-group text-center">
+                        <label for="selectAlbum">Select target album below</label>
+                        <select class="form-control" id="selectAlbum">
+                            @if (albums.Count() > 0)
+                            {
+                                <option value="0">All images</option>
+                                foreach (var album in albums)
+                                {
+                                    <option value="@album.Id">@album.Name</option>
+                                }
+                            }
+                            else
+                            {
+                                <option value="0">All images</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div class="d-flex col-sm-6 col-md-2">
+                        <button type="submit" class="btn btn-outline-info btn-block align-self-center">
+                            <i class="bi bi-cloud-upload"></i><span class="px-3">Upload</span>
+                        </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@code {
+
+    IReadOnlyList<IBrowserFile> fileList;
+    List<(string Url, string Name)> images;
+
+    string ImageUri, ImageName;
+    int ImageCount = 0;
+    bool isLoaded = false;
+    long maxFileSize = 1024 * 1024 * 15;
+
+    async Task LoadImage(InputFileChangeEventArgs eventArgs)
+    {
+
+        if(eventArgs.FileCount > 1)
+        {
+            fileList = eventArgs.GetMultipleFiles();
+            images = new List<(string, string)>();
+
+            foreach(var file in fileList)
+            {
+                images.Add((await GetImageUrl(file), file.Name));
+            }
+
+            ImageCount = eventArgs.FileCount;
+            isLoaded = true;
+        }
+        else
+        {
+            ImageCount = 1;
+            var file = eventArgs.File;
+            images = null;
+            ImageUri = await GetImageUrl(file);
+            ImageName = file.Name;
+            isLoaded = true;
+        }
+    }
+
+    private async Task<string> GetImageUrl(IBrowserFile file)
+    {
+        var imgFile = await file.RequestImageFileAsync("image/jpeg", 6000, 6000);
+
+        using System.IO.Stream fileStream = imgFile.OpenReadStream(maxFileSize);
+        using System.IO.MemoryStream ms = new();
+
+        await fileStream.CopyToAsync(ms);
+        var convertedStream = Convert.ToBase64String(ms.ToArray());
+        var uri = "data:image/jpeg;base64," + convertedStream;
+
+        return uri;
+    }
+
+    public class TempAlbumModel
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Brief { get; set; }
+        public string PrivacyType { get; set; }
+    }
+
+    List<TempAlbumModel> albums = new List<TempAlbumModel>()
+    {
+        new TempAlbumModel(){ Id = 1, Name = "Dogs", Brief = "Best pets", PrivacyType = "Private" },
+        new TempAlbumModel(){ Id = 2, Name = "Cats", Brief = "All my kitties", PrivacyType = "Private" },
+        new TempAlbumModel(){ Id = 3,Name = "Memes", Brief = "Hehehehehe", PrivacyType = "Public" },
+        new TempAlbumModel(){ Id = 4, Name = "Wedding", Brief = "Wedding 2012", PrivacyType = "Private" }
+    };
+
+}
