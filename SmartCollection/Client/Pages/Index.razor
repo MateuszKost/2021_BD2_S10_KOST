@@ -1,6 +1,18 @@
 ﻿@page "/"
+@inject HttpClient Http
 
 <h1>Hello, world!</h1>
+<tr>
+    <th>Database status:</th>
+    <td>&nbsp;@dbName</td>
+</tr>
 
-Welcome to your new app.
 
+@code {
+    string dbName;
+    protected override async Task OnInitializedAsync()
+    {
+        dbName = await Http.GetStringAsync("Images");
+    }
+
+}
