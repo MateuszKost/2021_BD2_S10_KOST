@@ -18,11 +18,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Content\Class\" />
-    <Folder Include="Content\Interfaces\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\SmartCollection.Models\SmartCollection.Models.csproj" />
   </ItemGroup>
 

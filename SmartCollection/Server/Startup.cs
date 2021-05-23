@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SmartCollection.DataAccess.Context;
+using SmartCollection.DataAccess.RepositoryPattern;
 
 namespace SmartCollection.Server
 {
@@ -26,6 +27,7 @@ namespace SmartCollection.Server
             services.AddDbContext<SmartCollectionDbContext>(
                 options => options.UseNpgsql(
                     Configuration.GetConnectionString("SmartCollectionDB")));
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
