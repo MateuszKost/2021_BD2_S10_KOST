@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SmartCollection.Server.Models;
+using SmartCollection.DataAccess.Context;
 using SmartCollection.Shared;
 using System;
 using System.Collections.Generic;
@@ -14,9 +14,9 @@ namespace SmartCollection.Server.Controllers
     public class ImagesController : ControllerBase
     {
         private readonly ILogger<ImagesController> _logger;
-        private readonly SmartCollectionDb _context;
+        private readonly SmartCollectionDbContext _context;
 
-        public ImagesController(ILogger<ImagesController> logger, SmartCollectionDb context)
+        public ImagesController(ILogger<ImagesController> logger, SmartCollectionDbContext context)
         {
             _logger = logger;
             _context = context;

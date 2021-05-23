@@ -4,8 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using SmartCollection.Server.Models;
-
+using SmartCollection.DataAccess.Context;
 
 namespace SmartCollection.Server
 {
@@ -24,7 +23,7 @@ namespace SmartCollection.Server
         {
             services.AddControllersWithViews();
             services.AddRazorPages();
-            services.AddDbContext<SmartCollectionDb>(
+            services.AddDbContext<SmartCollectionDbContext>(
                 options => options.UseNpgsql(
                     Configuration.GetConnectionString("SmartCollectionDB")));
         }
