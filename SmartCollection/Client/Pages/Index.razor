@@ -1,18 +1,26 @@
 ﻿@page "/"
+@using SmartCollection.Models.ViewModels.ImagesViewModel
 @inject HttpClient Http
 
 <h1>Hello, world!</h1>
-<tr>
-    <th>Database status:</th>
-    <td>&nbsp;@dbName</td>
-</tr>
 
 
-@code {
-    string dbName;
-    protected override async Task OnInitializedAsync()
-    {
-        dbName = await Http.GetStringAsync("Images");
-    }
-
+@if (model != null)
+{
+    <br />
+    <div class="col">
+        <p>@model.FirstOrDefault().Name</p>
+        <p>@model.FirstOrDefault().Description</p>
+        <p>@model.FirstOrDefault().Date</p>
+    </div>
 }
+
+        @code {
+    List<SingleImageViewModel> model;
+    protected override async Task OnInitializedAsync()
+        {
+            var data = await Http.GetFromJsonAsync<ImagesViewModel>("images");
+            model = data.Images.ToList();
+        }
+
+        }

@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Shared\SmartCollection.Shared.csproj" />
+    <ProjectReference Include="..\SmartCollection.Models\SmartCollection.Models.csproj" />
   </ItemGroup>
 
   <ItemGroup>

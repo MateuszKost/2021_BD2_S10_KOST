@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SmartCollection.DataAccess.Context;
+using SmartCollection.DataAccess.RepositoryPattern;
+using SmartCollection.Models.ViewModels.ImagesViewModel;
 using SmartCollection.Shared;
 using System;
 using System.Collections.Generic;
@@ -14,18 +16,31 @@ namespace SmartCollection.Server.Controllers
     public class ImagesController : ControllerBase
     {
         private readonly ILogger<ImagesController> _logger;
-        private readonly SmartCollectionDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ImagesController(ILogger<ImagesController> logger, SmartCollectionDbContext context)
+        public ImagesController(ILogger<ImagesController> logger, IUnitOfWork unitOfWork)
         {
             _logger = logger;
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
-        [HttpGet]
-        public IActionResult Get()
+       [HttpGet]
+        public async Task<ActionResult<ImagesViewModel>> Get()
         {
-            return Ok(_context.Database.CanConnect() ? "connected to db" : "error while connecting to db");
+            //getting data from db
+            var imageName = _unitOfWork.ImageDetails.GetAll().FirstOrDefault();
+
+            //example view model
+            List<SingleImageViewModel> images = new List<SingleImageViewModel>();
+
+            var singleImage  = new SingleImageViewModel() { 
+            Name  = "MyPhoto",
+            Date = "DateAsString",
+            Description = "This is Description"};
+
+            images.Add(singleImage);
+
+            return new ImagesViewModel() { Images = images };
         }
     }
 }
