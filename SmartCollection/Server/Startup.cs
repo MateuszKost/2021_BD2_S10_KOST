@@ -6,6 +6,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using SmartCollection.DataAccess.Context;
 using SmartCollection.DataAccess.RepositoryPattern;
+using SmartCollection.StorageManager.Containers;
+using SmartCollection.StorageManager.Context;
+using SmartCollection.StorageManager.ServiceClient;
 
 namespace SmartCollection.Server
 {
@@ -25,9 +28,16 @@ namespace SmartCollection.Server
             services.AddControllersWithViews();
             services.AddRazorPages();
             services.AddDbContext<SmartCollectionDbContext>(
+                
                 options => options.UseNpgsql(
-                    Configuration.GetConnectionString("SmartCollectionDB")));
+                    Configuration.GetConnectionString("SmartCollectionDB"))
+               
+                );
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddSingleton(provider =>
+            new BlobStorageServiceClient(Configuration.GetConnectionString("BlobStorage")));
+            services.AddScoped<IStorageContext<IStorageContainer>, BlobStorageContext<IStorageContainer>>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
