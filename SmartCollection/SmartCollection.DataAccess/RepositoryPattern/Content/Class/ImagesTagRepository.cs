@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace SmartCollection.DataAccess.RepositoryPattern.Content.Class
 {
-    public class UserCredentialRepository : Repository<UserCredential>, IUserCredentialRepository
+    public class ImagesTagRepository : Repository<ImagesTag>, IImagesTagRepository
     {
-        public UserCredentialRepository(SmartCollectionDbContext db) : base(db)
+        public ImagesTagRepository(SmartCollectionDbContext db) : base(db)
         {
 
         }

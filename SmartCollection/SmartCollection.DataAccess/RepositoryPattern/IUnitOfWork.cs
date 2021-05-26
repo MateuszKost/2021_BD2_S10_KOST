@@ -14,11 +14,10 @@ namespace SmartCollection.DataAccess.RepositoryPattern
         IImageRepository Images { get; }
         IImagesAlbumRepository ImagesAlbums { get; }
         IPrivacyRepository Privacies { get; }
-        ITagOrderRepository TagOrders { get; }
+        IImagesTagRepository TagOrders { get; }
         ITagRepository Tags { get; }
-        IUserCredentialRepository UserCredentials { get; }
-        IUserRepository Users { get; }
-        IUsersAlbumRepository UsersAlbums { get; }
+
+        IApplicationUserRepository ApplicationUsers { get; }
         int Save();
     }
 }

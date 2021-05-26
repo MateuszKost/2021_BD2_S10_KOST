@@ -50,8 +50,6 @@
 
     protected override void OnAfterRender(bool firstRender)
     {
-        string currentLocation;
-
         NavigationManager.LocationChanged += (obj, lcea) =>
         {
             currentLocation = lcea.Location;
