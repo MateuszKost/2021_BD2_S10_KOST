@@ -4022,13 +4022,24 @@ input[type="button"].btn-block {
 }
 
 .nav-link {
-  display: block;
-  padding: 0.5rem 1rem;
+    display: block;
+    padding: 0.5rem 1rem;
 }
 
-.nav-link:hover, .nav-link:focus {
-  text-decoration: none;
+    .nav-link:hover, .nav-link:focus {
+        text-decoration: none;
+    }
+
+.nav-link2:hover {
+    background-color: #4481DD !important;
+    text-decoration: none;
 }
+
+.nav-link2:focus {
+    background-color: #2163C6 !important;
+    text-decoration: none;
+}
+
 
 .nav-link.disabled {
   color: #858796;
