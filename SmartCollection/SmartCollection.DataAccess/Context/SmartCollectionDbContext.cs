@@ -19,27 +19,23 @@ namespace SmartCollection.DataAccess.Context
         }
 
         public virtual DbSet<Album> Albums { get; set; }
+        public virtual DbSet<ApplicationUser> ApplicationUsers { get; set; }
         public virtual DbSet<Image> Images { get; set; }
         public virtual DbSet<ImageDetail> ImageDetails { get; set; }
         public virtual DbSet<ImagesAlbum> ImagesAlbums { get; set; }
+        public virtual DbSet<ImagesTag> ImagesTags { get; set; }
         public virtual DbSet<Privacy> Privacies { get; set; }
         public virtual DbSet<Tag> Tags { get; set; }
-        public virtual DbSet<TagOrder> TagOrders { get; set; }
-        public virtual DbSet<User> Users { get; set; }
-        public virtual DbSet<UserCredential> UserCredentials { get; set; }
-        public virtual DbSet<UsersAlbum> UsersAlbums { get; set; }
 
-        //delete in future
         /*        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
                 {
                     if (!optionsBuilder.IsConfigured)
                     {
-                        //You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                        optionsBuilder.UseNpgsql(*//*put here connection string*//*);
-
+        #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                        optionsBuilder.UseNpgsql(*//*put connection string here*//*);
                     }
-                }*/
-
+                }
+        */
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "C.UTF-8");
@@ -58,18 +54,17 @@ namespace SmartCollection.DataAccess.Context
 
                 entity.Property(e => e.PrivacyId).HasColumnName("privacy_id");
 
-                entity.Property(e => e.UserId).HasColumnName("user_id");
-
                 entity.HasOne(d => d.Privacy)
                     .WithMany(p => p.Albums)
                     .HasForeignKey(d => d.PrivacyId)
                     .HasConstraintName("albums_privacy_id_fkey");
+            });
 
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Albums)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("albums_user_id_fkey");
+            modelBuilder.Entity<ApplicationUser>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("application_users");
             });
 
             modelBuilder.Entity<Image>(entity =>
@@ -84,18 +79,10 @@ namespace SmartCollection.DataAccess.Context
                     .HasMaxLength(40)
                     .HasColumnName("image_sha1");
 
-                entity.Property(e => e.UserId).HasColumnName("user_id");
-
                 entity.HasOne(d => d.Album)
                     .WithMany(p => p.Images)
                     .HasForeignKey(d => d.AlbumId)
                     .HasConstraintName("images_album_id_fkey");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Images)
-                    .HasForeignKey(d => d.UserId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("images_user_id_fkey");
             });
 
             modelBuilder.Entity<ImageDetail>(entity =>
@@ -154,6 +141,28 @@ namespace SmartCollection.DataAccess.Context
                     .HasConstraintName("images_albums_images_album_id_fkey");
             });
 
+            modelBuilder.Entity<ImagesTag>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToTable("images_tags");
+
+                entity.Property(e => e.ImageId).HasColumnName("image_id");
+
+                entity.Property(e => e.TagId).HasColumnName("tag_id");
+
+                entity.HasOne(d => d.Image)
+                    .WithMany()
+                    .HasForeignKey(d => d.ImageId)
+                    .HasConstraintName("images_tags_image_id_fkey");
+
+                entity.HasOne(d => d.Tag)
+                    .WithMany()
+                    .HasForeignKey(d => d.TagId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("images_tags_tag_id_fkey");
+            });
+
             modelBuilder.Entity<Privacy>(entity =>
             {
                 entity.ToTable("privacy");
@@ -161,6 +170,7 @@ namespace SmartCollection.DataAccess.Context
                 entity.Property(e => e.PrivacyId).HasColumnName("privacy_id");
 
                 entity.Property(e => e.Name)
+                    .IsRequired()
                     .HasMaxLength(20)
                     .HasColumnName("name");
             });
@@ -174,93 +184,6 @@ namespace SmartCollection.DataAccess.Context
                 entity.Property(e => e.Name)
                     .HasMaxLength(40)
                     .HasColumnName("name");
-            });
-
-            modelBuilder.Entity<TagOrder>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("tag_order");
-
-                entity.Property(e => e.ImageId).HasColumnName("image_id");
-
-                entity.Property(e => e.TagId).HasColumnName("tag_id");
-
-                entity.HasOne(d => d.Image)
-                    .WithMany()
-                    .HasForeignKey(d => d.ImageId)
-                    .HasConstraintName("tag_order_image_id_fkey");
-
-                entity.HasOne(d => d.Tag)
-                    .WithMany()
-                    .HasForeignKey(d => d.TagId)
-                    .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("tag_order_tag_id_fkey");
-            });
-
-            modelBuilder.Entity<User>(entity =>
-            {
-                entity.ToTable("users");
-
-                entity.Property(e => e.UserId).HasColumnName("user_id");
-
-                entity.Property(e => e.CredentialsId).HasColumnName("credentials_id");
-
-                entity.Property(e => e.Name)
-                    .HasMaxLength(20)
-                    .HasColumnName("name");
-            });
-
-            modelBuilder.Entity<UserCredential>(entity =>
-            {
-                entity.HasKey(e => e.UserId)
-                    .HasName("user_credentials_pkey");
-
-                entity.ToTable("user_credentials");
-
-                entity.Property(e => e.UserId)
-                    .ValueGeneratedNever()
-                    .HasColumnName("user_id");
-
-                entity.Property(e => e.Login)
-                    .HasMaxLength(20)
-                    .HasColumnName("login")
-                    .IsFixedLength(true);
-
-                entity.Property(e => e.PasswordHash)
-                    .HasMaxLength(40)
-                    .HasColumnName("password_hash")
-                    .IsFixedLength(true);
-
-                entity.Property(e => e.Salt)
-                    .HasColumnType("character varying")
-                    .HasColumnName("salt");
-
-                entity.HasOne(d => d.User)
-                    .WithOne(p => p.UserCredential)
-                    .HasForeignKey<UserCredential>(d => d.UserId)
-                    .HasConstraintName("user_credentials_user_id_fkey");
-            });
-
-            modelBuilder.Entity<UsersAlbum>(entity =>
-            {
-                entity.HasNoKey();
-
-                entity.ToTable("users_albums");
-
-                entity.Property(e => e.AlbumsUserId).HasColumnName("albums_user_id");
-
-                entity.Property(e => e.UsersUserId).HasColumnName("users_user_id");
-
-                entity.HasOne(d => d.AlbumsUser)
-                    .WithMany()
-                    .HasForeignKey(d => d.AlbumsUserId)
-                    .HasConstraintName("users_albums_albums_user_id_fkey");
-
-                entity.HasOne(d => d.UsersUser)
-                    .WithMany()
-                    .HasForeignKey(d => d.UsersUserId)
-                    .HasConstraintName("users_albums_users_user_id_fkey");
             });
 
             OnModelCreatingPartial(modelBuilder);

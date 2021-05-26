@@ -18,11 +18,9 @@ namespace SmartCollection.DataAccess.RepositoryPattern
         public IImageRepository Images { get; private set; }
         public IImagesAlbumRepository ImagesAlbums { get; private set; }
         public IPrivacyRepository Privacies { get; private set; }
-        public ITagOrderRepository TagOrders { get; private set; }
         public ITagRepository Tags { get; private set; }
-        public IUserCredentialRepository UserCredentials { get; private set; }
-        public IUserRepository Users  { get; private set; }
-        public IUsersAlbumRepository UsersAlbums { get; private set; }
+        public IApplicationUserRepository ApplicationUsers { get; private set; }
+        public IImagesTagRepository ImagesTags { get; private set; }
 
         public UnitOfWork(SmartCollectionDbContext db)
         {
@@ -32,11 +30,9 @@ namespace SmartCollection.DataAccess.RepositoryPattern
             Images = new ImageRepository(db);
             ImagesAlbums = new ImagesAlbumRepository(db);
             Privacies = new PrivacyRepository(db);
-            TagOrders = new TagOrderRepository(db);
             Tags = new TagRepository(db);
-            UserCredentials = new UserCredentialRepository(db);
-            Users = new UserRepository(db);
-            UsersAlbums = new UsersAlbumRepository(db);
+            ApplicationUsers = new ApplicationUserRepository(db);
+            ImagesTags = new ImagesTagRepository(db);
 
         }
         public int Save()

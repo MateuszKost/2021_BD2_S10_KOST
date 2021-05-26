@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SmartCollection.Models.DBModels
 {
-    public partial class TagOrder
+    public partial class ImagesTag
     {
         public int? TagId { get; set; }
         public int? ImageId { get; set; }
