@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace SmartCollection.DataAccess.RepositoryPattern.Content.Class
 {
-    public class ImagesTagRepository : Repository<ImagesTag>, IImagesTagRepository
+    public class ImagesTagRepository : Repository<ImageTag>, IImagesTagRepository
     {
         public ImagesTagRepository(SmartCollectionDbContext db) : base(db)
         {

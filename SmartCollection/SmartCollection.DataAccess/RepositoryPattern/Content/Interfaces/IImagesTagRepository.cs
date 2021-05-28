@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SmartCollection.DataAccess.RepositoryPattern.Content.Interfaces
 {
-    public interface IImagesTagRepository : IRepository<ImagesTag>
+    public interface IImagesTagRepository : IRepository<ImageTag>
     {
     }
 }

@@ -13,6 +13,7 @@ namespace SmartCollection.Models.DBModels
         }
 
         public int AlbumId { get; set; }
+        public string UserId { get; set; }
         public int? PrivacyId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }

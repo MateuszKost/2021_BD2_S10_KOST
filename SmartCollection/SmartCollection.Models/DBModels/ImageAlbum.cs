@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace SmartCollection.Models.DBModels
 {
-    public partial class ImagesAlbum
+    public partial class ImageAlbum
     {
         public int? ImagesAlbumId { get; set; }
         public int? AlbumsAlbumId { get; set; }

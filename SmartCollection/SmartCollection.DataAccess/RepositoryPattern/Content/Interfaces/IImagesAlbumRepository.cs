@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SmartCollection.DataAccess.RepositoryPattern.Content.Interfaces
 {
-    public interface IImagesAlbumRepository : IRepository<ImagesAlbum>
+    public interface IImagesAlbumRepository : IRepository<ImageAlbum>
     {
     }
 }

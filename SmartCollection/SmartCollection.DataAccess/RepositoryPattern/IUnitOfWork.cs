@@ -16,8 +16,6 @@ namespace SmartCollection.DataAccess.RepositoryPattern
         IPrivacyRepository Privacies { get; }
         IImagesTagRepository TagOrders { get; }
         ITagRepository Tags { get; }
-
-        IApplicationUserRepository ApplicationUsers { get; }
         int Save();
     }
 }

@@ -8,6 +8,7 @@ namespace SmartCollection.Models.DBModels
     public partial class Image
     {
         public int ImageId { get; set; }
+        public string UserId { get; set; }
         public int? AlbumId { get; set; }
         public string ImageSha1 { get; set; }
 

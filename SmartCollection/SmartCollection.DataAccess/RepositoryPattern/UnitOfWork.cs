@@ -20,7 +20,6 @@ namespace SmartCollection.DataAccess.RepositoryPattern
         public IPrivacyRepository Privacies { get; private set; }
         public IImagesTagRepository TagOrders { get; private set; }
         public ITagRepository Tags { get; private set; }
-        public IApplicationUserRepository ApplicationUsers { get; private set; }
 
         public UnitOfWork(SmartCollectionDbContext db)
         {
@@ -32,7 +31,6 @@ namespace SmartCollection.DataAccess.RepositoryPattern
             Privacies = new PrivacyRepository(db);
             TagOrders = new ImagesTagRepository(db);
             Tags = new TagRepository(db);
-            ApplicationUsers = new ApplicationUserRepository(db);
         }
         public int Save()
         {
