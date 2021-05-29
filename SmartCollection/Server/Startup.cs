@@ -10,6 +10,7 @@ using SmartCollection.DataAccess.RepositoryPattern;
 using SmartCollection.StorageManager.Containers;
 using SmartCollection.StorageManager.Context;
 using SmartCollection.StorageManager.ServiceClient;
+using Newtonsoft;
 
 namespace SmartCollection.Server
 {
@@ -26,7 +27,7 @@ namespace SmartCollection.Server
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddNewtonsoftJson();
             services.AddRazorPages();
             services.AddDbContext<SmartCollectionDbContext>(
                 
@@ -38,6 +39,15 @@ namespace SmartCollection.Server
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;
+                // added password details
+                options.Password = new PasswordOptions
+                {
+                    RequireDigit = false,
+                    RequiredLength = 6,
+                    RequireLowercase = true,
+                    RequireUppercase = false,
+                    RequireNonAlphanumeric = false
+                };
             })
             .AddEntityFrameworkStores<SmartCollectionDbContext>()
             .AddDefaultTokenProviders();
@@ -64,16 +74,24 @@ namespace SmartCollection.Server
                 app.UseHsts();
             }
 
+            app.UseAuthentication();
+
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
 
             app.UseRouting();
 
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+
                 endpoints.MapFallbackToFile("index.html");
             });
         }

@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using SmartCollection.Models.DBModels;
@@ -7,7 +8,7 @@ using SmartCollection.Models.DBModels;
 
 namespace SmartCollection.DataAccess.Context
 {
-    public partial class SmartCollectionDbContext : DbContext
+    public partial class SmartCollectionDbContext : IdentityDbContext
     {
         public SmartCollectionDbContext()
         {
@@ -37,6 +38,8 @@ namespace SmartCollection.DataAccess.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.HasAnnotation("Relational:Collation", "C.UTF-8");
 
             modelBuilder.Entity<Album>(entity =>

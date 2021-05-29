@@ -22,5 +22,6 @@ namespace SmartCollection.Server
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
     }
 }

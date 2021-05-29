@@ -1,5 +1,6 @@
 ﻿@page "/register"
 @layout AuthLayout
+@inject NavigationManager NavigationManager
 
 <div class="container">
 
@@ -14,34 +15,38 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                             </div>
-                            <form class="user">
+                            <EditForm Model="@RegisterModel" OnValidSubmit="@OnSubmit" class="user">
+                                <DataAnnotationsValidator />
+                                @*<ValidationSummary />*@
+
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="exampleFirstName"
-                                               placeholder="First Name">
+                                        <InputText @bind-Value="@RegisterModel.FirstName" class="form-control form-control-user" placeholder="First Name" />
+                                        <ValidationMessage For="() => RegisterModel.FirstName" />
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="text" class="form-control form-control-user" id="exampleLastName"
-                                               placeholder="Last Name">
+                                        <InputText @bind-Value="@RegisterModel.LastName" class="form-control form-control-user" placeholder="Last Name" />
+                                        <ValidationMessage For="() => RegisterModel.LastName" />
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <input type="email" class="form-control form-control-user" id="exampleInputEmail"
-                                           placeholder="Email Address">
+                                    <InputText @bind-Value="@RegisterModel.Email" class="form-control form-control-user" placeholder="Email Address" />
+                                    <ValidationMessage For="() => RegisterModel.Email" />
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="password" class="form-control form-control-user"
-                                               id="exampleInputPassword" placeholder="Password">
+                                        <InputText type="password" @bind-Value="@RegisterModel.Password" class="form-control form-control-user" placeholder="Password" />
+                                        <ValidationMessage For="() => RegisterModel.Password" />
                                     </div>
                                     <div class="col-sm-6">
-                                        <input type="password" class="form-control form-control-user"
-                                               id="exampleRepeatPassword" placeholder="Repeat Password">
+                                        <InputText type="password" @bind-Value="@RegisterModel.ConfirmPassword" class="form-control form-control-user" placeholder="Repeat Password" />
+                                        <ValidationMessage For="() => RegisterModel.ConfirmPassword" />
                                     </div>
                                 </div>
-                                <a href="#" class="btn btn-primary btn-user btn-block">
+                                <span class="text-warning @RegisterWarning">Registration failed.</span>
+                                <button type="submit" class="btn btn-primary btn-user btn-block">
                                     Register Account
-                                </a>
+                                </button>
                                 <hr>
                                 <a href="#" class="btn btn-google btn-user btn-block">
                                     <i class="bi bi-google"></i> Register with Google
@@ -49,7 +54,7 @@
                                 <a href="#" class="btn btn-facebook btn-user btn-block">
                                     <i class="bi bi-facebook"></i> Register with Facebook
                                 </a>
-                            </form>
+                            </EditForm>
                             <hr>
                             <div class="text-center">
                                 <a class="small" href="/forgot-password">Forgot Password?</a>
