@@ -27,7 +27,7 @@ namespace SmartCollection.Server.Controllers
         [Route("")]
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        //[ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Register(RegisterModel model)
         {
             if (ModelState.IsValid)
@@ -43,25 +43,19 @@ namespace SmartCollection.Server.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
-                    // Ok - client method gets response and displays info
-                    return Ok();
-                    // or - user gets imediately logged in
-                    /*
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToPage("/albums");  
-                    */
+                    return Ok(new RegisterResult { Succesfull = true });
                 }
                 else
                 {
-                    // badrequest - client method gets response and displays info
                     _logger.LogInformation("Registration problem occured");
-                    return BadRequest();
+                    var errors = result.Errors.Select(e => e.Description);
+                    return Ok(new RegisterResult { Succesfull = false, Errors = errors });
                 }
             }
             else
             {
-                // temporary if model is not valid return to Register view again
-                return BadRequest();
+                _logger.LogInformation("Model not valid");
+                return Ok(new RegisterResult { Succesfull = false, Errors = new[] { "Validation failed" } });
             }
         }
 

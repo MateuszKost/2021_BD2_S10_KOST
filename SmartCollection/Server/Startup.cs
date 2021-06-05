@@ -11,6 +11,15 @@ using SmartCollection.StorageManager.Containers;
 using SmartCollection.StorageManager.Context;
 using SmartCollection.StorageManager.ServiceClient;
 using Newtonsoft;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Components.Authorization;
+using SmartCollection.Models.ViewModels.AuthModels;
+using SmartCollection.Client.Authorization;
+using Microsoft.AspNetCore.Authentication;
+using System;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace SmartCollection.Server
 {
@@ -36,6 +45,7 @@ namespace SmartCollection.Server
                
                 );
 
+
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;
@@ -48,9 +58,35 @@ namespace SmartCollection.Server
                     RequireUppercase = false,
                     RequireNonAlphanumeric = false
                 };
+
             })
             .AddEntityFrameworkStores<SmartCollectionDbContext>()
             .AddDefaultTokenProviders();
+
+            //services.AddIdentityServer().AddApiAuthorization<IdentityUser, SmartCollectionDbContext>(op =>
+            //op.IdentityResources);
+
+            //services.AddAuthentication()
+            //.AddIdentityServerJwt();
+
+            //services.ConfigureApplicationCookie(options =>
+            //{
+            //    options.Cookie.HttpOnly = false;
+            //});
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = Configuration["Jwt:Issuer"],
+                    ValidAudience = Configuration["Jwt:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SecurityKey"]))
+                };
+            });
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddSingleton(provider =>
@@ -74,7 +110,7 @@ namespace SmartCollection.Server
                 app.UseHsts();
             }
 
-            app.UseAuthentication();
+            
 
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
@@ -82,6 +118,7 @@ namespace SmartCollection.Server
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
