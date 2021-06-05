@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartCollection.DataAccess"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartCollection.Models", "SmartCollection.Models\SmartCollection.Models.csproj", "{E8B4DE97-9A9D-4F52-AE50-2098C7E9125F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCollection.StorageManager", "SmartCollection.StorageManager\SmartCollection.StorageManager.csproj", "{D274F537-E10E-49FA-914A-5742AD6AA763}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartCollection.StorageManager", "SmartCollection.StorageManager\SmartCollection.StorageManager.csproj", "{D274F537-E10E-49FA-914A-5742AD6AA763}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,9 @@
+﻿#content-wrapper {
+    position: relative;
+    min-height: 100vh;
+}
+
+#content {
+    padding-bottom: 2.5rem; /* Footer height */
+}
+
