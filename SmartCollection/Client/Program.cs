@@ -26,6 +26,7 @@ namespace SmartCollection.Client
             builder.Services.AddScoped<StateProvider>();
             builder.Services.AddScoped<AuthenticationStateProvider>(provider => provider.GetRequiredService<StateProvider>());
             builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<ITokenService, TokenService>();
             //builder.Services.AddScoped<AuthenticationStateProvider, StateProvider>();
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 

@@ -10,6 +10,10 @@ using System.Net;
 using Microsoft.AspNetCore.Components.Authorization;
 using Blazored.LocalStorage;
 using System.Net.Http.Headers;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Configuration;
+using System.Security.Claims;
 
 namespace SmartCollection.Client.Authorization
 {
@@ -17,13 +21,15 @@ namespace SmartCollection.Client.Authorization
     {
         private readonly HttpClient _httpClient;
         private readonly ILocalStorageService _localStorage;
+        private IConfiguration _configuration;
         private readonly AuthenticationStateProvider _authenticationStateProvider;
 
-        public AuthService(HttpClient httpClient, StateProvider authenticationStateProvider, ILocalStorageService localStorage)
+        public AuthService(HttpClient httpClient, StateProvider authenticationStateProvider, ILocalStorageService localStorage, IConfiguration configuration)
         {
             _httpClient = httpClient;
             _authenticationStateProvider = authenticationStateProvider;
             _localStorage = localStorage;
+            _configuration = configuration;
         }
 
         public async Task<LoginResult> Login(LoginModel loginModel)
@@ -31,6 +37,7 @@ namespace SmartCollection.Client.Authorization
             var jsonModel = JsonConvert.SerializeObject(loginModel);
             var response = await _httpClient.PostAsync("https://localhost:44368/Login", new StringContent(jsonModel, Encoding.UTF8, "application/json"));
             var jsonResult = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("RESULT  " + jsonResult);
             var loginResult = JsonConvert.DeserializeObject<LoginResult>(jsonResult);
 
             // fail
@@ -38,14 +45,12 @@ namespace SmartCollection.Client.Authorization
             {
                 return loginResult;
             }
+
             await _localStorage.SetItemAsync("authToken", loginResult.Token);
             // success
-            ((StateProvider)_authenticationStateProvider)._currentUser = await GetCurrentUser();
             ((StateProvider)_authenticationStateProvider).AuthenticateUser(loginModel.Email);
             _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", loginResult.Token);
             return loginResult;
-            //if (result.StatusCode == HttpStatusCode.BadRequest) throw new Exception(await result.Content.ReadAsStringAsync());
-            //result.EnsureSuccessStatusCode();
         }
 
         public async Task<RegisterResult> Register(RegisterModel registerModel)

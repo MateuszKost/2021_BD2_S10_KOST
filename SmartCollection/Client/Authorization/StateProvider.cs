@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using SmartCollection.Models.ViewModels.AuthModels;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -27,16 +28,20 @@ namespace SmartCollection.Client.Authorization
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             //var identity = new ClaimsIdentity();
-            var savedToken = await _localStorage.GetItemAsync<string>("authToken");
+            var tokenString = await _localStorage.GetItemAsync<string>("authToken");
+            Console.WriteLine("hello szmato");
 
-            if (string.IsNullOrWhiteSpace(savedToken))
+            if (string.IsNullOrEmpty(tokenString))
             {
                 return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
             }
 
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", savedToken);
+            var token = new JwtSecurityToken(tokenString);
 
-            return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(ParseClaimsFromJwt(savedToken), "jwt")));
+            var claims = token.Claims;
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", tokenString);
+
+            return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity(claims)));
             //try
             //{
             //    if (_currentUser != null && _currentUser.IsAuthenticated)
@@ -77,51 +82,51 @@ namespace SmartCollection.Client.Authorization
             NotifyAuthenticationStateChanged(authState);
         }
        
-        private IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
-        {
-            var claims = new List<Claim>();
-            var payload = jwt.Split('.')[1];
-            var jsonBytes = ParseBase64WithoutPadding(payload);
+        //private IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
+        //{
+        //    var claims = new List<Claim>();
+        //    var payload = jwt.Split('.')[1];
+        //    var jsonBytes = ParseBase64WithoutPadding(payload);
 
-            //var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes); // bylo
+        //    //var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes); // bylo
 
-            var keyValuePairs = JsonConvert.DeserializeObject<Dictionary<string, object>>(Convert.ToBase64String(jsonBytes)); // jest
+        //    var keyValuePairs = JsonConvert.DeserializeObject<Dictionary<string, object>>(Convert.ToBase64String(jsonBytes)); // jest
 
-            keyValuePairs.TryGetValue(ClaimTypes.Role, out object roles);
+        //    keyValuePairs.TryGetValue(ClaimTypes.Role, out object roles);
 
-            if (roles != null)
-            {
-                if (roles.ToString().Trim().StartsWith("["))
-                {
-                    var parsedRoles = JsonConvert.DeserializeObject<string[]>(roles.ToString());
+        //    if (roles != null)
+        //    {
+        //        if (roles.ToString().Trim().StartsWith("["))
+        //        {
+        //            var parsedRoles = JsonConvert.DeserializeObject<string[]>(roles.ToString());
 
-                    foreach (var parsedRole in parsedRoles)
-                    {
-                        claims.Add(new Claim(ClaimTypes.Role, parsedRole));
-                    }
-                }
-                else
-                {
-                    claims.Add(new Claim(ClaimTypes.Role, roles.ToString()));
-                }
+        //            foreach (var parsedRole in parsedRoles)
+        //            {
+        //                claims.Add(new Claim(ClaimTypes.Role, parsedRole));
+        //            }
+        //        }
+        //        else
+        //        {
+        //            claims.Add(new Claim(ClaimTypes.Role, roles.ToString()));
+        //        }
 
-                keyValuePairs.Remove(ClaimTypes.Role);
-            }
+        //        keyValuePairs.Remove(ClaimTypes.Role);
+        //    }
 
-            claims.AddRange(keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString())));
+        //    claims.AddRange(keyValuePairs.Select(kvp => new Claim(kvp.Key, kvp.Value.ToString())));
 
-            return claims;
-        }
+        //    return claims;
+        //}
 
-        private byte[] ParseBase64WithoutPadding(string base64)
-        {
-            switch (base64.Length % 4)
-            {
-                case 2: base64 += "=="; break;
-                case 3: base64 += "="; break;
-            }
-            return Convert.FromBase64String(base64);
-        }
+        //private byte[] ParseBase64WithoutPadding(string base64)
+        //{
+        //    switch (base64.Length % 4)
+        //    {
+        //        case 2: base64 += "=="; break;
+        //        case 3: base64 += "="; break;
+        //    }
+        //    return Convert.FromBase64String(base64);
+        //}
 
         //public async Task<ApplicationUser> GetCurrentUser()
         //{

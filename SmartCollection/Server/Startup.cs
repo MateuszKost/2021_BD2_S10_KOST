@@ -74,13 +74,19 @@ namespace SmartCollection.Server
             //    options.Cookie.HttpOnly = false;
             //});
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+            services.AddAuthentication(options =>
             {
-                options.TokenValidationParameters = new TokenValidationParameters
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).
+            AddJwtBearer(jwtOptions =>
+            {
+                jwtOptions.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
                     ValidateAudience = true,
-                    ValidateLifetime = true,
+                    ValidateLifetime = false,
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = Configuration["Jwt:Issuer"],
                     ValidAudience = Configuration["Jwt:Issuer"],
@@ -89,6 +95,7 @@ namespace SmartCollection.Server
             });
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<ITokenService, TokenService>();
             services.AddSingleton(provider =>
             new BlobStorageServiceClient(Configuration.GetConnectionString("BlobStorage")));
             services.AddScoped<IStorageContext<IStorageContainer>, BlobStorageContext<IStorageContainer>>();

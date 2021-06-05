@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using SmartCollection.Client.Authorization;
 using SmartCollection.Models.ViewModels.AuthModels;
 using System;
 using System.Collections.Generic;
@@ -26,13 +27,15 @@ namespace SmartCollection.Server.Controllers
         private readonly IConfiguration _configuration;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly ITokenService _tokenService;
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginController(IConfiguration configuration, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginController(IConfiguration configuration, UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, ITokenService tokenService, ILogger<LoginModel> logger)
         {
             _configuration = configuration;
             _userManager = userManager;
             _signInManager = signInManager;
+            _tokenService = tokenService;
             _logger = logger;
         }
 
@@ -55,25 +58,10 @@ namespace SmartCollection.Server.Controllers
                 {
                     _logger.LogInformation("Login succeeded.");
 
-                    var claims = new[]
-                    {
-                        new Claim(ClaimTypes.Name, model.Email)
-                    };
-
-                    var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecurityKey"]));
-                    var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-                    var expiry = DateTime.Now.AddDays(Convert.ToInt32(_configuration["Jwt:ExpiryInDays"]));
-
-                    var token = new JwtSecurityToken(
-                        _configuration["Jwt:Issuer"],
-                        _configuration["Jwt:Issuer"],
-                        claims,
-                        expires: expiry,
-                        signingCredentials: credentials
-                    );
+                    var jwtToken = _tokenService.CreateJwtToken(user.Id);
 
                     //return CreatedAtAction(nameof(Login), user.Id);
-                    return Ok(new LoginResult { Successful = true , Token = new JwtSecurityTokenHandler().WriteToken(token) });
+                    return Ok(new LoginResult { Successful = true , Token = new JwtSecurityTokenHandler().WriteToken(jwtToken) });
                 }
                 else
                 {
