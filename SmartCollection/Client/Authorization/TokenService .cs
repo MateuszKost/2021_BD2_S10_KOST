@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -18,29 +19,32 @@ namespace SmartCollection.Client.Authorization
         {
             _configuration = configuration;
         }
-        public JwtSecurityToken CreateJwtToken(string userId)
+        public JwtSecurityToken CreateJwtToken(IdentityUser user)
         {
             var signKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:SecurityKey"]));
+            var credentials = new SigningCredentials(signKey, SecurityAlgorithms.HmacSha256);
             var expireInMins = _configuration.GetValue<int>("Jwt:ExpireInMinutes");
 
             var token = new JwtSecurityToken(
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
-                claims: GetTokenClaims(userId),
-                notBefore: DateTime.Now,
+                claims: GetTokenClaims(user),
+                //notBefore: DateTime.Now,
                 expires: DateTime.Now.Add(TimeSpan.FromMinutes(expireInMins)),
-                signingCredentials: new SigningCredentials(signKey, SecurityAlgorithms.HmacSha256)
+                signingCredentials: credentials
                 );
 
             return token;
         }
-        public IEnumerable<Claim> GetTokenClaims(string userId)
+        public IEnumerable<Claim> GetTokenClaims(IdentityUser user)
         {
+
             var claims = new List<Claim>
             {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                new Claim(JwtRegisteredClaimNames.Name, user.UserName),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                new Claim(JwtRegisteredClaimNames.Sub, userId),
-                new Claim(JwtRegisteredClaimNames.Iat, new DateTimeOffset(DateTime.Now).ToUnixTimeSeconds().ToString())
+                new Claim(ClaimTypes.NameIdentifier, user.Id)
             };
 
             return claims;

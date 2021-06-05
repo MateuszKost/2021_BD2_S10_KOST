@@ -37,7 +37,7 @@ namespace SmartCollection.Client.Authorization
             var jsonModel = JsonConvert.SerializeObject(loginModel);
             var response = await _httpClient.PostAsync("https://localhost:44368/Login", new StringContent(jsonModel, Encoding.UTF8, "application/json"));
             var jsonResult = await response.Content.ReadAsStringAsync();
-            Console.WriteLine("RESULT  " + jsonResult);
+
             var loginResult = JsonConvert.DeserializeObject<LoginResult>(jsonResult);
 
             // fail
@@ -48,8 +48,9 @@ namespace SmartCollection.Client.Authorization
 
             await _localStorage.SetItemAsync("authToken", loginResult.Token);
             // success
-            ((StateProvider)_authenticationStateProvider).AuthenticateUser(loginModel.Email);
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", loginResult.Token);
+            ((StateProvider)_authenticationStateProvider).StateChanged();
+           // _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", loginResult.Token);
+
             return loginResult;
         }
 
@@ -65,8 +66,8 @@ namespace SmartCollection.Client.Authorization
         public async Task Logout()
         {
             await _localStorage.RemoveItemAsync("authToken");
-            ((StateProvider)_authenticationStateProvider).Logout();
-            _httpClient.DefaultRequestHeaders.Authorization = null;
+            ((StateProvider)_authenticationStateProvider).StateChanged();
+            //_httpClient.DefaultRequestHeaders.Authorization = null;
             //var result = await _httpClient.PostAsync("https://localhost:44368/Logout", null);
             //result.EnsureSuccessStatusCode();
         }

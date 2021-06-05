@@ -58,10 +58,9 @@ namespace SmartCollection.Server.Controllers
                 {
                     _logger.LogInformation("Login succeeded.");
 
-                    var jwtToken = _tokenService.CreateJwtToken(user.Id);
-
-                    //return CreatedAtAction(nameof(Login), user.Id);
+                    var jwtToken = _tokenService.CreateJwtToken(user);
                     return Ok(new LoginResult { Successful = true , Token = new JwtSecurityTokenHandler().WriteToken(jwtToken) });
+
                 }
                 else
                 {

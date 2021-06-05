@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
@@ -9,7 +10,7 @@ namespace SmartCollection.Client.Authorization
 {
     public interface ITokenService
     {
-        public JwtSecurityToken CreateJwtToken(string userId);
-        public IEnumerable<Claim> GetTokenClaims(string userId);
+        public JwtSecurityToken CreateJwtToken(IdentityUser user);
+        public IEnumerable<Claim> GetTokenClaims(IdentityUser user);
     }
 }

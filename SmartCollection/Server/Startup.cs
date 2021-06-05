@@ -20,6 +20,7 @@ using System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace SmartCollection.Server
 {
@@ -74,6 +75,9 @@ namespace SmartCollection.Server
             //    options.Cookie.HttpOnly = false;
             //});
 
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            services.AddSingleton<ITokenService, TokenService>();
+
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -89,13 +93,13 @@ namespace SmartCollection.Server
                     ValidateLifetime = false,
                     ValidateIssuerSigningKey = true,
                     ValidIssuer = Configuration["Jwt:Issuer"],
-                    ValidAudience = Configuration["Jwt:Issuer"],
+                    ValidAudience = Configuration["Jwt:Audience"],
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SecurityKey"]))
                 };
             });
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            services.AddScoped<ITokenService, TokenService>();
+            
             services.AddSingleton(provider =>
             new BlobStorageServiceClient(Configuration.GetConnectionString("BlobStorage")));
             services.AddScoped<IStorageContext<IStorageContainer>, BlobStorageContext<IStorageContainer>>();
