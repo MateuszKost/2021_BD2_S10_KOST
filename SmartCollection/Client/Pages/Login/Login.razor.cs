@@ -26,7 +26,7 @@ namespace SmartCollection.Client.Pages.Login
 
             if (result.Successful)
             {
-                NavigationManager.NavigateTo("/");
+                NavigationManager.NavigateTo("/", true);
             }
             else
             {

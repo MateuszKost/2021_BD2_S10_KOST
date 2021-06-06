@@ -10,17 +10,11 @@ namespace SmartCollection.Client.Shared
 {
     public partial class UserProfile
     {
-        
         private string Token;
         [Parameter]
         public string UserName { get; set; }
 
-        /*
-         * TODO
-         * Fix this to display UserName after login.
-         * Currently displays UserName AFTER refresh when user is logged.
-         */
-        protected override async Task OnParametersSetAsync()
+        protected override async Task OnInitializedAsync()
         {
             Token = await LocalStorage.GetItemAsync<string>("authToken");
 
@@ -31,12 +25,13 @@ namespace SmartCollection.Client.Shared
                 var underscoredUserName = claims.FirstOrDefault(claimRecord => claimRecord.Type == JwtRegisteredClaimNames.Name).Value;
 
                 UserName = DivideUserName(underscoredUserName);
-                //ShouldRender();
             }
             else
             {
                 UserName = null;
             }
+
+            StateHasChanged();
         }
 
         private string DivideUserName(string username)
@@ -50,7 +45,7 @@ namespace SmartCollection.Client.Shared
             AuthService.Logout();
             UserName = null;
             Token = null;
-            ShouldRender();
+            StateHasChanged();
         }
 
         private void HandleNavigation(string target)

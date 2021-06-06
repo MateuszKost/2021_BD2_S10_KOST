@@ -2,23 +2,26 @@
 @using SmartCollection.Models.ViewModels.ImagesViewModel
 @using Microsoft.AspNetCore.Components.Authorization
 @inject HttpClient Http
-<AuthorizeView>
-    <Authorized>
-        <p>Yo man</p>
-    </Authorized>
-    <NotAuthorized>
-        <h1>Hello, world!</h1>
 
-        @if (model != null)
-        {
-            <br />
-            <div class="col">
-                <p>@model.FirstOrDefault().Name</p>
-                <p>@model.FirstOrDefault().Description</p>
-                <p>@model.FirstOrDefault().Date</p>
-            </div>
-        }
+<AuthorizeView>
+    <NotAuthorized>
+        <h4 class="display-4">Hello there!</h4>
+        <p><NavLink href="/login">Login</NavLink> or <NavLink href="/register">Register</NavLink> to use your SmartCollection!</p>
     </NotAuthorized>
+    <Authorized>
+        <h4 class="display-4">Hello again!</h4>
+        <p>Below is example of database connection.</p>
+
+            @if (model != null)
+            {
+                <br />
+                <div class="col">
+                    <p>@model.FirstOrDefault().Name</p>
+                    <p>@model.FirstOrDefault().Description</p>
+                    <p>@model.FirstOrDefault().Date</p>
+                </div>
+            }
+    </Authorized>
 </AuthorizeView>
 
 @code {
