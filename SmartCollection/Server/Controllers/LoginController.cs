@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -79,8 +81,7 @@ namespace SmartCollection.Server.Controllers
         {
             await _signInManager.SignOutAsync();
             
-            //return RedirectToPage("/login");
-            return Ok();
+            return RedirectToPage("/welcome");
         }
 
         [Route("~/GetCurrentUser")]
@@ -95,5 +96,16 @@ namespace SmartCollection.Server.Controllers
                 .ToDictionary(c => c.Type, c => c.Value)
             };
         }
+
+        [HttpGet("~/signin-google")]
+        public async Task<ActionResult> GoogleLogin()
+        {
+            var properties = new AuthenticationProperties
+            {
+                RedirectUri = "/"
+            };
+            return Challenge(properties, GoogleDefaults.AuthenticationScheme);
+        }
+
     }
 }

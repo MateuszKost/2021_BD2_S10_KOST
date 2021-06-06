@@ -1,0 +1,14 @@
+﻿@page "/welcome"
+@inject NavigationManager NavManager
+
+<AuthorizeView>
+    <NotAuthorized>
+        <h4 class="display-4">Hello there!</h4>
+        <p><NavLink href="/login">Login</NavLink> or <NavLink href="/register">Register</NavLink> to use your SmartCollection!</p>
+    </NotAuthorized>
+    <Authorized>
+        @{
+            NavManager.NavigateTo("/");
+        }
+    </Authorized>
+</AuthorizeView>
