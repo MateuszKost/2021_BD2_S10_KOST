@@ -78,8 +78,7 @@ namespace SmartCollection.Server
             //    options.Cookie.HttpOnly = false;
             //});
 
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            services.AddSingleton<ITokenService, TokenService>();
+            services.AddTransient<ITokenService, TokenService>();
 
             services.AddAuthentication(options =>
             {
