@@ -32,7 +32,6 @@ namespace SmartCollection.Server.Controllers
         {
             //getting data from db
             var imageName = _unitOfWork.ImageDetails.GetAll().FirstOrDefault();
-
             //example view model
             List<SingleImageViewModel> images = new List<SingleImageViewModel>();
 
@@ -41,7 +40,7 @@ namespace SmartCollection.Server.Controllers
             Date = "DateAsString",
             Description = "This is Description"};
 
-            images.Add(singleImage);
+            images.Add(singleImage); 
 
             #region _storageContext example use
             //byte[] myFile = new byte[420];

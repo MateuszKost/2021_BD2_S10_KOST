@@ -21,6 +21,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
+using System.Collections.Generic;
 
 namespace SmartCollection.Server
 {
@@ -75,8 +76,7 @@ namespace SmartCollection.Server
             //    options.Cookie.HttpOnly = false;
             //});
 
-            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-            services.AddSingleton<ITokenService, TokenService>();
+            services.AddTransient<ITokenService, TokenService>();
 
             services.AddAuthentication(options =>
             {

@@ -60,7 +60,6 @@ namespace SmartCollection.Server.Controllers
 
                     var jwtToken = _tokenService.CreateJwtToken(user);
                     return Ok(new LoginResult { Successful = true , Token = new JwtSecurityTokenHandler().WriteToken(jwtToken) });
-
                 }
                 else
                 {
