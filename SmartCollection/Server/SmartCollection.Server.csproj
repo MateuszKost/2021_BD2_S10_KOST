@@ -25,6 +25,7 @@
     <ProjectReference Include="..\SmartCollection.DataAccess\SmartCollection.DataAccess.csproj" />
     <ProjectReference Include="..\SmartCollection.Models\SmartCollection.Models.csproj" />
     <ProjectReference Include="..\SmartCollection.StorageManager\SmartCollection.StorageManager.csproj" />
+    <ProjectReference Include="..\SmartCollection.Utilities\SmartCollection.Utilities.csproj" />
   </ItemGroup>
 
 

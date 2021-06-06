@@ -21,7 +21,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
-using System.Collections.Generic;
+using SmartCollection.Utilities.DatabaseInitializer;
+using SmartCollection.Models.ViewModels.CreateAlbumViewModel;
+using SmartCollection.Utilities.AlbumCreator;
 
 namespace SmartCollection.Server
 {
@@ -104,6 +106,8 @@ namespace SmartCollection.Server
             new BlobStorageServiceClient(Configuration.GetConnectionString("BlobStorage")));
             services.AddScoped<IStorageContext<IStorageContainer>, BlobStorageContext<IStorageContainer>>();
 
+            services.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
+            services.AddScoped<IAlbumCreator<CreateAlbumViewModel,IUnitOfWork>, AlbumCreator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
