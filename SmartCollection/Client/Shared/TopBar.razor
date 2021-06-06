@@ -1,20 +1,7 @@
-﻿@using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Components.Authorization
-
+﻿
 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-    <AuthorizeView>
-
-        <NotAuthorized>
-            <!-- Sidebar Toggle (Topbar) -->
-            <SidebarCollapseButton />
-
-        </NotAuthorized>
-        <Authorized>
             <!-- Sidebar Toggle (Topbar) -->
             <SidebarCollapseButton />
             <!-- Nav Item - User Information -->
             <UserProfile />
-        </Authorized>
-    </AuthorizeView>
-
 </nav>

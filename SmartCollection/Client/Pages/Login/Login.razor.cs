@@ -16,11 +16,11 @@ namespace SmartCollection.Client.Pages.Login
     {
         private LoginModel LoginModel = new();
         private string Error = "";
-        private string LoginWarning = "d-none";
+        private bool ShowError;
 
         public async Task OnSubmit()
         {
-            LoginWarning = "d-none";
+            ShowError = false;
 
             var result = await AuthService.Login(LoginModel);
 
@@ -31,16 +31,8 @@ namespace SmartCollection.Client.Pages.Login
             else
             {
                 Error = result.Error;
-                LoginWarning = "block";
+                ShowError = true;
             }
-
-            //HttpClient Http = new();
-            //var json = JsonConvert.SerializeObject(LoginModel);
-            
-            //var result = await Http.PostAsync("https://localhost:44368/Login", new StringContent(json, Encoding.UTF8, "application/json"));
-            //Console.WriteLine(result.StatusCode);
-            //if (result.IsSuccessStatusCode) NavigationManager.NavigateTo("/");
-            //else LoginWarning = "block";
         }
     }
 }

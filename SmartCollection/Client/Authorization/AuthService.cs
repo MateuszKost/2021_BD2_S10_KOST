@@ -66,10 +66,10 @@ namespace SmartCollection.Client.Authorization
         public async Task Logout()
         {
             await _localStorage.RemoveItemAsync("authToken");
+            var result = await _httpClient.PostAsync("https://localhost:44368/Logout", null);
+            result.EnsureSuccessStatusCode();
             ((StateProvider)_authenticationStateProvider).StateChanged();
             //_httpClient.DefaultRequestHeaders.Authorization = null;
-            //var result = await _httpClient.PostAsync("https://localhost:44368/Logout", null);
-            //result.EnsureSuccessStatusCode();
         }
 
         public async Task<ApplicationUser> GetCurrentUser()

@@ -13,13 +13,29 @@ namespace SmartCollection.Client.Pages.Register
 {
     public partial class Register
     {
-        private string RegisterWarning = "d-none";
+        private bool ShowErrors, ShowSuccess;
+        private IEnumerable<string> Errors;
         private RegisterModel RegisterModel = new();
 
         private async Task OnSubmit()
         {
-            HttpClient Http = new();
-            var json = JsonConvert.SerializeObject(RegisterModel);
+            ShowErrors = false;
+            ShowSuccess = false;
+            var result = await AuthService.Register(RegisterModel);
+
+            if (result.Succesfull)
+            {
+                ShowSuccess = true;
+            }
+            else
+            {
+                ShowErrors = true;
+                foreach(var e in Errors)
+                {
+                    Console.WriteLine(e);
+                }
+            }
+            //var json = JsonConvert.SerializeObject(RegisterModel);
 
             //var result = await Http.PostAsync("https://localhost:44368/Register", new StringContent(json, Encoding.UTF8, "application/json"));
             //Console.WriteLine(result.StatusCode);
