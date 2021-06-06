@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using SmartCollection.DataAccess.RepositoryPattern;
 using SmartCollection.Models.DBModels;
 using SmartCollection.Models.ViewModels.CreateAlbumViewModel;
+using SmartCollection.Utilities.AlbumCreator;
 using SmartCollection.Utilities.DatabaseInitializer;
 using System;
 using System.Collections.Generic;
@@ -11,49 +12,29 @@ using System.Threading.Tasks;
 
 namespace SmartCollection.Server.Controllers
 {
-    [Route("[controller]")]
-    [ApiController]
-    public class CreateAlbumController : Controller
-    {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly UserManager<IdentityUser> _userManager;
+  [Route("[controller]")]
+      [ApiController]
+      public class CreateAlbumController : Controller
+      {
+          private readonly UserManager<IdentityUser> _userManager;
+          private readonly IAlbumCreator<CreateAlbumViewModel,IUnitOfWork> _albumCreator;
 
-        public CreateAlbumController(
-            IUnitOfWork unitOfWork,
-            UserManager<IdentityUser> userManager)
-        {
-            _unitOfWork = unitOfWork;
-            _userManager = userManager;
-        }
+          public CreateAlbumController(
+              UserManager<IdentityUser> userManager,
+              IAlbumCreator<CreateAlbumViewModel, IUnitOfWork> albumCreator)
+          {
+              _userManager = userManager;
+              _albumCreator = albumCreator;
+          }
+
 
         public async Task<IActionResult> AddAlbum(CreateAlbumViewModel model)
         {
-            var user = await _userManager.FindByNameAsync(User.Identity.Name);
-           
-            Privacy privacy = null;
+            IdentityUser user = await _userManager.FindByNameAsync(User.Identity.Name);
 
-            if (model.PrivacyType)
-                privacy = _unitOfWork.Privacies.Find(p => p.Name == "public").ToList().FirstOrDefault();
-            else
-                privacy = _unitOfWork.Privacies.Find(p => p.Name == "private").ToList().FirstOrDefault();
+            await _albumCreator.CreateAsync(model, user.Id);
 
-            if (privacy != null)
-            {
-                _unitOfWork.Albums.AddAsync(new Album()
-                {
-
-                    Description = model.Brief,
-                    Name = model.Name,
-                    Privacy = privacy,
-                    UserId = user.Id,
-                    Images = null,
-                    PrivacyId = privacy.PrivacyId
-
-                });
-
-                _unitOfWork.Save();
-            }
             return Ok();
         }
-    }
+      }
 }

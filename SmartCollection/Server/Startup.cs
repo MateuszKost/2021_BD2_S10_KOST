@@ -22,6 +22,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.IdentityModel.Tokens.Jwt;
 using SmartCollection.Utilities.DatabaseInitializer;
+using SmartCollection.Models.ViewModels.CreateAlbumViewModel;
+using SmartCollection.Utilities.AlbumCreator;
 
 namespace SmartCollection.Server
 {
@@ -106,6 +108,7 @@ namespace SmartCollection.Server
             services.AddScoped<IStorageContext<IStorageContainer>, BlobStorageContext<IStorageContainer>>();
 
             services.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
+            services.AddScoped<IAlbumCreator<CreateAlbumViewModel,IUnitOfWork>, AlbumCreator>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
