@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 
@@ -22,7 +23,7 @@ namespace SmartCollection.Client.Shared
             {
                 var decryptedToken = new JwtSecurityToken(Token);
                 var claims = decryptedToken.Claims.ToList();
-                var underscoredUserName = claims.FirstOrDefault(claimRecord => claimRecord.Type == JwtRegisteredClaimNames.Name).Value;
+                var underscoredUserName = claims.FirstOrDefault(claimRecord => claimRecord.Type == ClaimTypes.Name).Value;
 
                 UserName = DivideUserName(underscoredUserName);
             }
@@ -46,6 +47,7 @@ namespace SmartCollection.Client.Shared
             UserName = null;
             Token = null;
             StateHasChanged();
+            NavigationManager.NavigateTo("/", false);
         }
 
         private void HandleNavigation(string target)

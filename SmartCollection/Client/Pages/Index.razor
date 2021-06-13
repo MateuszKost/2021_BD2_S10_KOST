@@ -2,6 +2,7 @@
 @using SmartCollection.Models.ViewModels.ImagesViewModel
 @using Microsoft.AspNetCore.Components.Authorization
 @inject HttpClient Http
+@inject ILocalStorageService LocalStorage
 
 <AuthorizeView>
     <NotAuthorized>
@@ -25,11 +26,18 @@
 </AuthorizeView>
 
 @code {
+
     List<SingleImageViewModel> model;
+
     protected override async Task OnInitializedAsync()
     {
-        var data = await Http.GetFromJsonAsync<ImagesViewModel>("images");
-        model = data.Images.ToList();
+        var token = await LocalStorage.GetItemAsync<string>("authToken");
+        if (!string.IsNullOrEmpty(token))
+        {
+            var data = await Http.GetFromJsonAsync<ImagesViewModel>("images");
+            model = data.Images.ToList();
+        }
+
     }
 
 }

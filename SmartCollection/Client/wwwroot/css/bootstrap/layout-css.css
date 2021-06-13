@@ -5654,17 +5654,20 @@ a.close.disabled {
 
 .modal-open .modal {
   overflow-x: hidden;
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 
 .modal {
-  position: fixed;
-  top: 0;
+  position: absolute;
+/*  top: 0;*/  
+  top: 25%;
   left: 0;
   z-index: 1050;
   display: none;
   width: 100%;
-  height: 100%;
+/*  height: 100%;*/
+/*  max-height set to prevent y-scrollbar showing */
+  max-height: 100%;
   overflow: hidden;
   outline: 0;
 }
@@ -5711,7 +5714,7 @@ a.close.disabled {
 }
 
 .modal-dialog-scrollable .modal-body {
-  overflow-y: auto;
+  overflow-y: hidden;
 }
 
 .modal-dialog-centered {
