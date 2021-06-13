@@ -24,6 +24,7 @@ using System.IdentityModel.Tokens.Jwt;
 using SmartCollection.Utilities.DatabaseInitializer;
 using SmartCollection.Models.ViewModels.CreateAlbumViewModel;
 using SmartCollection.Utilities.AlbumCreator;
+using SmartCollection.Utilities.HashGenerator;
 
 namespace SmartCollection.Server
 {
@@ -120,7 +121,7 @@ namespace SmartCollection.Server
 
             services.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
             services.AddScoped<IAlbumCreator<CreateAlbumViewModel,IUnitOfWork>, AlbumCreator>();
-
+            services.AddScoped<IHashGenerator, Sha1HashGenerator>();
             
         }
 

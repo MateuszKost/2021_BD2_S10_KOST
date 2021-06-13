@@ -5,6 +5,7 @@ using SmartCollection.DataAccess.RepositoryPattern;
 using SmartCollection.Models.ViewModels.ImagesViewModel;
 using SmartCollection.StorageManager.Containers;
 using SmartCollection.StorageManager.Context;
+using SmartCollection.Utilities.HashGenerator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +20,17 @@ namespace SmartCollection.Server.Controllers
         private readonly ILogger<ImagesController> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IStorageContext<IStorageContainer> _storageContext;
+        private readonly IHashGenerator _hashGenerator;
 
-        public ImagesController(ILogger<ImagesController> logger, IUnitOfWork unitOfWork,IStorageContext<IStorageContainer> storageContext)
+        public ImagesController(ILogger<ImagesController> logger,
+            IUnitOfWork unitOfWork,
+            IStorageContext<IStorageContainer> storageContext,
+            IHashGenerator hashGenerator)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _storageContext = storageContext;
+            _hashGenerator = hashGenerator;
         }
 
        [HttpGet]
@@ -53,6 +59,17 @@ namespace SmartCollection.Server.Controllers
             #endregion
 
             return new ImagesViewModel() { Images = images };
+        }
+
+        private void ImageExampleDeleteIt(byte[] myImage)
+        {
+           string myHashCode = _hashGenerator.GetHash(myImage);
+            
+            
+           _storageContext.AddAsync(new ImageContainer(), myImage, myHashCode);
+
+            if (_storageContext.GetAsync(new ImageContainer(), myHashCode) == null)
+                Console.WriteLine("Error, no image in blob");
         }
     }
 }
