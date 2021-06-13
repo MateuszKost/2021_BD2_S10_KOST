@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 
 namespace SmartCollection.Server.Controllers
 {
-    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class ImagesController : ControllerBase
