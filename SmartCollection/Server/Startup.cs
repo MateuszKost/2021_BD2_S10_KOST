@@ -25,6 +25,8 @@ using SmartCollection.Utilities.DatabaseInitializer;
 using SmartCollection.Models.ViewModels.CreateAlbumViewModel;
 using SmartCollection.Utilities.AlbumCreator;
 using SmartCollection.Utilities.HashGenerator;
+using Microsoft.AspNetCore.Http;
+using SmartCollection.Utilities.TokenService;
 
 namespace SmartCollection.Server
 {

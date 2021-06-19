@@ -6,9 +6,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
-using SmartCollection.Client.Authorization;
 using SmartCollection.Models.ViewModels.AuthModels;
+using SmartCollection.Utilities.TokenService;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -79,8 +78,9 @@ namespace SmartCollection.Server.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            
-            return RedirectToPage("/welcome");
+
+            //return RedirectToPage("/welcome");
+            return Ok();
         }
 
         [Route("~/GetCurrentUser")]

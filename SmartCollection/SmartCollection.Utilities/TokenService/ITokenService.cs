@@ -6,7 +6,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace SmartCollection.Client.Authorization
+namespace SmartCollection.Utilities.TokenService
 {
     public interface ITokenService
     {

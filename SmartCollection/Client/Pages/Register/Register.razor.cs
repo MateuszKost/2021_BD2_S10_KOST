@@ -15,8 +15,13 @@ namespace SmartCollection.Client.Pages.Register
     {
         private bool ShowErrors, ShowSuccess;
         private IEnumerable<string> Errors;
-        private RegisterModel RegisterModel = new();
+        private RegisterModel RegisterModel;
 
+        protected override void OnInitialized()
+        {
+            base.OnInitialized();
+            RegisterModel = new();
+        }
         private async Task OnSubmit()
         {
             ShowErrors = false;

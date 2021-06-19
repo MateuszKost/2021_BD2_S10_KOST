@@ -13,9 +13,9 @@ using System.Threading.Tasks;
 
 namespace SmartCollection.Server.Controllers
 {
+      [Authorize]
       [Route("[controller]")]
       [ApiController]
-      [Authorize]
       public class CreateAlbumController : Controller
       {
           private readonly UserManager<IdentityUser> _userManager;
@@ -32,22 +32,23 @@ namespace SmartCollection.Server.Controllers
               _unitOfWork = unitOfWork;
           }
 
-
+        [HttpPost]
+        [Route("")]
         public async Task<IActionResult> AddAlbum(CreateAlbumViewModel model)
         {
-            IdentityUser user = await _userManager.FindByNameAsync(User.Identity.Name);
+            //IdentityUser user = await _userManager.FindByNameAsync(User.Identity.Name);
+            var userId = _userManager.GetUserId(User);
+            var ownedAlbums = _unitOfWork.Albums.Find(a => a.UserId.Equals(userId));
 
-            var ownedAlbums = _unitOfWork.Albums.Find(a => a.UserId.Equals(user.Id));
-
-            foreach(var album in ownedAlbums)
+            foreach (var album in ownedAlbums)
             {
-                if(album.Name.Equals(model.Name))
+                if (album.Name.Equals(model.Name))
                 {
                     return BadRequest();
                 }
             }
 
-            await _albumCreator.CreateAsync(model, user.Id);
+            await _albumCreator.CreateAsync(model, userId);
 
             return Ok();
         }

@@ -8,5 +8,6 @@ namespace SmartCollection.Models.ViewModels.AlbumViewModel
 {
     public class AlbumViewModel
     {
+        public IEnumerable<SingleAlbumViewModel> AlbumViewModelList { get; set; }
     }
 }

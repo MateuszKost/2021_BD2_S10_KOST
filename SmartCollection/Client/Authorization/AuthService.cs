@@ -49,7 +49,7 @@ namespace SmartCollection.Client.Authorization
             await _localStorage.SetItemAsync("authToken", loginResult.Token);
             // success
             ((StateProvider)_authenticationStateProvider).StateChanged();
-           // _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", loginResult.Token);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", loginResult.Token);
 
             return loginResult;
         }
@@ -69,7 +69,7 @@ namespace SmartCollection.Client.Authorization
             var result = await _httpClient.PostAsync("https://localhost:44368/Logout", null);
             result.EnsureSuccessStatusCode();
             ((StateProvider)_authenticationStateProvider).StateChanged();
-            //_httpClient.DefaultRequestHeaders.Authorization = null;
+            _httpClient.DefaultRequestHeaders.Authorization = null;
         }
 
         public async Task<ApplicationUser> GetCurrentUser()

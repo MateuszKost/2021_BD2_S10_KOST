@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmartCollection.Models\SmartCollection.Models.csproj" />
+    <ProjectReference Include="..\SmartCollection.Utilities\SmartCollection.Utilities.csproj" />
   </ItemGroup>
 
   <ItemGroup>

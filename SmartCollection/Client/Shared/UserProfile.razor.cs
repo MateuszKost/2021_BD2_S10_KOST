@@ -47,7 +47,7 @@ namespace SmartCollection.Client.Shared
             UserName = null;
             Token = null;
             StateHasChanged();
-            NavigationManager.NavigateTo("/", false);
+            NavigationManager.NavigateTo("/", true);
         }
 
         private void HandleNavigation(string target)
