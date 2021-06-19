@@ -223,11 +223,51 @@ namespace SmartCollection.Server.Controllers
             }
             catch
             {
+                Console.WriteLine("Error during uploading image occured");
                 return BadRequest();
             }
-           
-
-            
         }
+
+        [HttpPost]
+        [Route("deleteimage")]
+        public async Task<IActionResult> DeleteImage(SingleImageViewModel imageViewModel)
+        {
+            var result = _unitOfWork.Images.Find(image => image.ImageId == imageViewModel.Id).FirstOrDefault();
+
+            if(result != null)
+            {
+                _unitOfWork.Images.Remove(result);
+                _storageContext.DeleteAsync(new ImageContainer(), result.ImageSha1);
+                return Ok();
+            }
+            else
+            {
+                Console.WriteLine("No image found");
+                return BadRequest();
+            }
+
+        }
+
+        [HttpPost] // [HttpDelete]
+        [Route("deletefromalbum")]
+        public async Task<IActionResult> DeleteImageFromAlbum(DeleteImageViewModel deleteImageViewModel)
+        {
+            //check if exists
+            var result = _unitOfWork.ImagesAlbums
+                .Find(ia => ia.ImagesAlbumId == deleteImageViewModel.ImageModel.Id && ia.ImagesAlbumId == deleteImageViewModel.AlbumId)
+                .FirstOrDefault();
+
+            if(result != null)
+            {
+                _unitOfWork.ImagesAlbums.Remove(result);
+                return Ok();
+            }
+            else
+            {
+                Console.WriteLine("No image found");
+                return BadRequest();
+            }
+        }
+
     }
 }
