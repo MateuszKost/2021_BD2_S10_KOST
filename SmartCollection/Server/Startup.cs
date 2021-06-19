@@ -12,21 +12,16 @@ using SmartCollection.StorageManager.Context;
 using SmartCollection.StorageManager.ServiceClient;
 using Newtonsoft;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Components.Authorization;
 using SmartCollection.Models.ViewModels.AuthModels;
-using SmartCollection.Client.Authorization;
-using Microsoft.AspNetCore.Authentication;
-using System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using System.IdentityModel.Tokens.Jwt;
 using SmartCollection.Utilities.DatabaseInitializer;
 using SmartCollection.Models.ViewModels.CreateAlbumViewModel;
 using SmartCollection.Utilities.AlbumCreator;
 using SmartCollection.Utilities.HashGenerator;
-using Microsoft.AspNetCore.Http;
-using SmartCollection.Utilities.TokenService;
+using SmartCollection.Server.User;
+using SmartCollection.Server.Identity;
 
 namespace SmartCollection.Server
 {
@@ -52,11 +47,10 @@ namespace SmartCollection.Server
                
                 );
 
-
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
             {
                 options.SignIn.RequireConfirmedAccount = false;
-                // added password details
+                options.User.RequireUniqueEmail = true;
                 options.Password = new PasswordOptions
                 {
                     RequireDigit = false,
@@ -65,55 +59,46 @@ namespace SmartCollection.Server
                     RequireUppercase = false,
                     RequireNonAlphanumeric = false
                 };
-
             })
-            .AddEntityFrameworkStores<SmartCollectionDbContext>()
-            .AddDefaultTokenProviders();
+            .AddEntityFrameworkStores<SmartCollectionDbContext>();
 
-            //services.AddIdentityServer().AddApiAuthorization<IdentityUser, SmartCollectionDbContext>(op =>
-            //op.IdentityResources);
+            var key = Encoding.ASCII.GetBytes(Configuration["Jwt:SecurityKey"]);
 
-            //services.AddAuthentication()
-            //.AddIdentityServerJwt();
+            services.AddAuthentication(authentication =>
+            {
+                authentication.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                authentication.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(bearer =>
+            {
+                bearer.RequireHttpsMetadata = false;
+                bearer.SaveToken = true;
+                bearer.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
 
-            //services.ConfigureApplicationCookie(options =>
+            services.AddHttpContextAccessor();
+            services.AddScoped<ICurrentUser, CurrentUser>();
+
+            //.AddFacebook(options =>
             //{
-            //    options.Cookie.HttpOnly = false;
+            //    options.AppId = Configuration["Authentication:Facebook:AppId"];
+            //    options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
+            //})
+            //.AddGoogle(options =>
+            //{
+            //    options.ClientId = Configuration["Authentication:Google:ClientId"];
+            //    options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+            //    options.CallbackPath = "/welcome";
             //});
 
-            services.AddTransient<ITokenService, TokenService>();
-
-            services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(jwtOptions =>
-            {
-                jwtOptions.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidateLifetime = false,
-                    ValidateIssuerSigningKey = true,
-                    ValidIssuer = Configuration["Jwt:Issuer"],
-                    ValidAudience = Configuration["Jwt:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:SecurityKey"]))
-                };
-            })
-            .AddFacebook(options =>
-            {
-                options.AppId = Configuration["Authentication:Facebook:AppId"];
-                options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-            })
-            .AddGoogle(options =>
-            {
-                options.ClientId = Configuration["Authentication:Google:ClientId"];
-                options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-                options.CallbackPath = "/welcome";
-            });
-                
+            services.AddTransient<IIdentityService, IdentityService>();
+            services.AddTransient<IJwtGeneratorService, JwtGeneratorService>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             

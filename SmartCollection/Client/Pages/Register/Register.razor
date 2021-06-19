@@ -1,7 +1,4 @@
 ﻿@page "/register"
-@layout AuthLayout
-@inject NavigationManager NavigationManager
-@inject Authorization.IAuthService AuthService
 
 <div class="container">
 
@@ -16,32 +13,32 @@
                         <div class="text-center">
                             <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                         </div>
-                        <EditForm Model="@RegisterModel" OnValidSubmit="@OnSubmit" class="user">
+                        <EditForm Model="@model" OnValidSubmit="@OnSubmit" class="user">
                             <DataAnnotationsValidator />
                             @*<ValidationSummary />*@
 
                             <div class="form-group row">
                                 <div class="col-sm-6 mb-3 mb-sm-0">
-                                    <InputText @bind-Value="@RegisterModel.FirstName" class="form-control form-control-user" placeholder="First Name" />
-                                    <ValidationMessage For="() => RegisterModel.FirstName" />
+                                    <InputText @bind-Value="@model.FirstName" class="form-control form-control-user" placeholder="First Name" />
+                                    <ValidationMessage For="() => model.FirstName" />
                                 </div>
                                 <div class="col-sm-6">
-                                    <InputText @bind-Value="@RegisterModel.LastName" class="form-control form-control-user" placeholder="Last Name" />
-                                    <ValidationMessage For="() => RegisterModel.LastName" />
+                                    <InputText @bind-Value="@model.LastName" class="form-control form-control-user" placeholder="Last Name" />
+                                    <ValidationMessage For="() => model.LastName" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <InputText @bind-Value="@RegisterModel.Email" class="form-control form-control-user" placeholder="Email Address" />
-                                <ValidationMessage For="() => RegisterModel.Email" />
+                                <InputText @bind-Value="@model.Email" class="form-control form-control-user" placeholder="Email Address" />
+                                <ValidationMessage For="() => model.Email" />
                             </div>
                             <div class="form-group row">
                                 <div class="col-sm-6 mb-3 mb-sm-0">
-                                    <InputText type="password" @bind-Value="@RegisterModel.Password" class="form-control form-control-user" placeholder="Password" />
-                                    <ValidationMessage For="() => RegisterModel.Password" />
+                                    <InputText type="password" @bind-Value="@model.Password" class="form-control form-control-user" placeholder="Password" />
+                                    <ValidationMessage For="() => model.Password" />
                                 </div>
                                 <div class="col-sm-6">
-                                    <InputText type="password" @bind-Value="@RegisterModel.ConfirmPassword" class="form-control form-control-user" placeholder="Repeat Password" />
-                                    <ValidationMessage For="() => RegisterModel.ConfirmPassword" />
+                                    <InputText type="password" @bind-Value="@model.ConfirmPassword" class="form-control form-control-user" placeholder="Repeat Password" />
+                                    <ValidationMessage For="() => model.ConfirmPassword" />
                                 </div>
                             </div>
 
@@ -49,9 +46,9 @@
                             {
                                 <span class="text-warning">Registration failed. Error @Errors.First()</span>
                             }
-                            else if (ShowSuccess)
+                            else
                             {
-                                <span class="text-success">Registration complete. <NavLink href="/login">Login here.</NavLink></span>
+                                <span class="text-success">Registration complete. Redirecting to login page.</span>
                             }
                             <button type="submit" class="btn btn-primary btn-user btn-block">
                                 Register Account

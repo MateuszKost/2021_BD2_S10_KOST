@@ -1,104 +1,102 @@
 ﻿@page "/albumpage"
-@inject HttpClient Http
-@inject NavigationManager NavigationManager
 
-    <AuthorizeView>
-        <Authorized Context="Auth">
-            <div class="container">
+<AuthorizeView>
+    <Authorized Context="Auth">
+        <div class="container">
 
-                <!-- Outer Row -->
-                <div class="row justify-content-center">
+            <!-- Outer Row -->
+            <div class="row justify-content-center">
 
-                    <div class="col-sm-12 col-md-6 col-lg-6">
+                <div class="col-sm-12 col-md-6 col-lg-6">
 
-                        <div class="card o-hidden border-0 shadow-lg my-5">
-                            <div class="card-body align-content-center p-0">
-                                <!-- Nested Row within Card Body -->
+                    <div class="card o-hidden border-0 shadow-lg my-5">
+                        <div class="card-body align-content-center p-0">
+                            <!-- Nested Row within Card Body -->
 
-                                <div class="col-sm-12 col-lg-10 mx-auto">
-                                    <div class="p-5">
-                                        <div class="text-center">
-                                            <div class="h1 rotate-15"><i class="bi bi-images"></i></div>
-                                            <h1 class="h4 text-gray-900 mb-4">
-                                                Create Your New Album
-                                            </h1>
-                                        </div>
-                                        <EditForm Model="@_createAlbumModel" OnValidSubmit="AddAlbum" class="user">
-                                            <DataAnnotationsValidator />
-                                            <div class="form-group">
-                                                <label class="text-gray-900" for="name">
-                                                    Give your album a name!
-                                                </label>
-                                                <InputText @bind-Value="_createAlbumModel.Name" id="name" class="form-control" placeholder="Trip to Indonesia" />
-                                                <ValidationMessage For=" () => _createAlbumModel.Name" />
-                                                @if (ShowError)
-                                                {
-                                                    <span class="text-warning">Album with this name already exists :(</span>
-                                                }
-
-                                            </div>
-                                            <div class="form-group mt-3">
-                                                <label class="text-gray-900" for="brief">
-                                                    Describe it with a few words!
-                                                </label>
-                                                <InputTextArea @bind-Value="_createAlbumModel.Brief" id="brief" class="form-control" placeholder="Best memories from Indonesia <3" />
-                                                <ValidationMessage For=" () => _createAlbumModel.Brief" />
-                                            </div>
-                                            <div class="form-group">
-                                                <div class="mt-4">
-                                                    <h1 class="h6 text-gray-900">Decide if you want to share it to someone!</h1>
-                                                </div>
-                                                <div class="row custom-control custom-radio">
-                                                    <div class="col-sm-12 col-md-6">
-                                                        <input type="radio" name="privacy" class="custom-control-input" id="private" checked
-                                                               @onchange="@(() => _createAlbumModel.PrivacyType = false)" />
-                                                        <label class="custom-control-label" for="private">
-                                                            Private
-                                                        </label>
-                                                    </div>
-                                                    <div class="col-sm-12 col-md-6">
-                                                        <input type="radio" name="privacy" class="custom-control-input" id="public"
-                                                               @onchange="@(() => _createAlbumModel.PrivacyType = true)" />
-                                                        <label class="custom-control-label" for="public">
-                                                            Public
-                                                        </label>
-                                                    </div>
-                                                </div>
-
-                                            </div>
-                                            <!-- submit button -->
-                                            <button type="submit" class="btn btn-primary btn-user btn-block mt-5">
-                                                <i class="bi bi-check-lg"></i><span class="px-3">Create</span>
-                                            </button>
-
-                                        </EditForm>
-
+                            <div class="col-sm-12 col-lg-10 mx-auto">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <div class="h1 rotate-15"><i class="bi bi-images"></i></div>
+                                        <h1 class="h4 text-gray-900 mb-4">
+                                            Create Your New Album
+                                        </h1>
                                     </div>
+                                    <EditForm Model="@_createAlbumModel" OnValidSubmit="AddAlbum" class="user">
+                                        <DataAnnotationsValidator />
+                                        <div class="form-group">
+                                            <label class="text-gray-900" for="name">
+                                                Give your album a name!
+                                            </label>
+                                            <InputText @bind-Value="_createAlbumModel.Name" id="name" class="form-control" placeholder="Trip to Indonesia" />
+                                            <ValidationMessage For=" () => _createAlbumModel.Name" />
+                                            @if (ShowError)
+                                            {
+                                                <span class="text-warning">Album with this name already exists :(</span>
+                                            }
+
+                                        </div>
+                                        <div class="form-group mt-3">
+                                            <label class="text-gray-900" for="brief">
+                                                Describe it with a few words!
+                                            </label>
+                                            <InputTextArea @bind-Value="_createAlbumModel.Brief" id="brief" class="form-control" placeholder="Best memories from Indonesia <3" />
+                                            <ValidationMessage For=" () => _createAlbumModel.Brief" />
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="mt-4">
+                                                <h1 class="h6 text-gray-900">Decide if you want to share it to someone!</h1>
+                                            </div>
+                                            <div class="row custom-control custom-radio">
+                                                <div class="col-sm-12 col-md-6">
+                                                    <input type="radio" name="privacy" class="custom-control-input" id="private" checked
+                                                           @onchange="@(() => _createAlbumModel.PrivacyType = false)" />
+                                                    <label class="custom-control-label" for="private">
+                                                        Private
+                                                    </label>
+                                                </div>
+                                                <div class="col-sm-12 col-md-6">
+                                                    <input type="radio" name="privacy" class="custom-control-input" id="public"
+                                                           @onchange="@(() => _createAlbumModel.PrivacyType = true)" />
+                                                    <label class="custom-control-label" for="public">
+                                                        Public
+                                                    </label>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <!-- submit button -->
+                                        <button type="submit" class="btn btn-primary btn-user btn-block mt-5">
+                                            <i class="bi bi-check-lg"></i><span class="px-3">Create</span>
+                                        </button>
+
+                                    </EditForm>
+
                                 </div>
-
                             </div>
-                        </div>
 
+                        </div>
                     </div>
 
                 </div>
 
             </div>
 
-            <!-- Modal Dialog Component -->
-            @if (ShowDialog)
-            {
-                <ModalComponent ModalTitle="Success!" OnClose="OnCloseDialog">
-                    Your album named <span class="text-success">@CreatedAlbumName</span> is created successfully!
-                </ModalComponent>
-            }
+        </div>
 
-        </Authorized>
-        <NotAuthorized Context="Auth">
-            
-                @{
-                    NavigateNotAuthorized();
-                }
+        <!-- Modal Dialog Component -->
+        @if (ShowDialog)
+        {
+            <ModalComponent ModalTitle="Success!" OnClose="OnCloseDialog">
+                Your album named <span class="text-success">@CreatedAlbumName</span> is created successfully!
+            </ModalComponent>
+        }
 
-        </NotAuthorized>
-    </AuthorizeView>
+    </Authorized>
+    <NotAuthorized Context="Auth">
+
+        @{
+            NavigateNotAuthorized();
+        }
+
+    </NotAuthorized>
+</AuthorizeView>
