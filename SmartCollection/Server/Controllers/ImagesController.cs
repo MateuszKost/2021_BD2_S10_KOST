@@ -11,6 +11,7 @@ using SmartCollection.Utilities.HashGenerator;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace SmartCollection.Server.Controllers
@@ -126,9 +127,7 @@ namespace SmartCollection.Server.Controllers
                 };
 
                 return imagesViewModel;
-
             }
-
             return null;
         }
 
@@ -169,6 +168,66 @@ namespace SmartCollection.Server.Controllers
 
             if (_storageContext.GetAsync(new ImageContainer(), myHashCode) == null)
                 Console.WriteLine("Error, no image in blob");
+        }
+
+        [HttpPost]
+        [Route("uploadimage")]
+        public async Task<IActionResult> UploadImage(SingleImageViewModel image, int? albumId)
+        {
+            byte[] imageFile = Encoding.ASCII.GetBytes(image.Data);
+
+            Models.DBModels.Album album = null;
+
+            if (albumId != 0 && albumId != null)
+            {
+                album = new();
+                album = _unitOfWork.Albums.Find(album => album.AlbumId == albumId).FirstOrDefault();
+            }
+
+            try
+            {
+                Models.DBModels.Image imageModel = new Models.DBModels.Image
+                {
+                    UserId = _userManager.GetUserId(User),
+                    Album = album,
+                    //AlbumId = albumId ?? 0,// if entityframework creates id by Album, delete it, if not, then uncomment
+                    ImageSha1 = _hashGenerator.GetHash(imageFile),
+                };
+
+                _unitOfWork.Images.AddAsync(imageModel);
+
+                Models.DBModels.ImageDetail imageDetails = new Models.DBModels.ImageDetail
+                {
+                    Date = DateTime.Now,
+                    Description = image.Description,
+                    Name = image.Name,
+                    Image = imageModel,
+                    //ImageId = imageModel.ImageId // // if entityframework creates id by Image, delete it, if not, then uncomment
+                };
+
+                _unitOfWork.ImageDetails.AddAsync(imageDetails);
+
+                // relation: check if entityframework does it itself
+                //if(albumId != 0 && albumId != null) _unitOfWork.ImagesAlbums.AddAsync(
+                //    new Models.DBModels.ImageAlbum { 
+                //    AlbumsAlbumId = albumId, 
+                //    ImagesAlbumId = image.Id, 
+                //    AlbumsAlbum = album,
+                //    ImagesAlbumNavigation = imageModel
+                //});
+
+                // add to blob by hash
+                _storageContext.AddAsync(new ImageContainer(), imageFile, imageModel.ImageSha1);
+
+                return Ok();
+            }
+            catch
+            {
+                return BadRequest();
+            }
+           
+
+            
         }
     }
 }
