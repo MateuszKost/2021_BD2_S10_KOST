@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SmartCollection.DataAccess.Context;
@@ -22,19 +23,116 @@ namespace SmartCollection.Server.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IStorageContext<IStorageContainer> _storageContext;
         private readonly IHashGenerator _hashGenerator;
+        private readonly UserManager<IdentityUser> _userManager;
 
         public ImagesController(ILogger<ImagesController> logger,
             IUnitOfWork unitOfWork,
             IStorageContext<IStorageContainer> storageContext,
-            IHashGenerator hashGenerator)
+            IHashGenerator hashGenerator,
+            UserManager<IdentityUser> userManager)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _storageContext = storageContext;
             _hashGenerator = hashGenerator;
+            _userManager = userManager;
         }
 
-       [HttpGet]
+        [HttpGet]
+        [Route("all")]
+        public async Task<ImagesViewModel> GetAllImages()
+        {
+            var userId = _userManager.GetUserId(User);
+
+            // list of images from db
+            var imagesList = _unitOfWork.Images.Find(image => image.UserId.Equals(userId)).ToList();
+            List<SingleImageViewModel> imageViewModelList = new();
+
+            if(imagesList != null && imagesList.Any())
+            {
+                foreach(var image in imagesList)
+                {
+                    var imageDetails = _unitOfWork.ImageDetails.Find(details => details.ImageId == image.ImageId).FirstOrDefault();
+
+                    // get file from blob by its hash
+                    byte[] imageFile = await _storageContext.GetAsync(new ImageContainer(), image.ImageSha1);
+
+                    // get file from blob by its name
+                    //byte[] imageFile = await _storageContext.GetAsync(new ImageContainer(), imageDetails.Name);
+
+                    // get file from blob by its OriginalName
+                    //byte[] imageFile = await _storageContext.GetAsync(new ImageContainer(), imageDetails.OriginalName);
+
+                    SingleImageViewModel singleImageViewModel = new SingleImageViewModel
+                    {
+                        Id = image.ImageId,
+                        Name = imageDetails.Name,
+                        Description = imageDetails.Description,
+                        Date = imageDetails.Date.ToString(),
+                        Data = Convert.ToBase64String(imageFile, 0, imageFile.Length)
+                    };
+
+                    imageViewModelList.Add(singleImageViewModel);
+                }
+
+                return new ImagesViewModel { Images = imageViewModelList };
+            }
+
+            return null;
+        }
+
+        [HttpGet]
+        [Route("albumimages")]
+        public async Task<ImagesViewModel> GetImagesFromAlbum(int albumId)
+        {
+            var userId = _userManager.GetUserId(User);
+
+            // list of images from db, from specified album
+
+            var imageAlbums = _unitOfWork.ImagesAlbums.Find(ia => ia.AlbumsAlbumId == albumId).ToList();
+            List<SingleImageViewModel> imagesViewModelList = new();
+
+            if(imageAlbums != null && imageAlbums.Any())
+            {
+                foreach (var ia in imageAlbums)
+                {
+                    var image = _unitOfWork.Images.Find(image => image.ImageId == ia.ImagesAlbumId).FirstOrDefault();
+                    var imageDetails = _unitOfWork.ImageDetails.Find(details => details.ImageId == ia.ImagesAlbumId).FirstOrDefault();
+
+                    // get file from blob by its hash
+                    byte[] imageFile = await _storageContext.GetAsync(new ImageContainer(), image.ImageSha1);
+
+                    // get file from blob by its name
+                    //byte[] imageFile = await _storageContext.GetAsync(new ImageContainer(), imageDetails.Name);
+
+                    // get file from blob by its OriginalName
+                    //byte[] imageFile = await _storageContext.GetAsync(new ImageContainer(), imageDetails.OriginalName);
+
+                    SingleImageViewModel singleImageViewModel = new SingleImageViewModel
+                    {
+                        Id = image.ImageId,
+                        Name = imageDetails.Name,
+                        Description = imageDetails.Description,
+                        Date = imageDetails.Date.ToString(),
+                        Data = Convert.ToBase64String(imageFile, 0, imageFile.Length)
+                    };
+
+                    imagesViewModelList.Add(singleImageViewModel);
+                }
+
+                ImagesViewModel imagesViewModel = new ImagesViewModel
+                {
+                    Images = imagesViewModelList
+                };
+
+                return imagesViewModel;
+
+            }
+
+            return null;
+        }
+
+        [HttpGet]
         public async Task<ActionResult<ImagesViewModel>> Get()
         {
             //getting data from db
