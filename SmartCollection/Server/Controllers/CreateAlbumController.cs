@@ -68,9 +68,11 @@ namespace SmartCollection.Server.Controllers
                 {
                     _unitOfWork.ImagesAlbums.RemoveRange(imagesAlbums);
                 }
+
+                return Ok();
             }
 
-            return Ok();
+            return BadRequest();
         }
     }
 }
