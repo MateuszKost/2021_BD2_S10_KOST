@@ -87,6 +87,12 @@ namespace SmartCollection.Server.Controllers
         public async Task<ImagesViewModel> GetImagesFromAlbum(int albumId)
         {
             var userId = _userManager.GetUserId(User);
+            
+            if(albumId == 0)
+            {
+                var imagesModel = await GetAllImages();
+                return new ImagesViewModel { Images = imagesModel.Images };
+            }
 
             // list of images from db, from specified album
 
@@ -121,12 +127,7 @@ namespace SmartCollection.Server.Controllers
                     imagesViewModelList.Add(singleImageViewModel);
                 }
 
-                ImagesViewModel imagesViewModel = new ImagesViewModel
-                {
-                    Images = imagesViewModelList
-                };
-
-                return imagesViewModel;
+                return new ImagesViewModel { Images = imagesViewModelList };            
             }
             return null;
         }
