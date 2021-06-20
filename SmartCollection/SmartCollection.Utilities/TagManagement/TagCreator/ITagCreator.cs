@@ -8,6 +8,6 @@ namespace SmartCollection.Utilities.TagManagement.TagCreator
 {
     public interface ITagCreator
     {
-        public void AddTagsAsync(string tags);
+        public IEnumerable<string> CreateTagList(string tags);
     }
 }

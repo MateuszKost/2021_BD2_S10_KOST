@@ -10,27 +10,16 @@ namespace SmartCollection.Utilities.TagManagement.TagCreator
 {
     public class TagCreator : ITagCreator
     {
-        IUnitOfWork _unitOfWork;
-        public TagCreator(IUnitOfWork unitOfWork)
-            => _unitOfWork = unitOfWork;
-
-        private void AddAsync(string tag)
-        {
-            if (_unitOfWork.Tags.Find(p => p.Name == tag).FirstOrDefault() == null)
-            {
-                _unitOfWork.Tags.AddAsync(new Tag() { Name = tag });
-                _unitOfWork.Save();
-            }
-        }
-
-        public void AddTagsAsync(string tags)
+        public IEnumerable<string> CreateTagList(string tags)
         {
             string normTags = tags.Trim(' ').ToUpper();
 
-            IEnumerable<string> tagList = normTags.Split('#').ToList();
+            List<string> tagList = normTags.Split('#').ToList();
+            
+            tagList.Remove("");
+            
+            return tagList;
 
-            foreach (var tag in tagList)
-                AddAsync(tag);
         }
     }
 }
