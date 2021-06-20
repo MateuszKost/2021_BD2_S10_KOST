@@ -159,17 +159,6 @@ namespace SmartCollection.Server.Controllers
             return new ImagesViewModel() { Images = images };
         }
 
-        private void ImageExampleDeleteIt(byte[] myImage)
-        {
-           string myHashCode = _hashGenerator.GetHash(myImage);
-            
-            
-           _storageContext.AddAsync(new ImageContainer(), myImage, myHashCode);
-
-            if (_storageContext.GetAsync(new ImageContainer(), myHashCode) == null)
-                Console.WriteLine("Error, no image in blob");
-        }
-
         [HttpPost]
         [Route("uploadimage")]
         public async Task<IActionResult> UploadImage(SingleImageViewModel image, int? albumId)
