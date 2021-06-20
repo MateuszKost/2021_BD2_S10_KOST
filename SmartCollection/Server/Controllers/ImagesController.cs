@@ -161,16 +161,16 @@ namespace SmartCollection.Server.Controllers
 
         [HttpPost]
         [Route("uploadimage")]
-        public async Task<IActionResult> UploadImage(SingleImageViewModel image, int? albumId)
+        public async Task<IActionResult> UploadImage(SingleImageViewModel image)
         {
             byte[] imageFile = Encoding.ASCII.GetBytes(image.Data);
 
             Models.DBModels.Album album = null;
 
-            if (albumId != 0 && albumId != null)
+            if (image.AlbumId != 0 && image.AlbumId != null)
             {
                 album = new();
-                album = _unitOfWork.Albums.Find(album => album.AlbumId == albumId).FirstOrDefault();
+                album = _unitOfWork.Albums.Find(album => album.AlbumId == image.AlbumId).FirstOrDefault();
             }
 
             try
@@ -239,11 +239,11 @@ namespace SmartCollection.Server.Controllers
 
         [HttpPost] // [HttpDelete]
         [Route("deletefromalbum")]
-        public async Task<IActionResult> DeleteImageFromAlbum(DeleteImageViewModel deleteImageViewModel)
+        public async Task<IActionResult> DeleteImageFromAlbum(SingleImageViewModel image)
         {
             //check if exists
             var result = _unitOfWork.ImagesAlbums
-                .Find(ia => ia.ImagesAlbumId == deleteImageViewModel.ImageModel.Id && ia.ImagesAlbumId == deleteImageViewModel.AlbumId)
+                .Find(ia => ia.ImagesAlbumId == image.Id && ia.ImagesAlbumId == image.AlbumId)
                 .FirstOrDefault();
 
             if(result != null)

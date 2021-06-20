@@ -11,5 +11,6 @@ namespace SmartCollection.Models.ViewModels.ImagesViewModel
         public string Date { get; set; }
         public string Description { get; set; }
         public string Data { get; set; }
+        public int? AlbumId { get; set; }
     }
 }
