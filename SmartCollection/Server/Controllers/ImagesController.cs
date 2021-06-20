@@ -218,6 +218,23 @@ namespace SmartCollection.Server.Controllers
         }
 
         [HttpPost]
+        [Route("uploadimages")]
+        public async Task<IActionResult> UploadImages(ImagesViewModel images)
+        {
+            if(images != null && images.Images.Any())
+            {
+                foreach(var image in images.Images)
+                {
+                    await UploadImage(image);
+                }
+
+                return Ok();
+            }
+
+            return BadRequest();
+        }
+
+        [HttpPost]
         [Route("deleteimage")]
         public async Task<IActionResult> DeleteImage(SingleImageViewModel imageViewModel)
         {

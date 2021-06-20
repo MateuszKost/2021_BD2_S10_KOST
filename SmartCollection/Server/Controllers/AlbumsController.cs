@@ -66,5 +66,6 @@ namespace SmartCollection.Server.Controllers
 
             return albumViewModel;
         }
+
     }
 }

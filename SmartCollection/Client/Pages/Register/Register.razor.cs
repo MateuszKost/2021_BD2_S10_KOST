@@ -28,6 +28,5 @@ namespace SmartCollection.Client.Pages.Register
                 ShowErrors = true;
             }
         }
-
     }
 }

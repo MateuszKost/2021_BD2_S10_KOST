@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SmartCollection.DataAccess.RepositoryPattern;
 using SmartCollection.Models.DBModels;
+using SmartCollection.Models.ViewModels.AlbumViewModel;
 using SmartCollection.Models.ViewModels.CreateAlbumViewModel;
 using SmartCollection.Server.User;
 using SmartCollection.Utilities.AlbumCreator;
@@ -49,6 +50,25 @@ namespace SmartCollection.Server.Controllers
             }
 
             await _albumCreator.CreateAsync(model, userId);
+
+            return Ok();
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> DeleteAlbum(SingleAlbumViewModel album)
+        {
+            var result = _unitOfWork.Albums.Find(a => a.AlbumId == album.AlbumId).FirstOrDefault();
+
+            if (result != null)
+            {
+                _unitOfWork.Albums.Remove(result);
+                var imagesAlbums = _unitOfWork.ImagesAlbums.Find(ia => ia.AlbumsAlbumId == result.AlbumId).ToList();
+
+                if (imagesAlbums.Any())
+                {
+                    _unitOfWork.ImagesAlbums.RemoveRange(imagesAlbums);
+                }
+            }
 
             return Ok();
         }
