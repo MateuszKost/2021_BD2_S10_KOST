@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SmartCollection.DataAccess.RepositoryPattern;
 using SmartCollection.Models.DBModels;
 using SmartCollection.Models.ViewModels.CreateAlbumViewModel;
+using SmartCollection.Server.User;
 using SmartCollection.Utilities.AlbumCreator;
 using SmartCollection.Utilities.DatabaseInitializer;
 using System;
@@ -13,31 +14,30 @@ using System.Threading.Tasks;
 
 namespace SmartCollection.Server.Controllers
 {
-      [Authorize]
-      [Route("[controller]")]
-      [ApiController]
-      public class CreateAlbumController : Controller
-      {
-          private readonly UserManager<IdentityUser> _userManager;
-          private readonly IAlbumCreator<CreateAlbumViewModel, IUnitOfWork> _albumCreator;
-          private readonly IUnitOfWork _unitOfWork;
+    [Authorize]
+    [Route("[controller]")]
+    [ApiController]
+    public class CreateAlbumController : Controller
+    {
+        private readonly IAlbumCreator<CreateAlbumViewModel, IUnitOfWork> _albumCreator;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ICurrentUser _currentUser;
 
-          public CreateAlbumController(
-              UserManager<IdentityUser> userManager,
+        public CreateAlbumController(
+              ICurrentUser currentUser,
               IAlbumCreator<CreateAlbumViewModel, IUnitOfWork> albumCreator,
               IUnitOfWork unitOfWork)
-          {
-              _userManager = userManager;
-              _albumCreator = albumCreator;
-              _unitOfWork = unitOfWork;
-          }
+        {
+            _currentUser = currentUser;
+            _albumCreator = albumCreator;
+            _unitOfWork = unitOfWork;
+        }
 
         [HttpPost]
         [Route("")]
         public async Task<IActionResult> AddAlbum(CreateAlbumViewModel model)
         {
-            //IdentityUser user = await _userManager.FindByNameAsync(User.Identity.Name);
-            var userId = _userManager.GetUserId(User);
+            var userId = _currentUser.UserId;
             var ownedAlbums = _unitOfWork.Albums.Find(a => a.UserId.Equals(userId));
 
             foreach (var album in ownedAlbums)
@@ -52,5 +52,5 @@ namespace SmartCollection.Server.Controllers
 
             return Ok();
         }
-      }
+    }
 }

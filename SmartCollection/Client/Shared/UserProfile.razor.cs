@@ -1,61 +1,27 @@
-﻿using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
-
 
 namespace SmartCollection.Client.Shared
 {
     public partial class UserProfile
     {
-        private string Token;
-        [Parameter]
-        public string UserName { get; set; }
+        private string Name = string.Empty;
 
-        protected override async Task OnInitializedAsync()
+        protected override async Task OnInitializedAsync() => await LoadDataAsync();
+
+        private async Task LoadDataAsync()
         {
-            Token = await LocalStorage.GetItemAsync<string>("authToken");
-
-            if(!string.IsNullOrEmpty(Token))
-            {
-                var decryptedToken = new JwtSecurityToken(Token);
-                var claims = decryptedToken.Claims.ToList();
-                var underscoredUserName = claims.FirstOrDefault(claimRecord => claimRecord.Type == ClaimTypes.Name).Value;
-
-                UserName = DivideUserName(underscoredUserName);
-            }
-            else
-            {
-                UserName = null;
-            }
-
-            StateHasChanged();
+            var state = await AuthState.GetAuthenticationStateAsync();
+            if (state.User.Claims.Any())
+                Name = state.User.FindFirstValue(ClaimTypes.Name).Replace("_", " ");
         }
 
-        private string DivideUserName(string username)
+        private async Task LogoutUser()
         {
-            username = username.Replace('_', ' ');
-            return username;
-        }
-
-        private void LogoutUser()
-        {
-            AuthService.Logout();
-            UserName = null;
-            Token = null;
-            StateHasChanged();
+            await AuthService.Logout();
             NavigationManager.NavigateTo("/", true);
-        }
-
-        private void HandleNavigation(string target)
-        {
-            if (target.Equals("login"))
-                NavigationManager.NavigateTo("/login", false);
-            else
-                NavigationManager.NavigateTo("/register", false);
         }
     }
 }

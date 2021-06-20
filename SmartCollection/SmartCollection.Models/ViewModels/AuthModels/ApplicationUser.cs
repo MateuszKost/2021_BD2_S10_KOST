@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,17 +8,12 @@ using System.Threading.Tasks;
 
 namespace SmartCollection.Models.ViewModels.AuthModels
 {
-    public class ApplicationUser
+    public class ApplicationUser : IdentityUser
     {
-        [JsonProperty]
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+        
         public bool IsAuthenticated { get; set; }
-        [JsonProperty]
-        public string UserName { get; set; }
-        [JsonProperty]
-        public string Email { get; set; }
-        [JsonProperty]
-        public string Id { get; set; }
-        [JsonProperty]
-        public Dictionary<string, string> Claims { get; set; }
     }
 }

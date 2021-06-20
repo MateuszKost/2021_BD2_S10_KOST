@@ -11,3 +11,9 @@
 @using Blazored.LocalStorage;
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
+@using SmartCollection.Client.Authentication
+
+@inject ApiAuthenticationStateProvider AuthState
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+@inject IAuthService AuthService

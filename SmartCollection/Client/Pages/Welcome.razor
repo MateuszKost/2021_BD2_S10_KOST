@@ -1,5 +1,4 @@
 ﻿@page "/welcome"
-@inject NavigationManager NavManager
 
 <AuthorizeView>
     <NotAuthorized>
@@ -8,7 +7,7 @@
     </NotAuthorized>
     <Authorized>
         @{
-            NavManager.NavigateTo("/");
+            NavigationManager.NavigateTo("/");
         }
     </Authorized>
 </AuthorizeView>

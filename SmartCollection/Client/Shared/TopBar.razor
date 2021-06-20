@@ -1,7 +1,19 @@
-﻿
-<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+﻿<AuthorizeView>
+    <Authorized>
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
             <!-- Sidebar Toggle (Topbar) -->
             <SidebarCollapseButton />
             <!-- Nav Item - User Information -->
             <UserProfile />
-</nav>
+        </nav>
+    </Authorized>
+    <NotAuthorized>
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+            <!-- Sidebar Toggle (Topbar) -->
+            <SidebarCollapseButton />
+            <!-- Nav Item - User Information -->
+            <UnauthorizedUser />
+        </nav>
+    </NotAuthorized>
+</AuthorizeView>
+
