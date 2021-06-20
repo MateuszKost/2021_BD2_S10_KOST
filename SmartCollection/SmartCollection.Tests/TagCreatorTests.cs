@@ -1,6 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SmartCollection.DataAccess.RepositoryPattern;
 using SmartCollection.Utilities.TagManagement.TagCreator;
+using System;
 using System.Collections.Generic;
 
 namespace SmartCollection.Tests
@@ -9,18 +10,25 @@ namespace SmartCollection.Tests
     public class TagCreatorTests
     {
         [TestMethod]
-        public void TagCreatorTest()
+        public void TagCreatorExpectedResult()
         {
             TagCreator tagCreator = new TagCreator();
 
-            List<string> result = new List<string>(tagCreator.CreateTagList("#dog#cat#student"));
+            List<string> result = new List<string>(tagCreator.CreateTagList("  #dog#cat  #student   "));
 
             List<string> expected = new List<string>
             {"DOG","CAT","STUDENT" };
-           
-           // Assert.AreEqual(expected,result);
-          for(int i = 0;i<expected.Count;i++)
+
+            for (int i = 0; i < expected.Count; i++)
                 Assert.AreEqual(expected[i], result[i]);
+        }
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void TagCreatorNullString()
+        {
+           TagCreator tagCreator = new TagCreator();
+
+           tagCreator.CreateTagList(null);
         }
     }
 }

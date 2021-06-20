@@ -12,14 +12,17 @@ namespace SmartCollection.Utilities.TagManagement.TagCreator
     {
         public IEnumerable<string> CreateTagList(string tags)
         {
-            string normTags = tags.Trim(' ').ToUpper();
+            if (tags != null)
+            {
+                string normTags = tags.Replace(" ","").ToUpper();
 
-            List<string> tagList = normTags.Split('#').ToList();
-            
-            tagList.Remove("");
-            
-            return tagList;
+                List<string> tagList = normTags.Split('#').ToList();
 
+                tagList.Remove("");
+
+                return tagList;
+            }
+            throw new ArgumentNullException();
         }
     }
 }
