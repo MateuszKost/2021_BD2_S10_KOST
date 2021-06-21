@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
+using System.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +14,21 @@ namespace SmartCollection.Utilities.ImageConverter
 
         public async Task<string> IBrowserFileImageToBase64Async(IBrowserFile file)
         {
-            var imgFile = await file.RequestImageFileAsync("image/jpeg", 6000, 6000);
+            var contentType = file.ContentType;
+            IBrowserFile imgFile;
 
-            using System.IO.Stream fileStream = imgFile.OpenReadStream(MaxFileSize);
-            using System.IO.MemoryStream ms = new();
+            // we want only jpeg and png file
+            if (contentType.Contains("jpeg") || contentType.Contains("png"))
+            {
+                imgFile = await file.RequestImageFileAsync(contentType, 6000, 6000);
+            }
+            else
+            {
+                throw new BadImageFormatException();
+            }
+
+            using Stream fileStream = imgFile.OpenReadStream(MaxFileSize);
+            using MemoryStream ms = new();
 
             await fileStream.CopyToAsync(ms);
             var base64 = Convert.ToBase64String(ms.ToArray());
@@ -24,16 +36,14 @@ namespace SmartCollection.Utilities.ImageConverter
             return base64;
         }
 
-        public async Task<string> ImageBytesToBase64(byte[] file)
+        public string ImageBytesToBase64(byte[] file)
         {
-            // NOT IMPLEMENTED YET
-            return null;
+            return file != null ? Convert.ToBase64String(file) : null;
         }
 
         public byte[] Base64ToImage(string base64)
         {
-            // NOT IMPLEMENTED YET
-            return null;
+            return base64 != null ? Convert.FromBase64String(base64) : null;
         }
     }
 }
