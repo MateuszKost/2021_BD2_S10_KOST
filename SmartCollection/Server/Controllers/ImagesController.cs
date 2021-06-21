@@ -49,7 +49,7 @@ namespace SmartCollection.Server.Controllers
             var imagesList = _unitOfWork.Images.Find(image => image.UserId.Equals(userId)).ToList();
             List<SingleImageViewModel> imageViewModelList = new();
 
-            if(imagesList != null && imagesList.Any())
+            if(imagesList.Any())
             {
                 foreach(var image in imagesList)
                 {
@@ -70,7 +70,7 @@ namespace SmartCollection.Server.Controllers
                         Name = imageDetails.Name,
                         Description = imageDetails.Description,
                         Date = imageDetails.Date.ToString(),
-                        Data = Convert.ToBase64String(imageFile, 0, imageFile.Length)
+                        Data = Convert.ToBase64String(imageFile)
                     };
 
                     imageViewModelList.Add(singleImageViewModel);
@@ -83,15 +83,13 @@ namespace SmartCollection.Server.Controllers
         }
 
         [HttpGet]
-        [Route("albumimages")]
+        [Route("getimages/{albumId}")]
         public async Task<ImagesViewModel> GetImagesFromAlbum(int albumId)
         {
-            var userId = _userManager.GetUserId(User);
-            
-            if(albumId == 0)
+            if (albumId == 0)
             {
-                var imagesModel = await GetAllImages();
-                return new ImagesViewModel { Images = imagesModel.Images };
+                var imagesModel = await GetAllImages() ?? new ImagesViewModel();
+                return imagesModel;
             }
 
             // list of images from db, from specified album
@@ -99,7 +97,7 @@ namespace SmartCollection.Server.Controllers
             var imageAlbums = _unitOfWork.ImagesAlbums.Find(ia => ia.AlbumsAlbumId == albumId).ToList();
             List<SingleImageViewModel> imagesViewModelList = new();
 
-            if(imageAlbums != null && imageAlbums.Any())
+            if (imageAlbums.Any())
             {
                 foreach (var ia in imageAlbums)
                 {
@@ -121,18 +119,20 @@ namespace SmartCollection.Server.Controllers
                         Name = imageDetails.Name,
                         Description = imageDetails.Description,
                         Date = imageDetails.Date.ToString(),
-                        Data = Convert.ToBase64String(imageFile, 0, imageFile.Length)
+                        Data = Convert.ToBase64String(imageFile)
                     };
 
                     imagesViewModelList.Add(singleImageViewModel);
                 }
 
-                return new ImagesViewModel { Images = imagesViewModelList };            
+                return new ImagesViewModel { Images = imagesViewModelList };
             }
+
             return null;
         }
 
         [HttpGet]
+        [Route("test")]
         public async Task<ActionResult<ImagesViewModel>> Get()
         {
             //getting data from db
@@ -140,12 +140,14 @@ namespace SmartCollection.Server.Controllers
             //example view model
             List<SingleImageViewModel> images = new List<SingleImageViewModel>();
 
-            var singleImage  = new SingleImageViewModel() { 
-            Name  = "MyPhoto",
-            Date = "DateAsString",
-            Description = "This is Description"};
+            var singleImage = new SingleImageViewModel()
+            {
+                Name = "MyPhoto",
+                Date = "DateAsString",
+                Description = "This is Description"
+            };
 
-            images.Add(singleImage); 
+            images.Add(singleImage);
 
             #region _storageContext example use
             //byte[] myFile = new byte[420];

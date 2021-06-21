@@ -13,7 +13,7 @@ namespace SmartCollection.Client.Pages.Album
         private IEnumerable<SingleAlbumViewModel> albums;
         private void Navigate(int albumId)
         {
-            NavigationManager.NavigateTo("Images");
+            NavigationManager.NavigateTo("images/"+albumId);
         }
 
         protected override async Task OnInitializedAsync()

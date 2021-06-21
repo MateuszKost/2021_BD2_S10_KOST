@@ -12,8 +12,11 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using SmartCollection.Client.Authentication
+@using SmartCollection.Client.Services
+@using SmartCollection.Models.ViewModels.ImagesViewModel
 
 @inject ApiAuthenticationStateProvider AuthState
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
 @inject IAuthService AuthService
+@inject IImageService<SingleImageViewModel> ImageService

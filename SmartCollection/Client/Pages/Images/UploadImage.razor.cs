@@ -58,6 +58,7 @@ namespace SmartCollection.Client.Pages.Images
             return uri;
         }
 
+        // TODO GetAlbumNames
         List<TempAlbumModel> albums = new List<TempAlbumModel>()
         {
             new TempAlbumModel(){ Id = 1, Name = "Dogs", Brief = "Best pets", PrivacyType = "Private" },
