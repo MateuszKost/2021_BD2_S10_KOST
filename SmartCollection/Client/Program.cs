@@ -30,6 +30,7 @@ namespace SmartCollection.Client
                .AddTransient<IAuthService, AuthService>()
                .AddTransient<AuthenticationHeaderHandler>()
                .AddTransient<IImageService<Models.ViewModels.ImagesViewModel.SingleImageViewModel>, ImageService>()
+               .AddTransient<IAlbumService, AlbumService>()
                .AddHttpClient(
                    ClientName,
                    client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))

@@ -73,12 +73,11 @@
                     <div class="col-md-8 form-group text-center">
                         <label for="selectAlbum">Select target album below</label>
                         <select class="form-control" id="selectAlbum">
-                            @if (albums.Count() > 0)
+                            @if (Albums != null)
                             {
-                                <option value="0">All images</option>
-                                foreach (var album in albums)
+                                foreach (var album in Albums)
                                 {
-                                    <option value="@album.Id">@album.Name</option>
+                                    <option value="@album.AlbumId">@album.AlbumName</option>
                                 }
                             }
                             else

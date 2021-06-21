@@ -1,7 +1,12 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
+using SmartCollection.Client.Services;
+using SmartCollection.Models.ViewModels.AlbumViewModel;
+using SmartCollection.Utilities.ImageConverter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace SmartCollection.Client.Pages.Images
@@ -9,17 +14,25 @@ namespace SmartCollection.Client.Pages.Images
 
     public partial class UploadImage
     {
-        IReadOnlyList<IBrowserFile> fileList;
-        List<(string Url, string Name)> images;
+        private readonly ImageConverter imageConverter = new ImageConverter { MaxFileSize = 1024 * 1024 * 15 };
 
-        string ImageUri, ImageName;
-        int ImageCount = 0;
-        bool isLoaded = false;
-        long maxFileSize = 1024 * 1024 * 15;
+        [Parameter]
+        public IEnumerable<SingleAlbumViewModel> Albums { get; set; }
 
-        async Task LoadImage(InputFileChangeEventArgs eventArgs)
+        private IReadOnlyList<IBrowserFile> fileList;
+        private List<(string Url, string Name)> images;
+
+        private string ImageUri, ImageName;
+        private int ImageCount = 0;
+        private bool isLoaded = false;
+
+        protected override async Task OnInitializedAsync()
         {
-
+            Albums = await AlbumService.GetAlbums();
+            StateHasChanged();
+        }
+        private async Task LoadImage(InputFileChangeEventArgs eventArgs)
+        {
             if (eventArgs.FileCount > 1)
             {
                 fileList = eventArgs.GetMultipleFiles();
@@ -46,33 +59,10 @@ namespace SmartCollection.Client.Pages.Images
 
         private async Task<string> GetImageUrl(IBrowserFile file)
         {
-            var imgFile = await file.RequestImageFileAsync("image/jpeg", 6000, 6000);
-
-            using System.IO.Stream fileStream = imgFile.OpenReadStream(maxFileSize);
-            using System.IO.MemoryStream ms = new();
-
-            await fileStream.CopyToAsync(ms);
-            var convertedStream = Convert.ToBase64String(ms.ToArray());
-            var uri = "data:image/jpeg;base64," + convertedStream;
+            string base64 = await imageConverter.IBrowserFileImageToBase64Async(file);
+            string uri = "data:" + file.ContentType+ ";base64," + base64;
 
             return uri;
         }
-
-        // TODO GetAlbumNames
-        List<TempAlbumModel> albums = new List<TempAlbumModel>()
-        {
-            new TempAlbumModel(){ Id = 1, Name = "Dogs", Brief = "Best pets", PrivacyType = "Private" },
-            new TempAlbumModel(){ Id = 2, Name = "Cats", Brief = "All my kitties", PrivacyType = "Private" },
-            new TempAlbumModel(){ Id = 3,Name = "Memes", Brief = "Hehehehehe", PrivacyType = "Public" },
-            new TempAlbumModel(){ Id = 4, Name = "Wedding", Brief = "Wedding 2012", PrivacyType = "Private" }
-        };
-
-    }
-    public class TempAlbumModel
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Brief { get; set; }
-        public string PrivacyType { get; set; }
     }
 }
