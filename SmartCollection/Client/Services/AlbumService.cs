@@ -11,7 +11,7 @@ namespace SmartCollection.Client.Services
     public class AlbumService : IAlbumService
     {
         private readonly HttpClient _httpClient;
-        public IlbumService(HttpClient httpClient)
+        public AlbumService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
