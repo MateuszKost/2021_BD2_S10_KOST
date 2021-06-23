@@ -15,7 +15,6 @@ namespace SmartCollection.Client.Services
         {
             _httpClient = httpClient;
         }
-
         public async Task<IEnumerable<SingleAlbumViewModel>> GetAlbums()
         {
             var result = await _httpClient.GetFromJsonAsync<AlbumViewModel>("albums");

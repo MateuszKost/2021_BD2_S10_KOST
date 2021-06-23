@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components.Forms;
 using SmartCollection.Client.Services;
 using SmartCollection.Models.ViewModels.AlbumViewModel;
+using SmartCollection.Models.ViewModels.ImagesViewModel;
 using SmartCollection.Utilities.ImageConverter;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,10 @@ namespace SmartCollection.Client.Pages.Images
 
         [Parameter]
         public IEnumerable<SingleAlbumViewModel> Albums { get; set; }
+        [Parameter]
+        public int SelectedAlbumId { get; set; }
+
+        private ImagesViewModel imagesViewModel;
 
         private IReadOnlyList<IBrowserFile> fileList;
         private List<(string Url, string Name)> images;
@@ -63,6 +68,29 @@ namespace SmartCollection.Client.Pages.Images
             string uri = "data:" + file.ContentType+ ";base64," + base64;
 
             return uri;
+        }
+
+        /*
+         * NOT FINISHED 
+         * TODO: 
+         * - components for image: name, description, tags
+         * - onclick event on Upload button
+         * - modal component with success / error information
+         * - getting selected album from <select> field
+         * - clearing view after upload or redirect to albums
+         */
+        private async void UploadImages()
+        {
+            imagesViewModel = new();
+            var requestResult = await ImageService.UploadImages(imagesViewModel.Images);
+            if(requestResult.Succeeded)
+            {
+                Console.WriteLine("Uploaded images");
+            }
+            else
+            {
+                Console.WriteLine("Failure: " + requestResult.Errors);
+            }
         }
     }
 }

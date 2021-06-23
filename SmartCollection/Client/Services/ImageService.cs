@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Net.Http.Json;
 using System.Net.Http;
+using SmartCollection.Models.ViewModels;
 
 namespace SmartCollection.Client.Services
 {
@@ -32,11 +33,23 @@ namespace SmartCollection.Client.Services
             }
         }
 
-        public Task UploadImage(SingleImageViewModel image)
+       
+        public async Task<Result> UploadImages(IEnumerable<SingleImageViewModel> images)
         {
-
-
-            return Task.CompletedTask;
+            if(images != null)
+            {
+                ImagesViewModel imagesViewModel = new ImagesViewModel { Images = images };
+                var result = await _httpClient.PostAsJsonAsync("uploadimages", imagesViewModel);
+                if (result.IsSuccessStatusCode)
+                    return Result.Success;
+                else 
+                    return Result.Failure(new[] { "Uploading failed on server" });
+            }
+            else
+            {
+                throw new ArgumentNullException("Images cannot be empty");
+            }
+            
         }
 
         public Task DeleteImage(SingleImageViewModel image)

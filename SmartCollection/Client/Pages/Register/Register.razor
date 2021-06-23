@@ -1,4 +1,5 @@
 ﻿@page "/register"
+@layout AuthLayout
 
 <div class="container">
 
@@ -46,7 +47,7 @@
                             {
                                 <span class="text-warning">Registration failed. Error @Errors.First()</span>
                             }
-                            else
+                            else if(ShowSucceed)
                             {
                                 <span class="text-success">Registration complete. Redirecting to login page.</span>
                             }

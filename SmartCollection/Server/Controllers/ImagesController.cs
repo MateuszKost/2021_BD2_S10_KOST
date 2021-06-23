@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -8,9 +9,11 @@ using SmartCollection.Models.ViewModels.ImagesViewModel;
 using SmartCollection.StorageManager.Containers;
 using SmartCollection.StorageManager.Context;
 using SmartCollection.Utilities.HashGenerator;
+using SmartCollection.Utilities.ImageConverter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,18 +27,21 @@ namespace SmartCollection.Server.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IStorageContext<IStorageContainer> _storageContext;
         private readonly IHashGenerator _hashGenerator;
+        private readonly IImageConverter _imageConverter;
         private readonly UserManager<IdentityUser> _userManager;
 
         public ImagesController(ILogger<ImagesController> logger,
             IUnitOfWork unitOfWork,
             IStorageContext<IStorageContainer> storageContext,
             IHashGenerator hashGenerator,
+            IImageConverter imageConverter,
             UserManager<IdentityUser> userManager)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _storageContext = storageContext;
             _hashGenerator = hashGenerator;
+            _imageConverter = imageConverter;
             _userManager = userManager;
         }
 
@@ -88,12 +94,10 @@ namespace SmartCollection.Server.Controllers
         {
             if (albumId == 0)
             {
-                var imagesModel = await GetAllImages() ?? new ImagesViewModel();
-                return imagesModel;
+                return await GetAllImages() ?? new ImagesViewModel();
             }
 
             // list of images from db, from specified album
-
             var imageAlbums = _unitOfWork.ImagesAlbums.Find(ia => ia.AlbumsAlbumId == albumId).ToList();
             List<SingleImageViewModel> imagesViewModelList = new();
 
@@ -133,7 +137,7 @@ namespace SmartCollection.Server.Controllers
 
         [HttpGet]
         [Route("test")]
-        public async Task<ActionResult<ImagesViewModel>> Get()
+        public async Task<ImagesViewModel> Get()
         {
             //getting data from db
             var imageName = _unitOfWork.ImageDetails.GetAll().FirstOrDefault();
@@ -164,9 +168,9 @@ namespace SmartCollection.Server.Controllers
 
         [HttpPost]
         [Route("uploadimage")]
-        public async Task<IActionResult> UploadImage(SingleImageViewModel image)
+        public async Task<ActionResult> UploadImage(SingleImageViewModel image)
         {
-            byte[] imageFile = Encoding.ASCII.GetBytes(image.Data);
+            byte[] imageFile = _imageConverter.Base64ToImage(image.Data);
 
             Models.DBModels.Album album = null;
 
@@ -222,15 +226,15 @@ namespace SmartCollection.Server.Controllers
 
         [HttpPost]
         [Route("uploadimages")]
-        public async Task<IActionResult> UploadImages(ImagesViewModel images)
+        public async Task<IActionResult> UploadImages([FromBody]ImagesViewModel images)
         {
             if(images != null && images.Images.Any())
             {
                 foreach(var image in images.Images)
                 {
-                    await UploadImage(image);
+                    var result = await UploadImage(image) as StatusCodeResult;
+                    if (result.StatusCode == 400) return BadRequest();
                 }
-
                 return Ok();
             }
 

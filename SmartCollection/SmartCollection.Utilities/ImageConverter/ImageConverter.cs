@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SmartCollection.Utilities.ImageConverter
 {
-    public class ImageConverter : IImageConverter<IBrowserFile>
+    public class ImageConverter : IImageConverter
     {
         public long MaxFileSize { get; set; }
 
