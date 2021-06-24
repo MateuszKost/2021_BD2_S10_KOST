@@ -6,6 +6,8 @@ namespace SmartCollection.StorageManager.Containers
 {
     public interface IStorageContainer
     {
-        public string GetName();
+        public string GetBlobName();
+
+        public string GetContainerName();
     }
 }

@@ -6,9 +6,14 @@ namespace SmartCollection.StorageManager.Containers
 {
     public class ImageContainer : IStorageContainer
     {
-        public string GetName()
+        public string GetBlobName()
         {
-           return "images";
+            return "smartcollectionblob";
+        }
+
+        public string GetContainerName()
+        {
+            return "images";
         }
     }
 }
