@@ -36,7 +36,7 @@ namespace SmartCollection.StorageManager.Context
 
         public async void DeleteAsync(TContainer containter, string name)
         {
-            var container = _storage.GetBlobContainerClient(containter.GetName());
+            var container = _storage.GetBlobContainerClient(containter.GetContainerName());
 
             var blob = container.GetBlobClient(name);
 
@@ -45,7 +45,7 @@ namespace SmartCollection.StorageManager.Context
 
         public async Task<byte[]> GetAsync(TContainer containter, string name)
         {
-            var container = _storage.GetBlobContainerClient(containter.GetName());
+            var container = _storage.GetBlobContainerClient(containter.GetContainerName());
             
             var blob = container.GetBlobClient(name);
 

@@ -85,7 +85,7 @@ namespace SmartCollection.Server.Controllers
                 return new ImagesViewModel { Images = imageViewModelList };
             }
 
-            return null;
+            return new ImagesViewModel();
         }
 
         [HttpGet]
@@ -132,7 +132,7 @@ namespace SmartCollection.Server.Controllers
                 return new ImagesViewModel { Images = imagesViewModelList };
             }
 
-            return null;
+            return new ImagesViewModel();
         }
 
         [HttpGet]

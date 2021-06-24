@@ -22,8 +22,6 @@ namespace SmartCollection.Client.Pages.Images
         [Parameter]
         public int SelectedAlbumId { get; set; }
 
-        private ImagesViewModel imagesViewModel;
-
         private IReadOnlyList<IBrowserFile> fileList;
         private List<(string Url, string Name)> images;
 
@@ -31,9 +29,14 @@ namespace SmartCollection.Client.Pages.Images
         private int ImageCount = 0;
         private bool isLoaded = false;
 
+        private bool UploadSucceed;
+        private bool UploadFailed;
+        private string Error;
+
         protected override async Task OnInitializedAsync()
         {
             Albums = await AlbumService.GetAlbums();
+            SelectedAlbumId = 0;
             StateHasChanged();
         }
         private async Task LoadImage(InputFileChangeEventArgs eventArgs)
@@ -70,26 +73,59 @@ namespace SmartCollection.Client.Pages.Images
             return uri;
         }
 
+        private void OnSelect(ChangeEventArgs e)
+        {
+            SelectedAlbumId = int.Parse(e.Value.ToString());
+            Console.WriteLine(SelectedAlbumId);
+        }
         /*
          * NOT FINISHED 
          * TODO: 
          * - components for image: name, description, tags
-         * - onclick event on Upload button
+         * - onclick event on Upload button - done, should be working
          * - modal component with success / error information
-         * - getting selected album from <select> field
-         * - clearing view after upload or redirect to albums
+         * - getting selected album from <select> field - done
+         * - clearing view after upload or redirect to albums - redirect to all images done
          */
         private async void UploadImages()
         {
-            imagesViewModel = new();
-            var requestResult = await ImageService.UploadImages(imagesViewModel.Images);
+            if(fileList == null)
+            {
+                UploadFailed = true;
+                Error = "Cannot upload nothing";
+            }
+            else
+            {
+                UploadFailed = false;
+            }
+
+            List<SingleImageViewModel> imagesToUpload = new();
+
+            for(int i = 0; i < fileList.Count; i++)
+            {
+                SingleImageViewModel image = new SingleImageViewModel
+                {
+                    Name = fileList[i].Name,
+                    Data = await imageConverter.IBrowserFileImageToBase64Async(fileList[i]),
+                    Date = DateTime.Now.ToString(),
+                    AlbumId = SelectedAlbumId,
+                    Description = "Test description" // TODO DESCRIPTION FIELD
+                };
+
+                imagesToUpload.Add(image);
+            }
+            var requestResult = await ImageService.UploadImages(imagesToUpload);
+
             if(requestResult.Succeeded)
             {
                 Console.WriteLine("Uploaded images");
+                UploadSucceed = true;
             }
             else
             {
                 Console.WriteLine("Failure: " + requestResult.Errors);
+                UploadFailed = true;
+                Error = requestResult.Errors.First();
             }
         }
     }
