@@ -26,11 +26,13 @@ namespace SmartCollection.StorageManager.Context
             
             await container.CreateIfNotExistsAsync();
 
-            var blob = container.GetBlobClient(name);
+            //var blob = container.GetBlobClient(name);
 
             MemoryStream fileStream = new MemoryStream(file);
 
-            await blob.UploadAsync(fileStream);
+            //await blob.UploadAsync(fileStream);
+
+            await container.UploadBlobAsync(name, fileStream);
         }
 
         public async void DeleteAsync(TContainer containter, string name)
