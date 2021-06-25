@@ -39,7 +39,9 @@ namespace SmartCollection.Client.Services
             if(images != null)
             {
                 ImagesViewModel imagesViewModel = new ImagesViewModel { Images = images };
-                var result = await _httpClient.PostAsJsonAsync("uploadimages", imagesViewModel);
+
+                var result = await _httpClient.PostAsJsonAsync("images/uploadimages", imagesViewModel);
+
                 if (result.IsSuccessStatusCode)
                     return Result.Success;
                 else 

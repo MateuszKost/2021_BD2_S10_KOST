@@ -15,12 +15,19 @@ namespace SmartCollection.Utilities.ImageConverter
         public async Task<string> IBrowserFileImageToBase64Async(IBrowserFile file)
         {
             var contentType = file.ContentType;
-            IBrowserFile imgFile;
+            //IBrowserFile imgFile = null;
+            IBrowserFile imgFile = file;
 
             // we want only jpeg and png file
             if (contentType.Contains("jpeg") || contentType.Contains("png"))
             {
-                imgFile = await file.RequestImageFileAsync(contentType, 6000, 6000);
+        /*        try { 
+                    imgFile = await file.RequestImageFileAsync(contentType, 6000, 6000); 
+                }
+                catch (Exception ex) 
+                {
+                    var xd = ex.Message; 
+                }*/
             }
             else
             {

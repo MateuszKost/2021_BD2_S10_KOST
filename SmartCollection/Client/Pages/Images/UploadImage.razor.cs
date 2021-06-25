@@ -22,7 +22,7 @@ namespace SmartCollection.Client.Pages.Images
         [Parameter]
         public int SelectedAlbumId { get; set; }
 
-        private IReadOnlyList<IBrowserFile> fileList;
+        private List<IBrowserFile> fileList = new List<IBrowserFile>();
         private List<(string Url, string Name)> images;
 
         private string ImageUri, ImageName;
@@ -43,7 +43,7 @@ namespace SmartCollection.Client.Pages.Images
         {
             if (eventArgs.FileCount > 1)
             {
-                fileList = eventArgs.GetMultipleFiles();
+                fileList = eventArgs.GetMultipleFiles().ToList();
                 images = new List<(string, string)>();
 
                 foreach (var file in fileList)
@@ -103,7 +103,7 @@ namespace SmartCollection.Client.Pages.Images
 
             for(int i = 0; i < fileList.Count; i++)
             {
-                SingleImageViewModel image = new SingleImageViewModel
+                SingleImageViewModel image = new SingleImageViewModel()
                 {
                     Name = fileList[i].Name,
                     Data = await imageConverter.IBrowserFileImageToBase64Async(fileList[i]),

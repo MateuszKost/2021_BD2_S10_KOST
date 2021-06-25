@@ -226,7 +226,7 @@ namespace SmartCollection.Server.Controllers
 
         [HttpPost]
         [Route("uploadimages")]
-        public async Task<IActionResult> UploadImages([FromBody]ImagesViewModel images)
+        public async Task<IActionResult> UploadImages(ImagesViewModel images)
         {
             if(images != null && images.Images.Any())
             {
