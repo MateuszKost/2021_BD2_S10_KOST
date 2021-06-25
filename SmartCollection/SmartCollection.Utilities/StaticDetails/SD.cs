@@ -8,5 +8,6 @@ namespace SmartCollection.Utilities.StaticDetails
 {
     public class SD
     {
+        public const string NONE = "none";
     }
 }

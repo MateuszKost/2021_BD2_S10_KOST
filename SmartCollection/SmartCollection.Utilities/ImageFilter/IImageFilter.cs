@@ -8,6 +8,6 @@ namespace SmartCollection.Utilities.ImageFilter
 {
     public interface IImageFilter<T> where T : class
     {
-        public Task<T> FiltrAsync(string dateSortType,string tagName, string imageName); 
+        public Task<IEnumerable<T>> FilterAsync(string userId, int tagId, string imageName,DateTime dateFrom,DateTime dateTo);
     }
 }
