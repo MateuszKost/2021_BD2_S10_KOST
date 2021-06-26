@@ -14,6 +14,11 @@ namespace SmartCollection.Client.Pages.Images
         [Parameter]
         public string AlbumId { get; set; }
 
+        //[Parameter]
+        //public IEnumerable<> Tags { get; set; }
+
+        private readonly FilterImagesViewModel FilterModel = new();
+
         private IEnumerable<SingleImageViewModel> images;
 
         protected override async Task OnInitializedAsync()
@@ -22,11 +27,9 @@ namespace SmartCollection.Client.Pages.Images
             StateHasChanged();
         }
 
-        private string getPicture()
+        private void OnFilter()
         {
-            Random random = new Random();
-            string path = @"\albumPic\" + random.Next(1, 10) + ".jpg";
-            return path;
+            Console.WriteLine("Filtering called");
         }
 
     }

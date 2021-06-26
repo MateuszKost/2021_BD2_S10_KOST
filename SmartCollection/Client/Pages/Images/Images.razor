@@ -4,33 +4,50 @@
 <div class="container">
 
     <div id="filter">
-        <div class="row">
-            <div class="col-md-5 mt-1">
-                <input type="text" class="form-control" placeholder="Find your awesome picture!">
+        <EditForm Model="FilterModel" OnSubmit="OnFilter">
+            <div class="row">
+                <div class="col-md-5 mt-1">
+                    <InputText @bind-Value="FilterModel.Name" type="text" class="form-control" placeholder="Find your awesome picture!" />
+                </div>
+                <div class="d-flex col-xs-12 col-md-1 ml-2">
+                    <button type="submit" class="btn btn-outline-info btn-block align-self-center">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
             </div>
-        </div>
-        <br />
-        <br />
-        <br />
-        <div class="d-md-flex flex-md-row">
-            <div class="col-md-2 d-flex">
-                <select class="btn btn-light m-1 flex-fill">
-                    <option selected>none</option>
-                    <option value=1>name</option>
-                    <option value=2>date</option>
-                </select>
+            <div class="d-md-flex flex-md-row mt-2">
+                <p class="text-muted">Filters</p>
+                <!-- Filtering by taglist -->
+                <div class="col-md-2 d-flex">
+                    <select class="btn btn-light m-1 flex-fill">
+                        <option selected>none</option>
+                        <option value=1>Tag1</option>
+                        <option value=2>Dog</option>
+                        <option value=3>Antyhing</option>
+                        <option value=4>Test</option>
+                    </select>
+                </div>
+                <!-- End of Filtering by taglist -->
+                <!-- DateFrom filtering -->
+                <div class="col-md-2 d-flex flex-column ml-1 form-group">
+                    <label class="control-label" for="date-from">
+                        Date from
+                    </label>
+                    <InputDate id="date-from" class="form-control" @bind-Value="FilterModel.DateFrom" />
+                </div>
+                <!-- End of DateFrom filtering -->
+                <!-- DateTo filtering -->
+                <div class="col-md-2 d-flex flex-column ml-1 form-group">
+                    <label class="control-label" for="date-to">
+                        Date to
+                    </label>
+                    <InputDate id="date-to" class="form-control" @bind-Value="FilterModel.DateTo" />
+                </div>
+                <!-- End of DateTo filtering -->
             </div>
-            <div class="col-md-2 d-flex">
-                <select id="sortType" class="btn btn-light m-1 flex-fill">
-                    <option value=1>ascending</option>
-                    <option value=2>descending</option>
-                </select>
-            </div>
-        </div>
-        <br />
-        <br />
-        <br />
+        </EditForm>
     </div>
+
     <div class="d-flex flex-wrap">
         @if (images != null)
         {
@@ -53,17 +70,5 @@
         {
             <p>There is nothing to display...</p>
         }
-        @*@for (int i = 0; i < 30; i++)
-        {
-            <div class="col-lg-3 mb-1">
-                <a href="" style="text-decoration:none" class="text-black-50">
-                    <div class="col-12">
-                        <picture>
-                            <img src=@getPicture() class="rounded img-fluid img-thumbnail" style="width:100%">
-                        </picture>
-                    </div>
-                </a>
-            </div>
-        }*@
     </div>
 </div>
