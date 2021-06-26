@@ -37,5 +37,11 @@ namespace SmartCollection.Client.Pages.Images
             NavigationManager.NavigateTo("editimage/" + imageId);
         }
 
+        private async Task delete(int imageId)
+        {
+            await ImageService.DeleteImage(imageId, int.Parse(AlbumId));
+            StateHasChanged();
+        }
+
     }
 }

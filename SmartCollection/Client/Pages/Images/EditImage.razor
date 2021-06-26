@@ -11,8 +11,11 @@
     {
         var imgUrl = "data:image;base64," + image.Data;
         var imgName = image.Name;
-        var imgData = image.Date;
+        var imgDate = image.Date;
         var imgDescription = image.Description;
+        var imgData = image.Data;
+        var imgAlbumId = image.AlbumId;
+        var imgId = image.Id;
 
         <div class="picture col-md-7 col-lg-6">
             <img class="object-fit-cover" src="@imgUrl" alt="pic" /> <!-- tutaj wstaw model i zdjecie z modelu-->
@@ -21,15 +24,15 @@
         <div class="editing col-md-7 col-lg-6">
             Name:<label>"@imgName"</label><br />
             Description: <label>@imgDescription</label><br />
-            Data: <label>@imgData</label><br />
+            Data: <label>@imgDate</label><br />
             Tags: <label>"no nie ma jeszcze"</label>
             New name: <br />
             <input @bind=@nName><br />
             New description: <br />
             <input @bind="nDescription"><br />
-            New Tags: <br />
-            <input @bind="nTags"><br />
-            <button class="btn btn-primary" @onclick="(() => Save(nName, nDescription, nTags))">
+            New tags: <br />
+            <input @bind="ntagsString"><br />
+            <button class="btn btn-primary" @onclick="(() => update(image.Id, nName, image.Date, nDescription, image.Data, image.AlbumId, nTags))">
                 Save
             </button>
         </div>
