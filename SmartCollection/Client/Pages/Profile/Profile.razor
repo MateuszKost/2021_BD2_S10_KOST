@@ -1,0 +1,98 @@
+﻿@attribute [Authorize]
+@page "/profile"
+
+<section class="section-content padding-y bg">
+    <div class="container">
+
+        <div class="row">
+
+            <main class="col-md-9">
+
+                <article class="card mb-3">
+                    <div class="card-body">
+
+                        <h4 class="card-title mb-4">Account settings</h4>
+                        <EditForm Model="settings" OnValidSubmit="SubmitChangesAsync">
+
+                            <DataAnnotationsValidator />
+                            <ValidationSummary />
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Email</label>
+                                <div class="col-sm-6">
+                                    <InputText @bind-Value="loginModel.Email" type="email" class="form-control-plaintext" readonly />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">First name</label>
+                                <div class="col-sm-6">
+                                    <InputText @bind-Value="settings.FirstName" type="text" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Last name</label>
+                                <div class="col-sm-6">
+                                    <InputText @bind-Value="settings.LastName" type="text" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Old password</label>
+                                <div class="col-sm-6">
+                                    <InputText @bind-Value="settings.Password" type="password" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">New password</label>
+                                <div class="col-sm-6">
+                                    <InputText @bind-Value="settings.NewPassword" type="password" class="form-control" />
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Confirm new password</label>
+                                <div class="col-sm-6">
+                                    <InputText @bind-Value="settings.ConfirmNewPassword" type="password" class="form-control" />
+                                </div>
+                            </div>
+                            <div align="right">
+                                <button class="btn btn-primary"> Save changes </button>
+                            </div>
+                        </EditForm>
+                        <hr />
+                        <h4 class="card-title mb-4">Delete your account</h4>
+                        <h6 class="text-warning">All your details, photos and albums will be permanently deleted.</h6>
+                        <br />
+                        <EditForm Model="loginModel" OnValidSubmit="DeleteAccountAsync">
+
+                            <DataAnnotationsValidator />
+                            <ValidationSummary />
+
+                            <div class="form-group row">
+                                <label class="col-sm-2 col-form-label">Password</label>
+                                <div class="col-sm-6">
+                                    <InputText @bind-Value="loginModel.Password" type="password" class="form-control" />
+                                </div>
+                            </div>
+                            <div align="right">
+                                <button class="btn btn-danger"> Delete account </button>
+                            </div>
+                        </EditForm>
+                    </div>
+                </article>
+
+                @if (ShowErrors)
+                {
+                    <span class="text-warning">@Errors.First()</span>
+                }
+
+                @if (ShowDialog)
+                {
+                    <ModalComponent ModalTitle="Success!" OnClose="OnCloseDialog">
+                        Your settings were changed successfully! Please login.
+                    </ModalComponent>
+                }
+
+            </main>
+        </div>
+
+    </div>
+</section>

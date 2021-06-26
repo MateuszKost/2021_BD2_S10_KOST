@@ -10,6 +10,6 @@ namespace SmartCollection.Server.Identity
 
         Task<Result<LoginResult>> LoginAsync(LoginModel model);
 
-        Task<Result> ChangePasswordAsync(ChangePasswordModel model, string userId);
+        Task<Result> ChangeSettingsAsync(ChangeSettingsModel model, string userId);
     }
 }

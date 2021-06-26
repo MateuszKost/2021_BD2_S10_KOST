@@ -60,7 +60,7 @@ namespace SmartCollection.Server.Identity
             return new LoginResult { Token = token };
         }
 
-        public async Task<Result> ChangePasswordAsync(ChangePasswordModel model, string userId)
+        public async Task<Result> ChangeSettingsAsync(ChangeSettingsModel model, string userId)
         {
             var user = await userManager.FindByIdAsync(userId);
             if (user == null)
@@ -68,14 +68,23 @@ namespace SmartCollection.Server.Identity
                 return InvalidErrorMessage;
             }
 
-            var identityResult = await userManager.ChangePasswordAsync(
-                user,
-                model.Password,
-                model.NewPassword);
+            IdentityResult result = null;
 
-            var errors = identityResult.Errors.Select(e => e.Description);
+            if (!string.IsNullOrEmpty(model.Password) &&
+                !string.IsNullOrEmpty(model.NewPassword) &&
+                !string.IsNullOrEmpty(model.ConfirmNewPassword))
+            {
+                result = await userManager.ChangePasswordAsync(user, model.Password, model.NewPassword);
+            }
 
-            return identityResult.Succeeded
+            if(user.UserName.Split("_") is var dupa)
+            {
+
+            }
+
+            var errors = result.Errors.Select(e => e.Description);
+
+            return result.Succeeded
                 ? Result.Success
                 : Result.Failure(errors);
         }

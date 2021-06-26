@@ -2,19 +2,22 @@
 
 namespace SmartCollection.Models.ViewModels.AuthModels
 {
-    public class ChangePasswordModel
+    public class ChangeSettingsModel
     {
-        [Required]
+        [Required(AllowEmptyStrings = false)]
+        public string FirstName { get; set; }
+
+        [Required(AllowEmptyStrings = false)]
+        public string LastName { get; set; }
+
         [MinLength(6)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [Required]
         [MinLength(6)]
         [DataType(DataType.Password)]
         public string NewPassword { get; set; }
 
-        [Required]
         [MinLength(6)]
         [DataType(DataType.Password)]
         [Compare(nameof(NewPassword))]

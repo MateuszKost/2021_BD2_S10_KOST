@@ -1,8 +1,6 @@
 ﻿@attribute [Authorize]
 
 <ul class="navbar-nav ml-auto">
-    <div class="topbar-divider d-none d-sm-block"></div>
-
     <!-- Nav Item - User Information -->
     <li class="nav-item dropdown no-arrow">
         <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
@@ -12,13 +10,15 @@
             </span>
             <i class="bi bi-person-circle"></i>
         </a>
-        <!-- Dropdown - User Information -->
         <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
              aria-labelledby="userDropdown">
-            @*<div class="dropdown-divider"></div>*@
-            <button class="dropdown-item" @onclick="LogoutUser" data-toggle="modal" data-target="#logoutModal">
+            <NavLink class="dropdown-item" @onclick="LogoutUser" data-toggle="modal">
                 Logout
-            </button>
+            </NavLink>
+            <div class="dropdown-divider"></div>
+            <NavLink class="dropdown-item" @onclick="NavigateToProfile" data-toggle="modal">
+                Profile
+            </NavLink>
         </div>
     </li>
 </ul>

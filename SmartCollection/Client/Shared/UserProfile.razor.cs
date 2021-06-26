@@ -23,5 +23,10 @@ namespace SmartCollection.Client.Shared
             await AuthService.Logout();
             NavigationManager.NavigateTo("/");
         }
+
+        private async Task NavigateToProfile()
+        {
+            NavigationManager.NavigateTo("/profile");
+        }
     }
 }

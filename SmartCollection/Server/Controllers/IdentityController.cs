@@ -36,10 +36,10 @@ namespace SmartCollection.Server.Controllers
 
 
         [Authorize]
-        [HttpPut(nameof(ChangePassword))]
-        public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordModel model)
+        [HttpPut(nameof(ChangeSettings))]
+        public async Task<ActionResult> ChangeSettings([FromBody] ChangeSettingsModel model)
             => await identity
-                .ChangePasswordAsync(model, this.currentUser.UserId)
+                .ChangeSettingsAsync(model, currentUser.UserId)
                 .ToActionResult();
     }
 }

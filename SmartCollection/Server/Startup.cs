@@ -20,6 +20,7 @@ using SmartCollection.Server.User;
 using SmartCollection.Server.Identity;
 using SmartCollection.Utilities.ImageConverter;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace SmartCollection.Server
 {
@@ -60,19 +61,23 @@ namespace SmartCollection.Server
 
             var key = Encoding.ASCII.GetBytes(Configuration["Jwt:SecurityKey"]);
 
-            services.AddAuthentication()
-            .AddJwtBearer(bearer =>
+            services.AddAuthentication(authentication =>
             {
-                bearer.RequireHttpsMetadata = false;
-                bearer.SaveToken = true;
-                bearer.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false
-                };
-            });
+                authentication.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                authentication.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+           .AddJwtBearer(bearer =>
+           {
+               bearer.RequireHttpsMetadata = false;
+               bearer.SaveToken = true;
+               bearer.TokenValidationParameters = new TokenValidationParameters
+               {
+                   ValidateIssuerSigningKey = true,
+                   IssuerSigningKey = new SymmetricSecurityKey(key),
+                   ValidateIssuer = false,
+                   ValidateAudience = false
+               };
+           });
 
             services.AddSession();
 
