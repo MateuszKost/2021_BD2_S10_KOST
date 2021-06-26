@@ -62,7 +62,7 @@ namespace SmartCollection.Server.Controllers
                     var imageDetails = _unitOfWork.ImageDetails.Find(details => details.ImageId == image.ImageId).FirstOrDefault();
 
                     // get file from blob by its hash
-                    byte[] imageFile = await _storageContext.GetAsync(new ImageContainer(), image.ImageSha1);
+                    byte[] imageFile = await _storageContext.GetAsync(new ImageContainer(), "szladzieweczka");
 
                     // get file from blob by its name
                     //byte[] imageFile = await _storageContext.GetAsync(new ImageContainer(), imageDetails.Name);
@@ -212,7 +212,7 @@ namespace SmartCollection.Server.Controllers
                 _unitOfWork.Save();
 
                 // add to blob by hash
-                _storageContext.AddAsync(new ImageContainer(), imageFile, imageModel.ImageSha1);
+                _storageContext.AddAsync(new ImageContainer(), imageFile, "szladzieweczka");
 
                 return Ok();
             }

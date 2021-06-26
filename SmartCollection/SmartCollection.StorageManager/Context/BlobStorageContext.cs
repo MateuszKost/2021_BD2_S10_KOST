@@ -25,7 +25,7 @@ namespace SmartCollection.StorageManager.Context
             var containerClient = _storage.GetBlobContainerClient(containter.GetContainerName());
 
             // Get a reference to a blob
-            var blobClient = containerClient.GetBlobClient(containter.GetBlobName());
+            var blobClient = containerClient.GetBlobClient(name);
 
             using(var stream = new MemoryStream(file))
             {
@@ -45,21 +45,30 @@ namespace SmartCollection.StorageManager.Context
 
         public async Task<byte[]> GetAsync(TContainer containter, string name)
         {
-            var container = _storage.GetBlobContainerClient(containter.GetContainerName());
+            var containerClient = _storage.GetBlobContainerClient(containter.GetContainerName());
+
+            // Get a reference to a blob
+            var blobClient = containerClient.GetBlobClient(name);
+
+            var downloadFile = await blobClient.DownloadAsync();
+
+            return downloadFile.GetRawResponse().Content.ToArray();
+
+            //var container = _storage.GetBlobContainerClient(containter.GetContainerName());
             
-            var blob = container.GetBlobClient(name);
+            //var blob = container.GetBlobClient(name);
 
-            if (blob.Exists())
-            {
-                BlobDownloadInfo download = await blob.DownloadAsync();
+            ////if (blob.Exists())
+            ////{
+            //    BlobDownloadInfo download = await blob.DownloadAsync();
 
-                MemoryStream fileStream = new MemoryStream();
+            //    MemoryStream fileStream = new MemoryStream();
 
-                await download.Content.CopyToAsync(fileStream);
+            //    await download.Content.CopyToAsync(fileStream);
 
-                return fileStream.ToArray();
-            }
-            else return null;
+            //    return fileStream.ToArray();
+            //}
+            //else return null;
         }
     }
 }
