@@ -306,11 +306,12 @@ namespace SmartCollection.Server.Controllers
             return BadRequest();
         }
 
-        [HttpPost]
-        [Route("deleteimage")]
-        public async Task<IActionResult> DeleteImage(SingleImageViewModel imageViewModel)
+        [HttpDelete]
+        [Route("deleteimage/{imageId}")]
+        public async Task<IActionResult> DeleteImage(int imageId)
         {
-            var result = _unitOfWork.Images.Find(image => image.ImageId == imageViewModel.Id).FirstOrDefault();
+            var result = _unitOfWork.Images.Find(image => image.ImageId == imageId).FirstOrDefault();
+            // TODO DELETE TAGS !
 
             if (result != null)
             {
@@ -326,13 +327,13 @@ namespace SmartCollection.Server.Controllers
 
         }
 
-        [HttpPost] // [HttpDelete]
-        [Route("deletefromalbum")]
-        public async Task<IActionResult> DeleteImageFromAlbum(SingleImageViewModel image)
+        [HttpDelete]
+        [Route("deletefromalbum/{albumId}/{imageId}")]
+        public async Task<IActionResult> DeleteImageFromAlbum(int albumId, int imageId)
         {
             //check if exists
             var result = _unitOfWork.ImagesAlbums
-                .Find(ia => ia.ImagesAlbumId == image.Id && ia.ImagesAlbumId == image.AlbumId)
+                .Find(ia => ia.ImagesAlbumId == imageId && ia.ImagesAlbumId == albumId)
                 .FirstOrDefault();
 
             if (result != null)

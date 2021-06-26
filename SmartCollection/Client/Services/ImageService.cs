@@ -13,6 +13,7 @@ namespace SmartCollection.Client.Services
          
     {
         private readonly HttpClient _httpClient;
+        private readonly string controller = "images";
 
         public ImageService(HttpClient httpClient)
         {
@@ -21,7 +22,7 @@ namespace SmartCollection.Client.Services
 
         public async Task<IEnumerable<SingleImageViewModel>> GetImagesFromAlbum(int albumId)
         {
-            var result = await _httpClient.GetFromJsonAsync<ImagesViewModel>("images/getimages/" + albumId);
+            var result = await _httpClient.GetFromJsonAsync<ImagesViewModel>(controller + "/getimages/" + albumId);
 
             if(result.Images != null)
             {
@@ -50,7 +51,7 @@ namespace SmartCollection.Client.Services
             {
                 ImagesViewModel imagesViewModel = new ImagesViewModel { Images = images };
 
-                var result = await _httpClient.PostAsJsonAsync("images/uploadimages", imagesViewModel);
+                var result = await _httpClient.PostAsJsonAsync(controller + "/uploadimages", imagesViewModel);
 
                 if (result.IsSuccessStatusCode)
                     return Result.Success;
@@ -64,18 +65,30 @@ namespace SmartCollection.Client.Services
             
         }
 
-        public Task DeleteImage(SingleImageViewModel image)
+        public async Task<Result> DeleteImage(int imageId, int albumId)
         {
-            //TODO
-            // - optional parameter for albumId, then call API DeleteFromAlbum
-            // - no parameter - delete image from server and db - DeleteImage API
-            return Task.CompletedTask;
+            HttpResponseMessage result;
+            string targetPath;
+
+            if (albumId != 0)
+            {
+                targetPath = "/" + albumId + "/" + imageId;
+                result = await _httpClient.DeleteAsync(controller + "/deletefromalbum" + targetPath);
+            }
+            else
+            {
+                targetPath = "/" + imageId;
+                result = await _httpClient.DeleteAsync(controller + "/deleteimage" + targetPath);
+            }
+
+            return result.IsSuccessStatusCode ? Result.Success : Result.Failure(errors: new[] { result.Content.ToString() });
+
         }
 
-        public Task UpdateImage(SingleImageViewModel image)
+        public async Task<Result> UpdateImage(SingleImageViewModel image)
         {
-            //TODO
-            return Task.CompletedTask;
+            var result = await _httpClient.PostAsJsonAsync<SingleImageViewModel>(controller + "/update", image);
+            return result.IsSuccessStatusCode ? Result.Success : Result.Failure(errors: new[] { "Update failed" });
         }
 
         public async Task<SingleImageViewModel> GetImage(int id)

@@ -12,9 +12,9 @@ namespace SmartCollection.Client.Services
 
         public Task<Result> UploadImages(IEnumerable<T> images);
 
-        public Task DeleteImage(T image);
+        public Task<Result> DeleteImage(int imageId, int albumId);
 
-        public Task UpdateImage(T image);
+        public Task<Result> UpdateImage(T image);
 
         public Task<T> GetImage(int id);
 
