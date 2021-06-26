@@ -11,6 +11,8 @@ namespace SmartCollection.Client.Pages.Register
 
         public bool ShowErrors { get; set; }
 
+        public bool Success { get; set; } = false;
+
         public IEnumerable<string> Errors { get; set; }
 
         private async Task OnSubmit()
@@ -20,6 +22,7 @@ namespace SmartCollection.Client.Pages.Register
             if (result.Succeeded)
             {
                 ShowErrors = false;
+                Success = true;
                 NavigationManager.NavigateTo("/login");
             }
             else

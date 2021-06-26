@@ -10,10 +10,6 @@ using SmartCollection.DataAccess.RepositoryPattern;
 using SmartCollection.StorageManager.Containers;
 using SmartCollection.StorageManager.Context;
 using SmartCollection.StorageManager.ServiceClient;
-using Newtonsoft;
-using System.Threading.Tasks;
-using SmartCollection.Models.ViewModels.AuthModels;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using SmartCollection.Utilities.DatabaseInitializer;
@@ -27,15 +23,13 @@ namespace SmartCollection.Server
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews().AddNewtonsoftJson();
@@ -64,11 +58,7 @@ namespace SmartCollection.Server
 
             var key = Encoding.ASCII.GetBytes(Configuration["Jwt:SecurityKey"]);
 
-            services.AddAuthentication(authentication =>
-            {
-                authentication.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                authentication.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
+            services.AddAuthentication()
             .AddJwtBearer(bearer =>
             {
                 bearer.RequireHttpsMetadata = false;
@@ -80,22 +70,12 @@ namespace SmartCollection.Server
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
-            });
+            }));
+
+            services.AddSession();
 
             services.AddHttpContextAccessor();
             services.AddScoped<ICurrentUser, CurrentUser>();
-
-            //.AddFacebook(options =>
-            //{
-            //    options.AppId = Configuration["Authentication:Facebook:AppId"];
-            //    options.AppSecret = Configuration["Authentication:Facebook:AppSecret"];
-            //})
-            //.AddGoogle(options =>
-            //{
-            //    options.ClientId = Configuration["Authentication:Google:ClientId"];
-            //    options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-            //    options.CallbackPath = "/welcome";
-            //});
 
             services.AddTransient<IIdentityService, IdentityService>();
             services.AddTransient<IJwtGeneratorService, JwtGeneratorService>();
@@ -112,7 +92,7 @@ namespace SmartCollection.Server
             
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -123,17 +103,16 @@ namespace SmartCollection.Server
             else
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
-            
 
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseSession();
 
             app.UseAuthentication();
             app.UseAuthorization();

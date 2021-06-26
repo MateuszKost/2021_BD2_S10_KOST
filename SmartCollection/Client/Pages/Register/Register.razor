@@ -14,8 +14,9 @@
                             <h1 class="h4 text-gray-900 mb-4">Create an Account!</h1>
                         </div>
                         <EditForm Model="@model" OnValidSubmit="@OnSubmit" class="user">
+
                             <DataAnnotationsValidator />
-                            @*<ValidationSummary />*@
+                            <ValidationSummary />
 
                             <div class="form-group row">
                                 <div class="col-sm-6 mb-3 mb-sm-0">
@@ -46,14 +47,13 @@
                             {
                                 <span class="text-warning">Registration failed. Error @Errors.First()</span>
                             }
-                            else
+                            else if(Success)
                             {
                                 <span class="text-success">Registration complete. Redirecting to login page.</span>
                             }
                             <button type="submit" class="btn btn-primary btn-user btn-block">
                                 Register Account
                             </button>
-                            <hr>
                         </EditForm>
                         <hr>
                         <div class="text-center">

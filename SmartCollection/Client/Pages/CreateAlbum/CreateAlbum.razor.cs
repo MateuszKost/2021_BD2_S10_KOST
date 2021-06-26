@@ -27,7 +27,9 @@ namespace SmartCollection.Client.Pages.CreateAlbum
             ShowDialog = false;
 
             var jsonModel = JsonConvert.SerializeObject(_createAlbumModel);
-            var result = await Http.PostAsync("https://localhost:44368/CreateAlbum", new StringContent(jsonModel, Encoding.UTF8, "application/json"));
+            var result = await Http.PostAsync("/CreateAlbum", new StringContent(jsonModel, Encoding.UTF8, "application/json"));
+
+            
 
             if (result.IsSuccessStatusCode)
             {
