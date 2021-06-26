@@ -72,7 +72,7 @@ namespace SmartCollection.Server
                     ValidateIssuer = false,
                     ValidateAudience = false
                 };
-            }));
+            });
 
             services.AddSession();
 
