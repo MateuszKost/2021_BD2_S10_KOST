@@ -145,7 +145,8 @@ namespace SmartCollection.DataAccess.Context
 
             modelBuilder.Entity<ImageTag>(entity =>
             {
-                entity.HasNoKey();
+                //entity.HasNoKey();
+                entity.HasKey(e => new { e.TagId,e.ImageId});
 
                 entity.ToTable("images_tags");
 
