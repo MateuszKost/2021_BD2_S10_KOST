@@ -21,7 +21,7 @@ namespace SmartCollection.Client.Shared
         private async Task LogoutUser()
         {
             await AuthService.Logout();
-            NavigationManager.NavigateTo("/", true);
+            NavigationManager.NavigateTo("/");
         }
     }
 }

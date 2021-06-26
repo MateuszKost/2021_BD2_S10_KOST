@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartCollection.StorageMana
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartCollection.Utilities", "SmartCollection.Utilities\SmartCollection.Utilities.csproj", "{E1B11061-94CA-41CE-B557-7B1361FCE893}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartCollection.Tests", "SmartCollection.Tests\SmartCollection.Tests.csproj", "{A0FF2036-342F-4EA5-B0B4-532C8F5043DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartCollection.Tests", "SmartCollection.Tests\SmartCollection.Tests.csproj", "{A0FF2036-342F-4EA5-B0B4-532C8F5043DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

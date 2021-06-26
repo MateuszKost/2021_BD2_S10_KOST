@@ -10,7 +10,8 @@ namespace SmartCollection.Client.Pages.Register
         private readonly RegisterModel model = new RegisterModel();
 
         public bool ShowErrors { get; set; }
-        public bool ShowSucceed { get; set; }
+
+        public bool Success { get; set; } = false;
 
         public IEnumerable<string> Errors { get; set; }
 
@@ -21,13 +22,12 @@ namespace SmartCollection.Client.Pages.Register
             if (result.Succeeded)
             {
                 ShowErrors = false;
-                ShowSucceed = true;
+                Success = true;
                 NavigationManager.NavigateTo("/login");
             }
             else
             {
                 Errors = result.Errors;
-                ShowSucceed = false;
                 ShowErrors = true;
             }
         }
