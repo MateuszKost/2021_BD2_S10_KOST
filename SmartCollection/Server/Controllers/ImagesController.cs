@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using SmartCollection.DataAccess.Context;
 using SmartCollection.DataAccess.RepositoryPattern;
 using SmartCollection.Models.ViewModels.ImagesViewModel;
+using SmartCollection.Server.User;
 using SmartCollection.StorageManager.Containers;
 using SmartCollection.StorageManager.Context;
 using SmartCollection.Utilities.HashGenerator;
@@ -20,39 +21,37 @@ using System.Threading.Tasks;
 namespace SmartCollection.Server.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class ImagesController : ControllerBase
     {
-        private readonly ILogger<ImagesController> _logger;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IStorageContext<IStorageContainer> _storageContext;
         private readonly IHashGenerator _hashGenerator;
         private readonly IImageConverter _imageConverter;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly ICurrentUser _currentUser;
 
-        public ImagesController(ILogger<ImagesController> logger,
-            IUnitOfWork unitOfWork,
+        public ImagesController(IUnitOfWork unitOfWork,
             IStorageContext<IStorageContainer> storageContext,
             IHashGenerator hashGenerator,
             IImageConverter imageConverter,
-            UserManager<IdentityUser> userManager)
+            ICurrentUser currentUser)
         {
-            _logger = logger;
             _unitOfWork = unitOfWork;
             _storageContext = storageContext;
             _hashGenerator = hashGenerator;
             _imageConverter = imageConverter;
-            _userManager = userManager;
+            _currentUser = currentUser;
         }
 
         [HttpGet]
         [Route("all")]
         public async Task<ImagesViewModel> GetAllImages()
         {
-            var userId = _userManager.GetUserId(User);
+            var userId = _currentUser.UserId;
 
-            // list of images from db
-            var imagesList = _unitOfWork.Images.Find(image => image.UserId.Equals(userId)).ToList();
+             // list of images from db
+             var imagesList = _unitOfWork.Images.Find(image => image.UserId.Equals(userId)).ToList();
             List<SingleImageViewModel> imageViewModelList = new();
 
             if (imagesList.Any())
@@ -244,7 +243,7 @@ namespace SmartCollection.Server.Controllers
             {
                 Models.DBModels.Image imageModel = new Models.DBModels.Image
                 {
-                    UserId = _userManager.GetUserId(User),
+                    UserId = _currentUser.UserId,
                     Album = album,
                     //AlbumId = albumId ?? 0,// if entityframework creates id by Album, delete it, if not, then uncomment
                     ImageSha1 = _hashGenerator.GetHash(imageFile),

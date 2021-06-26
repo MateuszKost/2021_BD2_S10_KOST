@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SmartCollection.Models.ViewModels.ImagesViewModel;
+using SmartCollection.Models.DBModels;
 
 namespace SmartCollection.Client.Pages.Images
 {
@@ -21,25 +22,24 @@ namespace SmartCollection.Client.Pages.Images
 
         // temp edit image
 
-        string nName, nDescription, nTags;
+        string nName, nDescription, ntagsString;
+        IEnumerable<Tag> nTags;
 
-        public void Save(string nname, string ndescription, string ntags)
+        private async Task update(int imageId, string name, string date, string description, string data, int? albumId, IEnumerable<Tag> tags)
         {
-            nName = nname;
-            nDescription = ndescription;
-            nTags = ntags;
+            tags = null; // tymczasowo, aby uniknac bledu przy updatowaniu zdjecia
+
+            SingleImageViewModel image = new SingleImageViewModel {
+                Id = imageId,
+                Name = name,
+                Date = date,
+                Description = description,
+                Data = data,
+                AlbumId = albumId,
+                Tags = tags
+            };
+            await ImageService.UpdateImage(image);
+            StateHasChanged();
         }
-
-
-        TempImageModel temp = new TempImageModel() {Name = "nazwa", Description="opis", Tags="Tagi, Tagi2", URL= "/picture/monkey.jpg" };
-
-    }
-
-    public class TempImageModel
-    {
-        public string Name { get; set; }
-        public string Description { get; set; }
-        public string Tags { get; set; }
-        public string URL { get; set; }
     }
 }

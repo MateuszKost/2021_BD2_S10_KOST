@@ -72,9 +72,11 @@
                                 Tags: <label>"no nie ma jeszcze"</label>
                             </div>
                         </div>
+                        <div class="buttons">
+                            <button class="btn btn-primary" @onclick="@( () => Navigate(image.Id) )">Edit</button>
+                            <button class="btn btn-danger" @onclick="@( () => delete(image.Id))"> Delete </button>
+                        </div>
                     </a>
-                    <button class="btn btn-primary"  @onclick="@( () => Navigate(image.Id) )" >Edit</button>
-                    <button class="btn btn-danger"> Delete </button>
                 </div>
             }
         }

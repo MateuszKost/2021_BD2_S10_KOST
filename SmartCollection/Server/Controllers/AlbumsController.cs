@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SmartCollection.DataAccess.RepositoryPattern;
 using SmartCollection.Models.ViewModels.AlbumViewModel;
+using SmartCollection.Server.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,12 @@ namespace SmartCollection.Server.Controllers
     [ApiController]
     public class AlbumsController : Controller
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly ICurrentUser _currentUser;
         private readonly IUnitOfWork _unitOfWork;
-        public AlbumsController(UserManager<IdentityUser> userManager, IUnitOfWork unitOfWork)
+
+        public AlbumsController(ICurrentUser currentUser, IUnitOfWork unitOfWork)
         {
-            _userManager = userManager;
+            _currentUser = currentUser;
             _unitOfWork = unitOfWork;
         }
 
@@ -30,7 +32,7 @@ namespace SmartCollection.Server.Controllers
         [Route("")]
         public async Task<AlbumViewModel> GetAlbums()
         {
-            var userId = _userManager.GetUserId(User);
+            var userId = _currentUser.UserId;
 
             var albumList = _unitOfWork.Albums.Find(x => x.UserId.Equals(userId)).ToList();
 
