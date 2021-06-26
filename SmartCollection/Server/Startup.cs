@@ -21,6 +21,9 @@ using SmartCollection.Server.Identity;
 using SmartCollection.Utilities.ImageConverter;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using SmartCollection.Utilities.TagManagement.TagDownloader;
+using SmartCollection.Models.DBModels;
+using System.Collections.Generic;
 
 namespace SmartCollection.Server
 {
@@ -89,6 +92,7 @@ namespace SmartCollection.Server
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IImageConverter, ImageConverter>();
+            services.AddScoped<ITagDownloader<IEnumerable<Tag>>, TagDownloader>();
             
             services.AddSingleton(provider =>
             new BlobStorageServiceClient(Configuration.GetConnectionString("BlobStorage")));

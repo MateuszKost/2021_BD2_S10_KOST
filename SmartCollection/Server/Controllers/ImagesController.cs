@@ -316,6 +316,7 @@ namespace SmartCollection.Server.Controllers
             if (result != null)
             {
                 _unitOfWork.Images.Remove(result);
+                _unitOfWork.Save();
                 _storageContext.DeleteAsync(new ImageContainer(), result.ImageSha1);
                 return Ok();
             }
@@ -339,6 +340,7 @@ namespace SmartCollection.Server.Controllers
             if (result != null)
             {
                 _unitOfWork.ImagesAlbums.Remove(result);
+                _unitOfWork.Save();
                 return Ok();
             }
             else

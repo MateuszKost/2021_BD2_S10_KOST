@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
 using SmartCollection.Client.Services;
+using SmartCollection.Models.DBModels;
 using SmartCollection.Models.ViewModels.ImagesViewModel;
+using SmartCollection.Utilities.TagManagement.TagDownloader;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,8 +16,8 @@ namespace SmartCollection.Client.Pages.Images
         [Parameter]
         public string AlbumId { get; set; }
 
-        //[Parameter]
-        //public IEnumerable<> Tags { get; set; }
+        [Parameter]
+        public IEnumerable<Tag> Tags { get; set; }
 
         private readonly FilterImagesViewModel FilterModel = new();
 
@@ -36,6 +38,7 @@ namespace SmartCollection.Client.Pages.Images
         {
             NavigationManager.NavigateTo("editimage/" + imageId);
         }
+
 
     }
 }

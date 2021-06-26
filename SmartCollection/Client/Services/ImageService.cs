@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Net.Http.Json;
 using System.Net.Http;
 using SmartCollection.Models.ViewModels;
+using SmartCollection.Models.DBModels;
 
 namespace SmartCollection.Client.Services
 {
@@ -35,16 +36,15 @@ namespace SmartCollection.Client.Services
         }
 
         public async Task<IEnumerable<SingleImageViewModel>> GetFilteredImages(
-            string tagName, 
-            string imageName, 
-            DateTime dateFrom, 
-            DateTime dateTo)
+            string? tagName, 
+            string? imageName, 
+            DateTime? dateFrom, 
+            DateTime? dateTo)
         {
 
             return null;
         }
 
-       
         public async Task<Result> UploadImages(IEnumerable<SingleImageViewModel> images)
         {
             if(images != null)
