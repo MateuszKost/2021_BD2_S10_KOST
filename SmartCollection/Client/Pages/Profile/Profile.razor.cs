@@ -17,26 +17,33 @@ namespace SmartCollection.Client.Pages.Profile
 
         public bool ShowErrors { get; set; }
 
-        [Parameter]
-        public bool ShowDialog { get; set; }
-
         public IEnumerable<string> Errors { get; set; }
 
         protected override async Task OnInitializedAsync() => await LoadDataAsync();
 
         private async Task SubmitChangesAsync()
         {
-            var response = await Http.PutAsJsonAsync("changesettings", settings);
+            if(settings.FirstName.Contains(" ") ||
+               settings.LastName.Contains(" ") ||
+               settings.FirstName.Contains("_") ||
+               settings.LastName.Contains("_"))
+            {
+                Errors = new string[] { "First name or last name contains forbidden characters. " };
+                ShowErrors = true;
+                return;
+            }
+
+            var response = await Http.PutAsJsonAsync("ChangeSettings", settings);
 
             if (response.IsSuccessStatusCode)
             {
                 ShowErrors = false;
-
-                OnDialogOpen();
-
-                await AuthService.Logout();
-
-                NavigationManager.NavigateTo("/login");
+                bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", new[] { "Your settings were changed successfully!\nYou will be redirected to login page." });
+                if (confirmed)
+                {
+                    await AuthService.Logout();
+                    NavigationManager.NavigateTo("/login");
+                }
             }
             else
             {
@@ -47,6 +54,27 @@ namespace SmartCollection.Client.Pages.Profile
 
         private async Task DeleteAccountAsync()
         {
+            bool ensured = await JsRuntime.InvokeAsync<bool>("confirm", new[] { "Are you sure you want to delete yout account?\nThis is irreversible!" });
+            if (ensured)
+            {
+                var response = await Http.PostAsJsonAsync("DeleteAccount", loginModel);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    ShowErrors = false;
+                    bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", new[] { "Your account has been deleted.\nThank you for using Smart Collection!" });
+                    if (confirmed)
+                    {
+                        await AuthService.Logout();
+                        NavigationManager.NavigateTo("/");
+                    }
+                }
+                else
+                {
+                    Errors = await response.Content.ReadFromJsonAsync<string[]>();
+                    ShowErrors = true;
+                }
+            }
         }
 
         private async Task LoadDataAsync()
@@ -57,18 +85,6 @@ namespace SmartCollection.Client.Pages.Profile
             var names = user.FindFirstValue(ClaimTypes.Name).Split("_");
             settings.FirstName = names[0];
             settings.LastName = names[1];
-        }
-
-        private void OnCloseDialog()
-        {
-            ShowDialog = false;
-            StateHasChanged();
-        }
-
-        private void OnDialogOpen()
-        {
-            ShowDialog = true;
-            StateHasChanged();
         }
     }
 }

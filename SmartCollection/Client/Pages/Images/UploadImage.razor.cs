@@ -125,7 +125,7 @@ namespace SmartCollection.Client.Pages.Images
             {
                 Console.WriteLine("Failure: " + requestResult.Errors);
                 uploadFailed = true;
-                errorMessage = requestResult.Errors.First();
+                errorMessage = string.Join("\n", requestResult.Errors);
                 StateHasChanged();
             }
         }

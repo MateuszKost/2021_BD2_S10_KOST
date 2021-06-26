@@ -11,5 +11,7 @@ namespace SmartCollection.Server.Identity
         Task<Result<LoginResult>> LoginAsync(LoginModel model);
 
         Task<Result> ChangeSettingsAsync(ChangeSettingsModel model, string userId);
+
+        Task<Result> DeleteAccountAsync(LoginModel model);
     }
 }

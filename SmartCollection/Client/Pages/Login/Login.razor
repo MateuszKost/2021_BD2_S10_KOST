@@ -41,7 +41,7 @@
 
                                 @if (ShowErrors)
                                 {
-                                    <span class="text-warning">Login attempt failed. @Errors.First()</span>
+                                    <span class="text-danger">Login attempt failed. @string.Join("\n", Errors)</span>
                                 }
 
                                 <button type="submit" class="btn btn-primary btn-user btn-block">

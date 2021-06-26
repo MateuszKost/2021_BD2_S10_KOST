@@ -41,5 +41,12 @@ namespace SmartCollection.Server.Controllers
             => await identity
                 .ChangeSettingsAsync(model, currentUser.UserId)
                 .ToActionResult();
+
+        [Authorize]
+        [HttpPost(nameof(DeleteAccount))]
+        public async Task<ActionResult> DeleteAccount([FromBody] LoginModel model)
+            => await identity
+                .DeleteAccountAsync(model)
+                .ToActionResult();
     }
 }

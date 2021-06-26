@@ -1,4 +1,5 @@
 ﻿@attribute [Authorize]
+@inject IJSRuntime JsRuntime
 @page "/profile"
 
 <section class="section-content padding-y bg">
@@ -76,23 +77,16 @@
                                 <button class="btn btn-danger"> Delete account </button>
                             </div>
                         </EditForm>
+                        @if (ShowErrors)
+                        {
+                            <hr />
+                            <div align="center">
+                                <span class="text-danger">@string.Join("\n", Errors)</span>
+                            </div>
+                        }
                     </div>
                 </article>
-
-                @if (ShowErrors)
-                {
-                    <span class="text-warning">@Errors.First()</span>
-                }
-
-                @if (ShowDialog)
-                {
-                    <ModalComponent ModalTitle="Success!" OnClose="OnCloseDialog">
-                        Your settings were changed successfully! Please login.
-                    </ModalComponent>
-                }
-
             </main>
         </div>
-
     </div>
 </section>

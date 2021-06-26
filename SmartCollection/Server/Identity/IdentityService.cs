@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using SmartCollection.Models.ViewModels;
@@ -68,25 +69,57 @@ namespace SmartCollection.Server.Identity
                 return InvalidErrorMessage;
             }
 
-            IdentityResult result = null;
+            var errors = new List<string>();
+            bool success = true;
 
             if (!string.IsNullOrEmpty(model.Password) &&
                 !string.IsNullOrEmpty(model.NewPassword) &&
                 !string.IsNullOrEmpty(model.ConfirmNewPassword))
             {
-                result = await userManager.ChangePasswordAsync(user, model.Password, model.NewPassword);
+                var result = await userManager.ChangePasswordAsync(user, model.Password, model.NewPassword);
+                
+                if (!result.Succeeded)
+                {
+                    errors.AddRange(result.Errors.Select(e => e.Description));
+                    success = false;
+                }     
             }
 
-            if(user.UserName.Split("_") is var dupa)
+            if(user.UserName.Split("_") is var names &&
+                (names[0] != model.FirstName || names[1] != model.LastName))
             {
-
+                var result = await userManager.SetUserNameAsync(user, $"{model.FirstName}_{model.LastName}");
+                if (!result.Succeeded)
+                {
+                    errors.AddRange(result.Errors.Select(e => e.Description));
+                    success = false;
+                }
             }
+
+            return success ? Result.Success : Result.Failure(errors);
+        }
+
+        public async Task<Result> DeleteAccountAsync(LoginModel model)
+        {
+            var user = await userManager.FindByEmailAsync(model.Email);
+
+            if (user == null)
+            {
+                return InvalidErrorMessage;
+            }
+
+            var passwordValid = await userManager.CheckPasswordAsync(user, model.Password);
+
+            if (!passwordValid)
+            {
+                return InvalidErrorMessage;
+            }
+
+            var result = await userManager.DeleteAsync(user);
 
             var errors = result.Errors.Select(e => e.Description);
 
-            return result.Succeeded
-                ? Result.Success
-                : Result.Failure(errors);
+            return result.Succeeded ? Result.Success : Result.Failure(errors);
         }
     }
 }

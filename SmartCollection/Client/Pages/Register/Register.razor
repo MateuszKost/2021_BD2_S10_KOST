@@ -46,7 +46,7 @@
 
                             @if (ShowErrors)
                             {
-                                <span class="text-warning">Registration failed. Error @Errors.First()</span>
+                                <span class="text-danger">Registration failed. @string.Join("\n", Errors)</span>
                             }
                             else if(Success)
                             {
