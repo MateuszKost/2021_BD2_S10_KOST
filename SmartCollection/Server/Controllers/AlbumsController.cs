@@ -26,8 +26,8 @@ namespace SmartCollection.Server.Controllers
         }
 
         //[Authorize]
-        [Route("")]
         [HttpGet]
+        [Route("")]
         public async Task<AlbumViewModel> GetAlbums()
         {
             var userId = _userManager.GetUserId(User);

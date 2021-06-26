@@ -55,9 +55,9 @@ namespace SmartCollection.Server.Controllers
             var imagesList = _unitOfWork.Images.Find(image => image.UserId.Equals(userId)).ToList();
             List<SingleImageViewModel> imageViewModelList = new();
 
-            if(imagesList.Any())
+            if (imagesList.Any())
             {
-                foreach(var image in imagesList)
+                foreach (var image in imagesList)
                 {
                     var imageDetails = _unitOfWork.ImageDetails.Find(details => details.ImageId == image.ImageId).FirstOrDefault();
 
@@ -162,6 +162,34 @@ namespace SmartCollection.Server.Controllers
         }
 
         [HttpPost]
+        [Route("update")]
+        public async Task<IActionResult> UpdateImage(SingleImageViewModel imageModel)
+        {
+
+            var imageDetails = _unitOfWork.ImageDetails.Find(d => d.ImageId == imageModel.Id).First();
+
+            if (imageDetails == null) return BadRequest();
+
+            imageDetails.Name = imageModel.Name;
+            imageDetails.Description = imageModel.Description;
+            imageDetails.Date = Convert.ToDateTime(imageModel.Date);
+
+            try
+            {
+                _unitOfWork.ImageDetails.Update(imageDetails);
+                _unitOfWork.Save();
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return BadRequest();
+            }
+
+        }
+
+        [HttpPost]
         [Route("uploadimage")]
         public async Task<ActionResult> UploadImage(SingleImageViewModel image)
         {
@@ -228,9 +256,9 @@ namespace SmartCollection.Server.Controllers
         [Route("uploadimages")]
         public async Task<IActionResult> UploadImages(ImagesViewModel images)
         {
-            if(images != null && images.Images.Any())
+            if (images != null && images.Images.Any())
             {
-                foreach(var image in images.Images)
+                foreach (var image in images.Images)
                 {
                     var result = await UploadImage(image) as StatusCodeResult;
                     if (result.StatusCode == 400) return BadRequest();
@@ -247,7 +275,7 @@ namespace SmartCollection.Server.Controllers
         {
             var result = _unitOfWork.Images.Find(image => image.ImageId == imageViewModel.Id).FirstOrDefault();
 
-            if(result != null)
+            if (result != null)
             {
                 _unitOfWork.Images.Remove(result);
                 _storageContext.DeleteAsync(new ImageContainer(), result.ImageSha1);
@@ -270,7 +298,7 @@ namespace SmartCollection.Server.Controllers
                 .Find(ia => ia.ImagesAlbumId == image.Id && ia.ImagesAlbumId == image.AlbumId)
                 .FirstOrDefault();
 
-            if(result != null)
+            if (result != null)
             {
                 _unitOfWork.ImagesAlbums.Remove(result);
                 return Ok();
@@ -282,7 +310,7 @@ namespace SmartCollection.Server.Controllers
             }
         }
 
-        
+
 
     }
 }
