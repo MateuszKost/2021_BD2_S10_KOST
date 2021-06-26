@@ -32,5 +32,10 @@ namespace SmartCollection.Client.Pages.Images
             Console.WriteLine("Filtering called");
         }
 
+        private void Navigate(int imageId)
+        {
+            NavigationManager.NavigateTo("editimage/" + imageId);
+        }
+
     }
 }

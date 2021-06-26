@@ -1,12 +1,26 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Components;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using SmartCollection.Models.ViewModels.ImagesViewModel;
 
 namespace SmartCollection.Client.Pages.Images
 {
     public partial class EditImage
     {
+        [Parameter]
+        public string ImageId { get; set; }
+
+        private SingleImageViewModel image;
+        protected override async Task OnInitializedAsync()
+        {
+            image = await ImageService.GetImage(int.Parse(ImageId));
+            StateHasChanged();
+        }
+
+        // temp edit image
+
         string nName, nDescription, nTags;
 
         public void Save(string nname, string ndescription, string ntags)

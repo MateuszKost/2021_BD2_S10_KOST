@@ -78,5 +78,14 @@ namespace SmartCollection.Client.Services
             return Task.CompletedTask;
         }
 
+        public async Task<SingleImageViewModel> GetImage(int id)
+        {
+            var result = await _httpClient.GetFromJsonAsync<SingleImageViewModel>("images/getImage/" + id);
+            if (result != null)
+                return result;
+            else
+                return null;
+        }
+
     }
 }
