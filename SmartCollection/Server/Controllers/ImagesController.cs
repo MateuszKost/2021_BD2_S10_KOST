@@ -131,6 +131,43 @@ namespace SmartCollection.Server.Controllers
         }
 
         [HttpGet]
+        [Route("getimage/{id}")]
+        public async Task<SingleImageViewModel> GetImageById([FromRoute] int id)
+        {
+            var image = await _unitOfWork.Images.GetAsync(id);
+
+            if (image != null)
+            {
+                var imageDetails = _unitOfWork.ImageDetails.Find(details => details.ImageId == id).First();
+
+                if (imageDetails != null)
+                {
+                    try
+                    {
+                        var file = await _storageContext.GetAsync(new ImageContainer(), image.ImageSha1);
+                        var base64 = _imageConverter.ImageBytesToBase64(file);
+
+                        return new SingleImageViewModel()
+                        {
+                            Id = id,
+                            Name = imageDetails.Name,
+                            Description = imageDetails.Description,
+                            Date = imageDetails.Date.ToString(),
+                            Data = base64
+                        };
+
+                    }
+                    catch(Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                        return new SingleImageViewModel();
+                    }
+                }               
+            }
+            return new SingleImageViewModel();
+        }
+
+        [HttpGet]
         [Route("test")]
         public async Task<ImagesViewModel> Get()
         {
