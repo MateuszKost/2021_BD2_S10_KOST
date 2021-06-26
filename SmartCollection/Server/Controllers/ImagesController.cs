@@ -70,7 +70,7 @@ namespace SmartCollection.Server.Controllers
                     // get file from blob by its OriginalName
                     //byte[] imageFile = await _storageContext.GetAsync(new ImageContainer(), imageDetails.OriginalName);
 
-                    SingleImageViewModel singleImageViewModel = new SingleImageViewModel
+                    SingleImageViewModel singleImageViewModel = new SingleImageViewModel()
                     {
                         Id = image.ImageId,
                         Name = imageDetails.Name,
@@ -200,13 +200,16 @@ namespace SmartCollection.Server.Controllers
                 _unitOfWork.Save();
 
                 // relation: check if entityframework does it itself
-                //if(albumId != 0 && albumId != null) _unitOfWork.ImagesAlbums.AddAsync(
-                //    new Models.DBModels.ImageAlbum { 
-                //    AlbumsAlbumId = albumId, 
-                //    ImagesAlbumId = image.Id, 
-                //    AlbumsAlbum = album,
-                //    ImagesAlbumNavigation = imageModel
-                //});
+                if (album != null && album.AlbumId != 0) _unitOfWork.ImagesAlbums.AddAsync(
+                     new Models.DBModels.ImageAlbum
+                     {
+                         AlbumsAlbumId = album.AlbumId,
+                         ImagesAlbumId = image.Id,
+                         AlbumsAlbum = album,
+                         ImagesAlbumNavigation = imageModel
+                     });
+
+                _unitOfWork.Save();
 
                 // add to blob by hash
                 _storageContext.AddAsync(new ImageContainer(), imageFile, imageModel.ImageSha1);
