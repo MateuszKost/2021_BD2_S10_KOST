@@ -18,6 +18,8 @@ using SmartCollection.Utilities.AlbumCreator;
 using SmartCollection.Utilities.HashGenerator;
 using SmartCollection.Server.User;
 using SmartCollection.Server.Identity;
+using SmartCollection.Utilities.ImageConverter;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace SmartCollection.Server
 {
@@ -81,6 +83,7 @@ namespace SmartCollection.Server
             services.AddTransient<IJwtGeneratorService, JwtGeneratorService>();
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IImageConverter, ImageConverter>();
             
             services.AddSingleton(provider =>
             new BlobStorageServiceClient(Configuration.GetConnectionString("BlobStorage")));

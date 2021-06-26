@@ -1,7 +1,13 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
+﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
+using SmartCollection.Client.Services;
+using SmartCollection.Models.ViewModels.AlbumViewModel;
+using SmartCollection.Models.ViewModels.ImagesViewModel;
+using SmartCollection.Utilities.ImageConverter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace SmartCollection.Client.Pages.Images
@@ -9,69 +15,120 @@ namespace SmartCollection.Client.Pages.Images
 
     public partial class UploadImage
     {
-        IReadOnlyList<IBrowserFile> fileList;
-        List<(string Url, string Name)> images;
+        private readonly ImageConverter imageConverter = new ImageConverter { MaxFileSize = 1024 * 1024 * 15 };
 
-        string ImageUri, ImageName;
-        int ImageCount = 0;
-        bool isLoaded = false;
-        long maxFileSize = 1024 * 1024 * 15;
+        [Parameter]
+        public IEnumerable<SingleAlbumViewModel> Albums { get; set; }
+        [Parameter]
+        public int SelectedAlbumId { get; set; }
 
-        async Task LoadImage(InputFileChangeEventArgs eventArgs)
+        private List<IBrowserFile> fileList;
+        private List<(string Url, string Name)> images;
+
+        private int imageCount = 0, maxImageCount = 15;
+        private bool isLoaded = false;
+
+        private bool uploadSucceed = false, uploadFailed = false;
+        private string errorMessage;
+
+        protected override async Task OnInitializedAsync()
         {
+            Albums = await AlbumService.GetAlbums();
+            SelectedAlbumId = 0;
+            StateHasChanged();
+        }
 
-            if (eventArgs.FileCount > 1)
+        private async Task LoadImage(InputFileChangeEventArgs eventArgs)
+        {
+            isLoaded = false;
+            imageCount = 0;
+            fileList = new List<IBrowserFile>();
+            images = new List<(string, string)>();
+
+            if (eventArgs.FileCount >= 1 && eventArgs.FileCount <= maxImageCount)
             {
-                fileList = eventArgs.GetMultipleFiles();
-                images = new List<(string, string)>();
+                fileList = eventArgs.GetMultipleFiles(maximumFileCount: 15).ToList();
 
                 foreach (var file in fileList)
                 {
                     images.Add((await GetImageUrl(file), file.Name));
                 }
 
-                ImageCount = eventArgs.FileCount;
+                imageCount = eventArgs.FileCount;
                 isLoaded = true;
             }
-            else
+            else if (eventArgs.FileCount > maxImageCount)
             {
-                ImageCount = 1;
-                var file = eventArgs.File;
-                images = null;
-                ImageUri = await GetImageUrl(file);
-                ImageName = file.Name;
-                isLoaded = true;
+                errorMessage = "You can load up to " + maxImageCount.ToString() + " pictures at once.";
+                isLoaded = false;
             }
+
         }
 
         private async Task<string> GetImageUrl(IBrowserFile file)
         {
-            var imgFile = await file.RequestImageFileAsync("image/jpeg", 6000, 6000);
-
-            using System.IO.Stream fileStream = imgFile.OpenReadStream(maxFileSize);
-            using System.IO.MemoryStream ms = new();
-
-            await fileStream.CopyToAsync(ms);
-            var convertedStream = Convert.ToBase64String(ms.ToArray());
-            var uri = "data:image/jpeg;base64," + convertedStream;
+            string base64 = await imageConverter.IBrowserFileImageToBase64Async(file);
+            string uri = "data:" + file.ContentType+ ";base64," + base64;
 
             return uri;
         }
 
-        List<TempAlbumModel> albums = new List<TempAlbumModel>()
+        private void OnSelect(ChangeEventArgs e)
         {
-            new TempAlbumModel(){ Id = 1, Name = "Dogs", Brief = "Best pets", PrivacyType = "Private" },
-            new TempAlbumModel(){ Id = 2, Name = "Cats", Brief = "All my kitties", PrivacyType = "Private" },
-            new TempAlbumModel(){ Id = 3,Name = "Memes", Brief = "Hehehehehe", PrivacyType = "Public" },
-            new TempAlbumModel(){ Id = 4, Name = "Wedding", Brief = "Wedding 2012", PrivacyType = "Private" }
-        };
+            SelectedAlbumId = int.Parse(e.Value.ToString());
+            Console.WriteLine(SelectedAlbumId);
+        }
 
-    }
-    public class TempAlbumModel
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Brief { get; set; }
-        public string PrivacyType { get; set; }
+        /*
+         * NOT FINISHED 
+         * TODO: 
+         * - components for image: name, description, tags
+         * - modal component with success / error information
+         * - clearing view after upload or redirect to albums - redirect to all images done
+         */
+        private async void UploadImages()
+        {
+            if(fileList == null)
+            {
+                uploadFailed = true;
+                errorMessage = "Cannot upload nothing";
+            }
+            else
+            {
+                uploadFailed = false;
+            }
+
+            List<SingleImageViewModel> imagesToUpload = new();
+
+            foreach(var file in fileList)
+            {
+                SingleImageViewModel image = new SingleImageViewModel()
+                {
+                    Name = file.Name,
+                    Data = await imageConverter.IBrowserFileImageToBase64Async(file),
+                    Date = DateTime.Now.ToString(),
+                    AlbumId = SelectedAlbumId,//.AlbumId,
+                    Description = "Test description" // TODO DESCRIPTION FIELD
+                };
+
+                imagesToUpload.Add(image);
+            }
+
+            var requestResult = await ImageService.UploadImages(imagesToUpload);
+
+            if(requestResult.Succeeded)
+            {
+                Console.WriteLine("Uploaded images");
+                uploadSucceed = true;
+                StateHasChanged();
+            }
+            else
+            {
+                Console.WriteLine("Failure: " + requestResult.Errors);
+                uploadFailed = true;
+                errorMessage = requestResult.Errors.First();
+                StateHasChanged();
+            }
+        }
     }
 }

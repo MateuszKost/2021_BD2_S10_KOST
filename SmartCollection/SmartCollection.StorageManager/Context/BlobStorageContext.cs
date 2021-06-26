@@ -22,20 +22,21 @@ namespace SmartCollection.StorageManager.Context
 
         public async void AddAsync(TContainer containter, byte[] file, string name)
         {
-            var container = _storage.GetBlobContainerClient(containter.GetName());
-            
-            await container.CreateIfNotExistsAsync();
+            var containerClient = _storage.GetBlobContainerClient(containter.GetContainerName());
 
-            var blob = container.GetBlobClient(name);
+            // Get a reference to a blob
+            var blobClient = containerClient.GetBlobClient(name);
 
-            MemoryStream fileStream = new MemoryStream(file);
-
-            await blob.UploadAsync(fileStream);
+            using(var stream = new MemoryStream(file))
+            {
+                await blobClient.UploadAsync(stream, true);
+                stream.Close();
+            }
         }
 
         public async void DeleteAsync(TContainer containter, string name)
         {
-            var container = _storage.GetBlobContainerClient(containter.GetName());
+            var container = _storage.GetBlobContainerClient(containter.GetContainerName());
 
             var blob = container.GetBlobClient(name);
 
@@ -44,21 +45,20 @@ namespace SmartCollection.StorageManager.Context
 
         public async Task<byte[]> GetAsync(TContainer containter, string name)
         {
-            var container = _storage.GetBlobContainerClient(containter.GetName());
+            var containerClient = _storage.GetBlobContainerClient(containter.GetContainerName());
+
+            // Get a reference to a blob
+            var blobClient = containerClient.GetBlobClient(name);
+
+            BlobDownloadInfo download = await blobClient.DownloadAsync();
+
+            MemoryStream downloadFileStream = new MemoryStream();
             
-            var blob = container.GetBlobClient(name);
-
-            if (blob.Exists())
-            {
-                BlobDownloadInfo download = await blob.DownloadAsync();
-
-                MemoryStream fileStream = new MemoryStream();
-
-                await download.Content.CopyToAsync(fileStream);
-
-                return fileStream.ToArray();
-            }
-            else return null;
+            await download.Content.CopyToAsync(downloadFileStream);
+            
+            downloadFileStream.Close();
+            
+            return downloadFileStream.ToArray();
         }
     }
 }

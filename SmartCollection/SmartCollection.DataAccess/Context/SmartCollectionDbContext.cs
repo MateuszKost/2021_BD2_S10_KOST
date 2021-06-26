@@ -123,7 +123,8 @@ namespace SmartCollection.DataAccess.Context
 
             modelBuilder.Entity<ImageAlbum>(entity =>
             {
-                entity.HasNoKey();
+                //entity.HasNoKey();
+                entity.HasKey(e => new { e.ImagesAlbumId, e.AlbumsAlbumId });
 
                 entity.ToTable("images_albums");
 

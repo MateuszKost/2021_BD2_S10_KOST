@@ -6,6 +6,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 using SmartCollection.Client.Authentication;
+using SmartCollection.Client.Services;
 
 namespace SmartCollection.Client
 {
@@ -28,10 +29,13 @@ namespace SmartCollection.Client
                    .CreateClient(ClientName))
                .AddTransient<IAuthService, AuthService>()
                .AddTransient<AuthenticationHeaderHandler>()
+               .AddTransient<IImageService<Models.ViewModels.ImagesViewModel.SingleImageViewModel>, ImageService>()
+               .AddTransient<IAlbumService, AlbumService>()
                .AddHttpClient(
                    ClientName,
                    client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
                .AddHttpMessageHandler<AuthenticationHeaderHandler>();
+               
 
             await builder.Build().RunAsync();
         }

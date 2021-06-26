@@ -5,10 +5,10 @@ using System.Text;
 namespace SmartCollection.StorageManager.Containers
 {
     public class ImageContainer : IStorageContainer
-    {
-        public string GetName()
+    { 
+        public string GetContainerName()
         {
-           return "images";
+            return "images";
         }
     }
 }

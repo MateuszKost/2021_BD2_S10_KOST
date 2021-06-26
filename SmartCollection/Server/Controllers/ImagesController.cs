@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -8,9 +9,11 @@ using SmartCollection.Models.ViewModels.ImagesViewModel;
 using SmartCollection.StorageManager.Containers;
 using SmartCollection.StorageManager.Context;
 using SmartCollection.Utilities.HashGenerator;
+using SmartCollection.Utilities.ImageConverter;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -24,18 +27,21 @@ namespace SmartCollection.Server.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly IStorageContext<IStorageContainer> _storageContext;
         private readonly IHashGenerator _hashGenerator;
+        private readonly IImageConverter _imageConverter;
         private readonly UserManager<IdentityUser> _userManager;
 
         public ImagesController(ILogger<ImagesController> logger,
             IUnitOfWork unitOfWork,
             IStorageContext<IStorageContainer> storageContext,
             IHashGenerator hashGenerator,
+            IImageConverter imageConverter,
             UserManager<IdentityUser> userManager)
         {
             _logger = logger;
             _unitOfWork = unitOfWork;
             _storageContext = storageContext;
             _hashGenerator = hashGenerator;
+            _imageConverter = imageConverter;
             _userManager = userManager;
         }
 
@@ -49,7 +55,7 @@ namespace SmartCollection.Server.Controllers
             var imagesList = _unitOfWork.Images.Find(image => image.UserId.Equals(userId)).ToList();
             List<SingleImageViewModel> imageViewModelList = new();
 
-            if(imagesList != null && imagesList.Any())
+            if(imagesList.Any())
             {
                 foreach(var image in imagesList)
                 {
@@ -64,13 +70,13 @@ namespace SmartCollection.Server.Controllers
                     // get file from blob by its OriginalName
                     //byte[] imageFile = await _storageContext.GetAsync(new ImageContainer(), imageDetails.OriginalName);
 
-                    SingleImageViewModel singleImageViewModel = new SingleImageViewModel
+                    SingleImageViewModel singleImageViewModel = new SingleImageViewModel()
                     {
                         Id = image.ImageId,
                         Name = imageDetails.Name,
                         Description = imageDetails.Description,
                         Date = imageDetails.Date.ToString(),
-                        Data = Convert.ToBase64String(imageFile, 0, imageFile.Length)
+                        Data = Convert.ToBase64String(imageFile)
                     };
 
                     imageViewModelList.Add(singleImageViewModel);
@@ -79,27 +85,23 @@ namespace SmartCollection.Server.Controllers
                 return new ImagesViewModel { Images = imageViewModelList };
             }
 
-            return null;
+            return new ImagesViewModel();
         }
 
         [HttpGet]
-        [Route("albumimages")]
-        public async Task<ImagesViewModel> GetImagesFromAlbum(int albumId)
+        [Route("getimages/{albumId}")]
+        public async Task<ImagesViewModel> GetImagesFromAlbum([FromRoute] int albumId)
         {
-            var userId = _userManager.GetUserId(User);
-            
-            if(albumId == 0)
+            if (albumId == 0)
             {
-                var imagesModel = await GetAllImages();
-                return new ImagesViewModel { Images = imagesModel.Images };
+                return await GetAllImages() ?? new ImagesViewModel();
             }
 
             // list of images from db, from specified album
-
             var imageAlbums = _unitOfWork.ImagesAlbums.Find(ia => ia.AlbumsAlbumId == albumId).ToList();
             List<SingleImageViewModel> imagesViewModelList = new();
 
-            if(imageAlbums != null && imageAlbums.Any())
+            if (imageAlbums.Any())
             {
                 foreach (var ia in imageAlbums)
                 {
@@ -109,43 +111,41 @@ namespace SmartCollection.Server.Controllers
                     // get file from blob by its hash
                     byte[] imageFile = await _storageContext.GetAsync(new ImageContainer(), image.ImageSha1);
 
-                    // get file from blob by its name
-                    //byte[] imageFile = await _storageContext.GetAsync(new ImageContainer(), imageDetails.Name);
-
-                    // get file from blob by its OriginalName
-                    //byte[] imageFile = await _storageContext.GetAsync(new ImageContainer(), imageDetails.OriginalName);
-
                     SingleImageViewModel singleImageViewModel = new SingleImageViewModel
                     {
                         Id = image.ImageId,
                         Name = imageDetails.Name,
                         Description = imageDetails.Description,
                         Date = imageDetails.Date.ToString(),
-                        Data = Convert.ToBase64String(imageFile, 0, imageFile.Length)
+                        Data = Convert.ToBase64String(imageFile)
                     };
 
                     imagesViewModelList.Add(singleImageViewModel);
                 }
 
-                return new ImagesViewModel { Images = imagesViewModelList };            
+                return new ImagesViewModel { Images = imagesViewModelList };
             }
-            return null;
+
+            return new ImagesViewModel();
         }
 
         [HttpGet]
-        public async Task<ActionResult<ImagesViewModel>> Get()
+        [Route("test")]
+        public async Task<ImagesViewModel> Get()
         {
             //getting data from db
             var imageName = _unitOfWork.ImageDetails.GetAll().FirstOrDefault();
             //example view model
             List<SingleImageViewModel> images = new List<SingleImageViewModel>();
 
-            var singleImage  = new SingleImageViewModel() { 
-            Name  = "MyPhoto",
-            Date = "DateAsString",
-            Description = "This is Description"};
+            var singleImage = new SingleImageViewModel()
+            {
+                Name = "MyPhoto",
+                Date = "DateAsString",
+                Description = "This is Description"
+            };
 
-            images.Add(singleImage); 
+            images.Add(singleImage);
 
             #region _storageContext example use
             //byte[] myFile = new byte[420];
@@ -162,9 +162,9 @@ namespace SmartCollection.Server.Controllers
 
         [HttpPost]
         [Route("uploadimage")]
-        public async Task<IActionResult> UploadImage(SingleImageViewModel image)
+        public async Task<ActionResult> UploadImage(SingleImageViewModel image)
         {
-            byte[] imageFile = Encoding.ASCII.GetBytes(image.Data);
+            byte[] imageFile = _imageConverter.Base64ToImage(image.Data);
 
             Models.DBModels.Album album = null;
 
@@ -185,6 +185,7 @@ namespace SmartCollection.Server.Controllers
                 };
 
                 _unitOfWork.Images.AddAsync(imageModel);
+                _unitOfWork.Save();
 
                 Models.DBModels.ImageDetail imageDetails = new Models.DBModels.ImageDetail
                 {
@@ -196,15 +197,19 @@ namespace SmartCollection.Server.Controllers
                 };
 
                 _unitOfWork.ImageDetails.AddAsync(imageDetails);
+                _unitOfWork.Save();
 
                 // relation: check if entityframework does it itself
-                //if(albumId != 0 && albumId != null) _unitOfWork.ImagesAlbums.AddAsync(
-                //    new Models.DBModels.ImageAlbum { 
-                //    AlbumsAlbumId = albumId, 
-                //    ImagesAlbumId = image.Id, 
-                //    AlbumsAlbum = album,
-                //    ImagesAlbumNavigation = imageModel
-                //});
+                if (album != null && album.AlbumId != 0) _unitOfWork.ImagesAlbums.AddAsync(
+                     new Models.DBModels.ImageAlbum
+                     {
+                         AlbumsAlbumId = album.AlbumId,
+                         ImagesAlbumId = image.Id,
+                         AlbumsAlbum = album,
+                         ImagesAlbumNavigation = imageModel
+                     });
+
+                _unitOfWork.Save();
 
                 // add to blob by hash
                 _storageContext.AddAsync(new ImageContainer(), imageFile, imageModel.ImageSha1);
@@ -226,9 +231,9 @@ namespace SmartCollection.Server.Controllers
             {
                 foreach(var image in images.Images)
                 {
-                    await UploadImage(image);
+                    var result = await UploadImage(image) as StatusCodeResult;
+                    if (result.StatusCode == 400) return BadRequest();
                 }
-
                 return Ok();
             }
 

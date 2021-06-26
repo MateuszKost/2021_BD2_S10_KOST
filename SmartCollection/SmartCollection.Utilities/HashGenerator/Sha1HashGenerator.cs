@@ -11,12 +11,15 @@ namespace SmartCollection.Utilities.HashGenerator
     {
         public string GetHash(byte[] file)
         {
-            SHA1 sha1 = SHA1.Create();
-            byte[] hashBytes = sha1.ComputeHash(file);
-            string hash = BitConverter.ToString(hashBytes);
-            //string hash = BitConverter.ToString(hashBytes).Replace("-", String.Empty);
-            
-            return hash;
+            if (file != null)
+            {
+                SHA1 sha1 = SHA1.Create();
+                byte[] hashBytes = sha1.ComputeHash(file);
+                string hash = BitConverter.ToString(hashBytes).Replace("-", String.Empty);
+
+                return hash;
+            }
+            throw new ArgumentNullException();
         }
     }
 }

@@ -28,7 +28,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var data = await Http.GetFromJsonAsync<ImagesViewModel>("images");
+        var data = await Http.GetFromJsonAsync<ImagesViewModel>("images/test");
         model = data.Images.ToList();
     }
 }
