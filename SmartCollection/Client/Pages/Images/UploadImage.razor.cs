@@ -62,7 +62,6 @@ namespace SmartCollection.Client.Pages.Images
                 errorMessage = "You can load up to " + maxImageCount.ToString() + " pictures at once.";
                 isLoaded = false;
             }
-
         }
 
         private async Task<string> GetImageUrl(IBrowserFile file)
@@ -107,8 +106,8 @@ namespace SmartCollection.Client.Pages.Images
                     Name = file.Name,
                     Data = await imageConverter.IBrowserFileImageToBase64Async(file),
                     Date = DateTime.Now.ToString(),
-                    AlbumId = SelectedAlbumId,//.AlbumId,
-                    Description = "Test description" // TODO DESCRIPTION FIELD
+                    AlbumId = SelectedAlbumId,
+                    Description = "Describe your picture"
                 };
 
                 imagesToUpload.Add(image);

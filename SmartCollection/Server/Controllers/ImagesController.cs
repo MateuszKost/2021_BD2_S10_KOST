@@ -64,12 +64,6 @@ namespace SmartCollection.Server.Controllers
                     // get file from blob by its hash
                     byte[] imageFile = await _storageContext.GetAsync(new ImageContainer(), image.ImageSha1);
 
-                    // get file from blob by its name
-                    //byte[] imageFile = await _storageContext.GetAsync(new ImageContainer(), imageDetails.Name);
-
-                    // get file from blob by its OriginalName
-                    //byte[] imageFile = await _storageContext.GetAsync(new ImageContainer(), imageDetails.OriginalName);
-
                     SingleImageViewModel singleImageViewModel = new SingleImageViewModel()
                     {
                         Id = image.ImageId,
@@ -125,8 +119,15 @@ namespace SmartCollection.Server.Controllers
 
                 return new ImagesViewModel { Images = imagesViewModelList };
             }
-
             return new ImagesViewModel();
+        }
+
+        [HttpGet]
+        [Route("filter")]
+        public async Task<IActionResult> FilterImages(FilterImagesViewModel filterModel)
+        {
+
+            return Ok();
         }
 
         [HttpGet]
@@ -280,6 +281,8 @@ namespace SmartCollection.Server.Controllers
                 return BadRequest();
             }
         }
+
+        
 
     }
 }

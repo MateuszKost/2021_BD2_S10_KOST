@@ -33,6 +33,16 @@ namespace SmartCollection.Client.Services
             }
         }
 
+        public async Task<IEnumerable<SingleImageViewModel>> GetFilteredImages(
+            string tagName, 
+            string imageName, 
+            DateTime dateFrom, 
+            DateTime dateTo)
+        {
+
+            return null;
+        }
+
        
         public async Task<Result> UploadImages(IEnumerable<SingleImageViewModel> images)
         {
@@ -56,11 +66,15 @@ namespace SmartCollection.Client.Services
 
         public Task DeleteImage(SingleImageViewModel image)
         {
+            //TODO
+            // - optional parameter for albumId, then call API DeleteFromAlbum
+            // - no parameter - delete image from server and db - DeleteImage API
             return Task.CompletedTask;
         }
 
         public Task UpdateImage(SingleImageViewModel image)
         {
+            //TODO
             return Task.CompletedTask;
         }
 
