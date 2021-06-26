@@ -50,25 +50,15 @@ namespace SmartCollection.StorageManager.Context
             // Get a reference to a blob
             var blobClient = containerClient.GetBlobClient(name);
 
-            var downloadFile = await blobClient.DownloadAsync();
+            BlobDownloadInfo download = await blobClient.DownloadAsync();
 
-            return downloadFile.GetRawResponse().Content.ToArray();
-
-            //var container = _storage.GetBlobContainerClient(containter.GetContainerName());
+            MemoryStream downloadFileStream = new MemoryStream();
             
-            //var blob = container.GetBlobClient(name);
-
-            ////if (blob.Exists())
-            ////{
-            //    BlobDownloadInfo download = await blob.DownloadAsync();
-
-            //    MemoryStream fileStream = new MemoryStream();
-
-            //    await download.Content.CopyToAsync(fileStream);
-
-            //    return fileStream.ToArray();
-            //}
-            //else return null;
+            await download.Content.CopyToAsync(downloadFileStream);
+            
+            downloadFileStream.Close();
+            
+            return downloadFileStream.ToArray();
         }
     }
 }
