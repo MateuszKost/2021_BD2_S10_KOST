@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using static System.Net.WebRequestMethods;
 
 namespace SmartCollection.Client.Pages.Album
 {

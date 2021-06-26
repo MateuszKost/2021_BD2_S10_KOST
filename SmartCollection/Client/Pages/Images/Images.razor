@@ -54,15 +54,27 @@
             foreach (var image in images)
             {
                 var imgUrl = "data:image;base64," + image.Data;
+                var imgName = image.Name;
+                var imgData = image.Date;
+                var imgDescription = image.Description;
 
-                <div class="col-lg-3 mb-1">
-                    <a href="" style="text-decoration:none" class="text-black-50">
+
+                <div class="pic col-lg-3 mb-1">
+                    <a style="text-decoration:none" class="text-black-50">
                         <div class="col-12">
                             <picture>
                                 <img src="@imgUrl" class="rounded img-fluid img-thumbnail" style="width:100%">
                             </picture>
+                            <div class="information">
+                                Name: <label>"@imgName"</label><br />
+                                Description: <label>@imgDescription</label><br />
+                                Data: <label>@imgData</label><br />
+                                Tags: <label>"no nie ma jeszcze"</label>
+                            </div>
                         </div>
                     </a>
+                    <button class="btn btn-primary"  @onclick="@( () => Navigate(image.Id) )" >Edit</button>
+                    <button class="btn btn-danger"> Delete </button>
                 </div>
             }
         }

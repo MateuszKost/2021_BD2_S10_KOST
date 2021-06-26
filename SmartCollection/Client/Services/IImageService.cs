@@ -16,5 +16,7 @@ namespace SmartCollection.Client.Services
 
         public Task UpdateImage(T image);
 
+        public Task<T> GetImage(int id);
+
     }
 }

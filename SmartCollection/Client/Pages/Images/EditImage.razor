@@ -1,26 +1,38 @@
 ﻿@page "/editimage"
+@page "/editimage/{ImageId}"
 
 <h1 id="title"> Editing Image </h1>
 
 <div class="container">
 
-    <div class="picture col-md-7 col-lg-6">
-        <img class="object-fit-cover" src="@temp.URL" alt="pic"/> <!-- tutaj wstaw model i zdjecie z modelu-->
-    </div>
-    
-    <div class="editing col-md-7 col-lg-6">
-        Name: <label>@temp.Name</label>
-        <span asp-validation-for="@temp.Name" class="text-danger"></span><br />
-        Description: <label>@temp.Description</label><br />
-        Tags: <label>@temp.Tags</label><br /><br />
-        New name: <br />
-        <input @bind=@nName><br />
-        New description: <br />
-        <input @bind="nDescription"><br />
-        New Tags: <br />
-        <input @bind="nTags"><br />
-        <button class="btn btn-primary" @onclick="(() => Save(nName, nDescription, nTags))"> Edit
-        </button>
-    </div>
+
+
+    @if (image != null)
+    {
+        var imgUrl = "data:image;base64," + image.Data;
+        var imgName = image.Name;
+        var imgData = image.Date;
+        var imgDescription = image.Description;
+
+        <div class="picture col-md-7 col-lg-6">
+            <img class="object-fit-cover" src="@imgUrl" alt="pic" /> <!-- tutaj wstaw model i zdjecie z modelu-->
+        </div>
+
+        <div class="editing col-md-7 col-lg-6">
+            Name:<label>"@imgName"</label><br />
+            Description: <label>@imgDescription</label><br />
+            Data: <label>@imgData</label><br />
+            Tags: <label>"no nie ma jeszcze"</label>
+            New name: <br />
+            <input @bind=@nName><br />
+            New description: <br />
+            <input @bind="nDescription"><br />
+            New Tags: <br />
+            <input @bind="nTags"><br />
+            <button class="btn btn-primary" @onclick="(() => Save(nName, nDescription, nTags))">
+                Save
+            </button>
+        </div>
+    }
 
 </div>
