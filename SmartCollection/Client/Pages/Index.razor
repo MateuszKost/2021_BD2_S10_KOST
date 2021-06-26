@@ -9,26 +9,5 @@
     <Authorized>
         <h4 class="display-4">Hello again!</h4>
         <p>Below is example of database connection.</p>
-
-        @if (model != null)
-        {
-            <br />
-            <div class="col">
-                <p>@model.FirstOrDefault().Name</p>
-                <p>@model.FirstOrDefault().Description</p>
-                <p>@model.FirstOrDefault().Date</p>
-            </div>
-        }
     </Authorized>
 </AuthorizeView>
-
-@code {
-
-    List<SingleImageViewModel> model;
-
-    protected override async Task OnInitializedAsync()
-    {
-        var data = await Http.GetFromJsonAsync<ImagesViewModel>("images/test");
-        model = data.Images.ToList();
-    }
-}

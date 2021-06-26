@@ -34,13 +34,14 @@ namespace SmartCollection.StorageManager.Context
             }
         }
 
-        public async void DeleteAsync(TContainer containter, string name)
+        public async void DeleteAsync(TContainer containter, IEnumerable<string> names)
         {
-            var container = _storage.GetBlobContainerClient(containter.GetContainerName());
+            var containerClient = _storage.GetBlobContainerClient(containter.GetContainerName());
 
-            var blob = container.GetBlobClient(name);
-
-            await blob.DeleteIfExistsAsync();
+            foreach(var name in names)
+            {
+                await containerClient.DeleteBlobIfExistsAsync(name, snapshotsOption: DeleteSnapshotsOption.IncludeSnapshots);
+            }
         }
 
         public async Task<byte[]> GetAsync(TContainer containter, string name)
