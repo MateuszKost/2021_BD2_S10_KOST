@@ -8,25 +8,25 @@
             Upload One or More of Your Pictures!
         </h1>
     </div>
-
+    <!-- Image display section -->
     <div class="row">
-        
+
         <div class="mx-auto">
 
             @if (isLoaded)
             {
-                @if (ImageCount == 1)
+                @if (imageCount == 1)
                 {
                     <div class="h-75">
                         <div class="col-12 col-lg-6 card mb-3 mx-auto">
-                            <img class="card-img-top h-100" src="@ImageUri" alt="Card image cap">
+                            <img class="card-img-top h-100" src="@images.First().Url" alt="Card image cap">
                             <div class="card-body">
-                                <h5 class="card-title">@ImageName</h5>
+                                <h5 class="card-title">@images.First().Name</h5>
                             </div>
                         </div>
                     </div>
                 }
-                else
+                else if (imageCount > 1 && imageCount <= maxImageCount)
                 {
                     <div class="row h-50">
                         @foreach (var image in images)
@@ -49,30 +49,52 @@
             {
                 <div class="row">
                     <div class="col-12 mx-auto py-5 text-center">
-                        <p>There is no image</p>
+                        <p>@(errorMessage != null ? @errorMessage : "Select image below.")</p>
                     </div>
                 </div>
             }
 
         </div>
     </div>
-
+    <!-- End of Image display section -->
+    <!-- Image load button section -->
     <div class="row">
         <div class="col-6 mx-auto pb-5">
             <div class="default-input-area d-flex justify-content-center">
-                <InputFile OnChange="LoadImage" accept="image/jpeg, image/png" multiple/>
+                <InputFile OnChange="LoadImage" accept="image/jpeg, image/png" multiple />
             </div>
         </div>
     </div>
-
+    <!-- End of Image load button section -->
+    <!-- Upload form section -->
     <div class="col-12">
-        <!-- TODO FORM jako EditForm + binding do modelu-->
-        <form>
+
+        <!-- Error/Success message -->
+        @if (uploadFailed)
+        {
             <div class="row justify-content-center mb-5">
+                <span class="text-warning">@errorMessage</span>
+            </div>
+        }
+        else if (uploadSucceed)
+        {
+            <div class="row justify-content-center mb-5">
+                <span class="text-success">Pictures uploaded!</span>
+            </div>
+            Task.Delay(1000);
+            NavigationManager.NavigateTo("images/getimages/0");
+        }
+        <!-- End of Error/Success message -->
+
+        <form @onsubmit="UploadImages" method="post">
+            <div class="row justify-content-center mb-5">
+
                 <div class="col-sm-12 col-md-4">
                     <div class="col-md-8 form-group text-center">
+
                         <label for="selectAlbum">Select target album below</label>
                         <select @onchange="OnSelect" class="form-control" id="selectAlbum">
+
                             @if (Albums != null)
                             {
                                 foreach (var album in Albums)
@@ -87,23 +109,18 @@
                         </select>
                     </div>
                 </div>
+
                 <div class="d-flex col-sm-6 col-md-2">
-                    <button type="submit" @onclick="@( () => UploadImages() )" class="btn btn-outline-info btn-block align-self-center">
+                    <button type="submit" class="btn btn-outline-info btn-block align-self-center">
                         <i class="bi bi-cloud-upload"></i><span class="px-3">Upload</span>
                     </button>
                 </div>
-                @if (UploadFailed)
-                {
-                    <span class="text-warning">@Error</span>
-                }
-                else if (UploadSucceed)
-                {
-                    <span class="text-success">Pictures uploaded!</span>
-                    Task.Delay(1000);
-                    NavigationManager.NavigateTo("images/0");
-                }
+
+
             </div>
         </form>
+
     </div>
-</div>
+    <!-- End of upload form section -->
+    </div>
 

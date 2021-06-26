@@ -90,7 +90,7 @@ namespace SmartCollection.Server.Controllers
 
         [HttpGet]
         [Route("getimages/{albumId}")]
-        public async Task<ImagesViewModel> GetImagesFromAlbum(int albumId)
+        public async Task<ImagesViewModel> GetImagesFromAlbum([FromRoute] int albumId)
         {
             if (albumId == 0)
             {
@@ -110,12 +110,6 @@ namespace SmartCollection.Server.Controllers
 
                     // get file from blob by its hash
                     byte[] imageFile = await _storageContext.GetAsync(new ImageContainer(), image.ImageSha1);
-
-                    // get file from blob by its name
-                    //byte[] imageFile = await _storageContext.GetAsync(new ImageContainer(), imageDetails.Name);
-
-                    // get file from blob by its OriginalName
-                    //byte[] imageFile = await _storageContext.GetAsync(new ImageContainer(), imageDetails.OriginalName);
 
                     SingleImageViewModel singleImageViewModel = new SingleImageViewModel
                     {
@@ -191,6 +185,7 @@ namespace SmartCollection.Server.Controllers
                 };
 
                 _unitOfWork.Images.AddAsync(imageModel);
+                _unitOfWork.Save();
 
                 Models.DBModels.ImageDetail imageDetails = new Models.DBModels.ImageDetail
                 {
@@ -202,6 +197,7 @@ namespace SmartCollection.Server.Controllers
                 };
 
                 _unitOfWork.ImageDetails.AddAsync(imageDetails);
+                _unitOfWork.Save();
 
                 // relation: check if entityframework does it itself
                 //if(albumId != 0 && albumId != null) _unitOfWork.ImagesAlbums.AddAsync(
