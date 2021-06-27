@@ -66,7 +66,7 @@ namespace SmartCollection.Client.Pages.Images
 
         private string GetImageUrl(IBrowserFile file)
         {
-            string base64 = imageConverter.IBrowserFileImageToBase64Async(file);
+            string base64 = imageConverter.IBrowserFileImageToBase64Async(file).Result;
             string uri = "data:" + file.ContentType+ ";base64," + base64;
 
             return uri;
@@ -104,7 +104,7 @@ namespace SmartCollection.Client.Pages.Images
                 SingleImageViewModel image = new SingleImageViewModel()
                 {
                     Name = file.Name,
-                    Data = imageConverter.IBrowserFileImageToBase64Async(file),
+                    Data = imageConverter.IBrowserFileImageToBase64Async(file).Result,
                     Date = DateTime.Now.ToString(),
                     AlbumId = SelectedAlbumId,
                     Description = "Describe your picture"

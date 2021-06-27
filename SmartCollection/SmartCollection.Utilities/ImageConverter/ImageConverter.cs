@@ -10,7 +10,7 @@ namespace SmartCollection.Utilities.ImageConverter
     {
         public long MaxFileSize { get; set; }
 
-        public string IBrowserFileImageToBase64Async(IBrowserFile file)
+        public async Task<string> IBrowserFileImageToBase64Async(IBrowserFile file)
         {
             var contentType = file.ContentType;
 
@@ -19,7 +19,7 @@ namespace SmartCollection.Utilities.ImageConverter
             {
                 using Stream fileStream = file.OpenReadStream(MaxFileSize);
                 using var ms = new MemoryStream();
-                fileStream.CopyTo(ms);
+                await fileStream.CopyToAsync(ms);
                 return Convert.ToBase64String(ms.ToArray());
             }
             else
