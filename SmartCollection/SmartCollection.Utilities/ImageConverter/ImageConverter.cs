@@ -18,8 +18,9 @@ namespace SmartCollection.Utilities.ImageConverter
             if (contentType.Contains("jpeg") || contentType.Contains("png"))
             {
                 using Stream fileStream = file.OpenReadStream(MaxFileSize);
-                using var image = new MagickImage(fileStream);
-                return image.ToBase64();
+                using var ms = new MemoryStream();
+                fileStream.CopyTo(ms);
+                return Convert.ToBase64String(ms.ToArray());
             }
             else
                 throw new BadImageFormatException();
@@ -27,14 +28,12 @@ namespace SmartCollection.Utilities.ImageConverter
 
         public string ImageBytesToBase64(byte[] file)
         {
-            using var image = new MagickImage(file);
-            return image.ToBase64();
+            return Convert.ToBase64String(file);
         }
 
         public byte[] Base64ToImage(string base64)
         {
-            using var image = new MagickImage(base64);
-            return image.ToByteArray();
+            return Convert.FromBase64String(base64);
         }
     }
 }
