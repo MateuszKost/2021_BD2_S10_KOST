@@ -13,11 +13,13 @@
                 {
                     foreach (var album in albums)
                     {
+                        string cover = album.AlbumCoverPicture != null ? @"data:image;base64," + album.AlbumCoverPicture : @"\picture\dog.jpg";
+
                         <div class="col-lg-3">
                             <a @onclick="@( () => Navigate(album.AlbumId) )" style="text-decoration:none" class="text-black-50">
                                 <div class="col-12">
                                     <picture>
-                                        <img src="\picture\dog.jpg" class="rounded img-fluid img-thumbnail" style="width:100%">
+                                        <img src="@cover" class="rounded img-fluid img-thumbnail" />
                                     </picture>
                                 </div>
                                 <div class="col">
