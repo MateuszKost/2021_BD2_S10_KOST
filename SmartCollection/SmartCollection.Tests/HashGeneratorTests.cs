@@ -1,7 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SmartCollection.DataAccess.RepositoryPattern;
 using SmartCollection.Utilities.HashGenerator;
-using SmartCollection.Utilities.TagManagement.TagCreator;
 using System;
 using System.Collections.Generic;
 

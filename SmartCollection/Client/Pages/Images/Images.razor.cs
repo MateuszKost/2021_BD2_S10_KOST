@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using SmartCollection.Client.Services;
 using SmartCollection.Models.DBModels;
 using SmartCollection.Models.ViewModels.ImagesViewModel;
 using System;
@@ -29,6 +30,10 @@ namespace SmartCollection.Client.Pages.Images
 
         private async void OnFilter()
         {
+            FilterModel.AlbumId = AlbumId;
+            _ = FilterModel.DateFrom != null ? FilterModel.DateFrom : default;
+            _ = FilterModel.DateTo != null ? FilterModel.DateTo : default;
+            _ = FilterModel.ImageName ?? null;
             var filteredImages = await ImageService.GetFilteredImages(FilterModel);
             StateHasChanged();
 
@@ -40,8 +45,9 @@ namespace SmartCollection.Client.Pages.Images
 
         private void OnTagSelected(ChangeEventArgs e)
         {
-            //FilterModel.AlbumId = int.Parse(AlbumId);
-            FilterModel.TagId = int.Parse(e.Value.ToString());
+            int tagId = int.Parse(e.Value.ToString());
+            FilterModel.TagId = tagId != 0 ? tagId : -1;
+
             StateHasChanged();
         }
 
