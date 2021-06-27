@@ -10,7 +10,7 @@ namespace SmartCollection.Utilities.ImageConverter
     {
         public long MaxFileSize { get; set; }
 
-        public string IBrowserFileImageToBase64Async(IBrowserFile file)
+        public async Task<string> IBrowserFileImageToBase64Async(IBrowserFile file)
         {
             var contentType = file.ContentType;
 
@@ -18,9 +18,17 @@ namespace SmartCollection.Utilities.ImageConverter
             if (contentType.Contains("jpeg") || contentType.Contains("png"))
             {
                 using Stream fileStream = file.OpenReadStream(MaxFileSize);
-                using var ms = new MemoryStream();
-                fileStream.CopyTo(ms);
-                return Convert.ToBase64String(ms.ToArray());
+                using MemoryStream ms = new();
+
+                await fileStream.CopyToAsync(ms);
+                var base64 = Convert.ToBase64String(ms.ToArray());
+
+                return base64;
+                //using var ms = new MemoryStream();
+                //fileStream.CopyTo(ms);
+                //using var image = new MagickImage(fileStream);
+                //return image.ToBase64();
+                //return Convert.ToBase64String(ms.ToArray());
             }
             else
                 throw new BadImageFormatException();

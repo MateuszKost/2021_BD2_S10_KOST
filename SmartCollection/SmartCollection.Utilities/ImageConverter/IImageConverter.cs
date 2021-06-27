@@ -9,7 +9,7 @@ namespace SmartCollection.Utilities.ImageConverter
 {
     public interface IImageConverter
     {
-        string IBrowserFileImageToBase64Async(IBrowserFile file);
+        Task<string> IBrowserFileImageToBase64Async(IBrowserFile file);
 
         string ImageBytesToBase64(byte[] file);
 
