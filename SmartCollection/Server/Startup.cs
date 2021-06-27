@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using SmartCollection.DataAccess.Context;
 using SmartCollection.DataAccess.RepositoryPattern;
+using SmartCollection.Models.DBModels;
 using SmartCollection.Models.ViewModels.CreateAlbumViewModel;
 using SmartCollection.Server.Identity;
 using SmartCollection.Server.User;
@@ -19,6 +20,7 @@ using SmartCollection.Utilities.AlbumCreator;
 using SmartCollection.Utilities.DatabaseInitializer;
 using SmartCollection.Utilities.HashGenerator;
 using SmartCollection.Utilities.ImageConverter;
+using SmartCollection.Utilities.ImageFilter;
 using SmartCollection.Utilities.TagManagement;
 using System.Text;
 
@@ -98,6 +100,7 @@ namespace SmartCollection.Server
             services.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
             services.AddScoped<IAlbumCreator<CreateAlbumViewModel, IUnitOfWork>, AlbumCreator>();
             services.AddScoped<IHashGenerator, Sha1HashGenerator>();
+            services.AddScoped<IImageFilter<ImageDetail>, ImageFilter>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

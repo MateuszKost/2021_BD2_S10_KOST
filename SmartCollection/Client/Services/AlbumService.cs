@@ -12,7 +12,7 @@ namespace SmartCollection.Client.Services
     public class AlbumService : IAlbumService
     {
         private readonly HttpClient _httpClient;
-        private readonly string controller = "albums";
+        private readonly string api = "albums";
         public AlbumService(HttpClient httpClient)
         {
             _httpClient = httpClient;
@@ -34,8 +34,14 @@ namespace SmartCollection.Client.Services
 
         public async Task<Result> UpdateAlbum(SingleAlbumViewModel album)
         {
-            var result = await _httpClient.PostAsJsonAsync<SingleAlbumViewModel>(controller + "/edit", album);
+            var result = await _httpClient.PostAsJsonAsync<SingleAlbumViewModel>(api + "/edit", album);
             return result.IsSuccessStatusCode ? Result.Success : Result.Failure(errors: new[] { "Update failed" });
+        }
+
+        public async Task<Result> DeleteAlbum (int id)
+        {
+            var result = await _httpClient.DeleteAsync(api + "/delete/" + id);
+            return result.IsSuccessStatusCode ? Result.Success : Result.Failure(errors: new[] { "Deletion failed" });
         }
     }
 }

@@ -31,10 +31,13 @@ namespace SmartCollection.Client.Pages.Images
         private async void OnFilter()
         {
             FilterModel.AlbumId = AlbumId;
+            FilterModel.TagId = (FilterModel.TagId != null && FilterModel.TagId != 0) ? FilterModel.TagId : -1;
             _ = FilterModel.DateFrom != null ? FilterModel.DateFrom : default;
             _ = FilterModel.DateTo != null ? FilterModel.DateTo : default;
             _ = FilterModel.ImageName ?? null;
+
             var filteredImages = await ImageService.GetFilteredImages(FilterModel);
+            images = filteredImages;
             StateHasChanged();
 
             Console.WriteLine("Filtering called");
@@ -45,9 +48,7 @@ namespace SmartCollection.Client.Pages.Images
 
         private void OnTagSelected(ChangeEventArgs e)
         {
-            int tagId = int.Parse(e.Value.ToString());
-            FilterModel.TagId = tagId != 0 ? tagId : -1;
-
+            FilterModel.TagId = int.Parse(e.Value.ToString());
             StateHasChanged();
         }
 

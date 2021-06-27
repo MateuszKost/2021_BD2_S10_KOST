@@ -132,5 +132,18 @@ namespace SmartCollection.Server.Controllers
 
             return Ok();
         }
+
+        [HttpDelete]
+        [Route("delete/{albumId}")]
+        public async Task<IActionResult> DeleteAlbum(int albumId)
+        {
+            var album = await _unitOfWork.Albums.GetAsync(albumId);
+            if (album == null) return BadRequest();
+
+            _unitOfWork.Albums.Remove(album);
+            _unitOfWork.Save();
+
+            return Ok();
+        }
     }
 }

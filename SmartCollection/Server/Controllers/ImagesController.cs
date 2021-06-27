@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartCollection.DataAccess.RepositoryPattern;
+using SmartCollection.Models.DBModels;
 using SmartCollection.Models.ViewModels.ImagesViewModel;
 using SmartCollection.Server.User;
 using SmartCollection.StorageManager.Containers;
 using SmartCollection.StorageManager.Context;
 using SmartCollection.Utilities.HashGenerator;
 using SmartCollection.Utilities.ImageConverter;
+using SmartCollection.Utilities.ImageFilter;
 using SmartCollection.Utilities.TagManagement;
 using System;
 using System.Collections.Generic;
@@ -26,13 +28,15 @@ namespace SmartCollection.Server.Controllers
         private readonly IImageConverter _imageConverter;
         private readonly ICurrentUser _currentUser;
         private readonly ITagManager _tagManager;
+        private readonly IImageFilter<ImageDetail> _imageFilter;
 
         public ImagesController(IUnitOfWork unitOfWork,
             IStorageContext<IStorageContainer> storageContext,
             IHashGenerator hashGenerator,
             IImageConverter imageConverter,
             ICurrentUser currentUser,
-            ITagManager tagManager)
+            ITagManager tagManager,
+            IImageFilter<ImageDetail> imageFilter)
         {
             _unitOfWork = unitOfWork;
             _storageContext = storageContext;
@@ -40,6 +44,7 @@ namespace SmartCollection.Server.Controllers
             _imageConverter = imageConverter;
             _currentUser = currentUser;
             _tagManager = tagManager;
+            _imageFilter = imageFilter;
         }
 
         [HttpGet]
@@ -117,11 +122,42 @@ namespace SmartCollection.Server.Controllers
 
         [HttpPost]
         [Route("filter")]
-        public async Task<ImagesViewModel> FilterImages(FilterParameters filterModel)
+        public async Task<ImagesViewModel> FilterImages([FromBody]FilterParameters filterModel)
         {
-            var imagesFromAlbum = GetImagesFromAlbum(filterModel.AlbumId);
+            var albumImages = _unitOfWork.ImagesAlbums.Find(ia => ia.AlbumsAlbumId == filterModel.AlbumId).ToList();
+            List<Image> images = new();
 
-            return new ImagesViewModel();
+            foreach(var image in albumImages)
+            {
+                var img = await _unitOfWork.Images.GetAsync((int)image.ImagesAlbumId);
+                images.Add(img);
+            }
+
+            var userId = _currentUser.UserId;
+            var filteredImageDetails = await _imageFilter.FilterAsync(filterModel, images);
+
+            List<SingleImageViewModel> filteredList = new();
+
+            foreach(var detail in filteredImageDetails)
+            {
+                var img = await _unitOfWork.Images.GetAsync(detail.ImageId);
+                var imgBytes = await _storageContext.GetAsync(new ImageContainer(), img.ImageSha1);
+
+                SingleImageViewModel imageModel = new SingleImageViewModel()
+                {
+                    Id = img.ImageId,
+                    Data = _imageConverter.ImageBytesToBase64(imgBytes),
+                    Date = detail.Date.ToString(),
+                    Description = detail.Description,
+                    Name = detail.Name,
+                    AlbumId = filterModel.AlbumId,
+                    Sha1 = img.ImageSha1
+                };
+
+                filteredList.Add(imageModel);
+            }
+
+            return new ImagesViewModel() { Images = filteredList };
         }
 
         [HttpGet]
