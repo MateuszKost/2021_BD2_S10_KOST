@@ -346,7 +346,7 @@ namespace SmartCollection.Server.Controllers
         {
             //check if exists
             var result = _unitOfWork.ImagesAlbums
-                .Find(ia => ia.ImagesAlbumId == imageId && ia.ImagesAlbumId == albumId)
+                .Find(ia => ia.ImagesAlbumId == imageId && ia.AlbumsAlbumId == albumId)
                 .FirstOrDefault();
 
             if (result != null)
