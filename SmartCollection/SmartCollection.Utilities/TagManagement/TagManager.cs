@@ -15,22 +15,15 @@ namespace SmartCollection.Utilities.TagManagement
         public TagManager(IUnitOfWork unitOfWork)
          => _unitOfWork = unitOfWork;
 
-        public async Task<IEnumerable<Tag>> DownloadTagForAlbumAsync(int albumId)
+        public IEnumerable<Tag> DownloadTagForAlbumAsync(int albumId)
         {
             if (albumId >= 0)
             {
-                var images = _unitOfWork.Images.Find(p => p.AlbumId == albumId);
+                var images = _unitOfWork.Images.Find(p => p.AlbumId == albumId).Select(x => x.ImageId).ToList();
 
-                var tagOrder = _unitOfWork.TagOrders.GetAll();
+                var tagIds= _unitOfWork.TagOrders.Find(o => o.ImageId.HasValue && images.Contains((int)o.ImageId)).Select(x => (int)x.TagId);
 
-                var tags = new List<Tag>();
-
-                foreach (var tagO in tagOrder)
-                    foreach (var img in images)
-                        if (tagO.ImageId == img.ImageId)
-                            tags.Add(await _unitOfWork.Tags.GetAsync((int)tagO.TagId));
-
-                return tags;
+                return _unitOfWork.Tags.Find(t => tagIds.Contains(t.TagId));
             }
             throw new ArgumentException();
         }

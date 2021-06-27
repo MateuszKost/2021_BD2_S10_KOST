@@ -6,7 +6,7 @@ namespace SmartCollection.Utilities.TagManagement
 {
     public interface ITagManager
     {
-        Task<IEnumerable<Tag>> DownloadTagForAlbumAsync(int albumId);
+        IEnumerable<Tag> DownloadTagForAlbumAsync(int albumId);
 
         List<int> InsertTags(IEnumerable<string> tags);
 
