@@ -48,7 +48,7 @@
                                     <i class="bi bi-pencil-square" @onclick="@( () => NavigateToAlbum(album.AlbumId) )"></i>
                                 </div>
                                 <div class="col-12 text-center">
-                                    <button class="btn " @onclick="@( () => CopyToClipboard(Http.BaseAddress+"albums/"+album.AlbumId) )" disabled=@state.IsDisabled>
+                                    <button class="btn " @onclick="@( () => CopyToClipboard(Http.BaseAddress+"images/"+album.AlbumId) )" disabled=@state.IsDisabled>
                                         <i class="@state.ClassName"></i> @state.Text
                                     </button>
                                 </div>
