@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SmartCollection.Models.DBModels;
 using SmartCollection.Models.ViewModels.TagsViewModel;
-using SmartCollection.Utilities.TagManagement.TagDownloader;
+using SmartCollection.Utilities.TagManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,18 +13,18 @@ namespace SmartCollection.Server.Controllers
     [Route("[controller]")]
     public class TagsController : Controller
     {
-        private readonly ITagDownloader<IEnumerable<Tag>> _tagDownloader;
+        private readonly ITagManager _tagManager;
 
-        public TagsController(ITagDownloader<IEnumerable<Tag>> tagDownloader)
+        public TagsController(ITagManager tagManager)
         {
-            _tagDownloader = tagDownloader;
+            _tagManager = tagManager;
         }
 
         [HttpGet]
         [Route("get/{albumId}")]
         public async Task<TagsViewModel> GetTagsFromAlbum(int albumId)
         {
-            var tags = await _tagDownloader.DownloadTagForAlbumAsync(albumId);
+            var tags = await _tagManager.DownloadTagForAlbumAsync(albumId);
 
             if(tags.Any())
             {

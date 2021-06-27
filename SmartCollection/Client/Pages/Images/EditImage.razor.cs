@@ -1,53 +1,47 @@
 ﻿using Microsoft.AspNetCore.Components;
+using SmartCollection.Models.ViewModels.ImagesViewModel;
+using SmartCollection.Utilities.TagManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SmartCollection.Models.ViewModels.ImagesViewModel;
-using SmartCollection.Models.DBModels;
-using SmartCollection.Utilities.TagManagement.TagCreator;
 
 namespace SmartCollection.Client.Pages.Images
 {
     public partial class EditImage
     {
         [Parameter]
-        public string ImageId { get; set; }
+        public int ImageId { get; set; }
 
-        private SingleImageViewModel image;
-        private readonly ITagCreator _tagCreator;
-        public EditImage(ITagCreator tagCreator)   
-            => _tagCreator = tagCreator;
-        
+        private string _tags = string.Empty;
+        private DateTime _date = DateTime.Now;
+
+        private SingleImageViewModel image = new();
+
+        private bool Success = false;
+        private List<string> Errors = new();
+
+
         protected override async Task OnInitializedAsync()
         {
-            image = await ImageService.GetImage(int.Parse(ImageId));
-            StateHasChanged();
+            image = await ImageService.GetImage(ImageId);
+            if (image.Tags?.Any() == true)
+                _tags = string.Join(" ", image.Tags.Select(x => "#" + x));
+            _date = DateTime.Parse(image.Date);
         }
 
-        // temp edit image
-
-        string nName, nDescription, ntagsString;
-        IEnumerable<string> nTags;
-
-        List<Tag> Tags;
-
-        private async Task update(int imageId, string name, string date, string description, string data, int? albumId, string tags)
+        private async Task SubmitChangesAsync()
         {
-            nTags = _tagCreator.CreateTagList(tags);
-            //tutaj ma byc przesylanie tagow do bazy danych
-
-            
-
-            SingleImageViewModel image = new SingleImageViewModel {
-                Id = imageId,
-                Name = name,
-                Date = date,
-                Description = description,
-                Data = data,
-                AlbumId = albumId,
-            };
-            await ImageService.UpdateImage(image);
+            image.Date = _date.ToString();
+            image.Tags = TagService.CreateTagList(_tags);
+            var result = await ImageService.UpdateImage(image);
+            if (result.Succeeded)
+                Success = true;
+            else
+            {
+                Success = false;
+                Errors = result.Errors;
+            }  
             StateHasChanged();
         }
     }

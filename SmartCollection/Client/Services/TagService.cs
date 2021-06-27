@@ -23,6 +23,19 @@ namespace SmartCollection.Client.Services
             return tagsViewModel.Tags ?? null;
         }
 
-        //public void UploadTags(IEnumerable<T> tags);
+        public IEnumerable<string> CreateTagList(string tags)
+        {
+            if (tags != null)
+            {
+                string normTags = tags.Replace(" ", "").ToUpper();
+
+                List<string> tagList = normTags.Split('#').ToList();
+
+                tagList.Remove("");
+
+                return tagList;
+            }
+            throw new ArgumentNullException();
+        }
     }
 }

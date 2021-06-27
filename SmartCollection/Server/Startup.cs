@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -5,25 +6,21 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using SmartCollection.DataAccess.Context;
 using SmartCollection.DataAccess.RepositoryPattern;
+using SmartCollection.Models.ViewModels.CreateAlbumViewModel;
+using SmartCollection.Server.Identity;
+using SmartCollection.Server.User;
 using SmartCollection.StorageManager.Containers;
 using SmartCollection.StorageManager.Context;
 using SmartCollection.StorageManager.ServiceClient;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using SmartCollection.Utilities.DatabaseInitializer;
-using SmartCollection.Models.ViewModels.CreateAlbumViewModel;
 using SmartCollection.Utilities.AlbumCreator;
+using SmartCollection.Utilities.DatabaseInitializer;
 using SmartCollection.Utilities.HashGenerator;
-using SmartCollection.Server.User;
-using SmartCollection.Server.Identity;
 using SmartCollection.Utilities.ImageConverter;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using SmartCollection.Utilities.TagManagement.TagDownloader;
-using SmartCollection.Models.DBModels;
-using System.Collections.Generic;
+using SmartCollection.Utilities.TagManagement;
+using System.Text;
 
 namespace SmartCollection.Server
 {
@@ -41,10 +38,10 @@ namespace SmartCollection.Server
             services.AddControllersWithViews().AddNewtonsoftJson();
             services.AddRazorPages();
             services.AddDbContext<SmartCollectionDbContext>(
-                
+
                 options => options.UseNpgsql(
                     Configuration.GetConnectionString("SmartCollectionDB"))
-               
+
                 );
 
             services.AddIdentity<IdentityUser, IdentityRole>(options =>
@@ -92,18 +89,16 @@ namespace SmartCollection.Server
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IImageConverter, ImageConverter>();
-            services.AddScoped<ITagDownloader<IEnumerable<Tag>>, TagDownloader>();
-            
+            services.AddScoped<ITagManager, TagManager>();
+
             services.AddSingleton(provider =>
             new BlobStorageServiceClient(Configuration.GetConnectionString("BlobStorage")));
             services.AddScoped<IStorageContext<IStorageContainer>, BlobStorageContext<IStorageContainer>>();
 
             services.AddScoped<IDatabaseInitializer, DatabaseInitializer>();
-            services.AddScoped<IAlbumCreator<CreateAlbumViewModel,IUnitOfWork>, AlbumCreator>();
+            services.AddScoped<IAlbumCreator<CreateAlbumViewModel, IUnitOfWork>, AlbumCreator>();
             services.AddScoped<IHashGenerator, Sha1HashGenerator>();
-            
         }
-
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
