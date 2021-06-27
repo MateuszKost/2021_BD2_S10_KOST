@@ -18,9 +18,9 @@ namespace SmartCollection.Utilities.TagManagement.TagDownloader
         {
             if (albumId >= 0)
             {
-                var images = _unitOfWork.Images.Find(p => p.AlbumId == albumId);
+                var images = _unitOfWork.Images.Find(p => p.AlbumId == albumId).ToList();
 
-                var tagOrder = _unitOfWork.TagOrders.GetAll();
+                var tagOrder = _unitOfWork.TagOrders.GetAll().ToList();
 
                 var tags = new List<Tag>();
 

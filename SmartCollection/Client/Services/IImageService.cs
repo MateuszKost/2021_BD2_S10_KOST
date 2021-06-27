@@ -10,6 +10,12 @@ namespace SmartCollection.Client.Services
     {
         public Task<IEnumerable<T>> GetImagesFromAlbum(int albumId);
 
+        public Task<IEnumerable<T>> GetFilteredImages(
+            string? tagName,
+            string? imageName,
+            DateTime? dateFrom,
+            DateTime? dateTo);
+
         public Task<Result> UploadImages(IEnumerable<T> images);
 
         public Task<Result> DeleteImage(int imageId, int albumId);

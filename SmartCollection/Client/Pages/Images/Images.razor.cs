@@ -38,7 +38,18 @@ namespace SmartCollection.Client.Pages.Images
             //TODO
             // filter method sending request from service to server
             // return is a new list of filtered images or empty list
+            var tagName = SelectedTagId != 0 ? Tags.Where(tag => tag.TagId == SelectedTagId).FirstOrDefault().Name : null;
+
+            var result = ImageService.GetFilteredImages(
+                tagName: tagName,
+                imageName: FilterModel.Name,
+                dateFrom: FilterModel.DateFrom,
+                dateTo: FilterModel.DateTo);
+
             Console.WriteLine("Filtering called");
+            Console.WriteLine("DateFrom: " + FilterModel.DateFrom);
+            Console.WriteLine("DateTo: " + FilterModel.DateTo);
+            Console.WriteLine("Selected tag: " + SelectedTagId);
         }
 
         private void OnTagSelected(ChangeEventArgs e)
