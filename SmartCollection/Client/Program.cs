@@ -25,6 +25,7 @@ namespace SmartCollection.Client
                .Services
                .AddAuthorizationCore()
                .AddBlazoredLocalStorage()
+               .AddScoped<ClipboardService>()
                .AddScoped<ApiAuthenticationStateProvider>()
                .AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>()
                .AddScoped(sp => sp

@@ -3,11 +3,19 @@
 
 <AuthorizeView>
     <NotAuthorized>
-        <h4 class="display-4">Hello there!</h4>
+        <h4 class="typewriter display-4 text-center" style="text-align: center; font-size: 5vw; margin-top: 35vh; margin-bottom: 45vh;"> 
+            <p>
+                <span class="typewriter-text">@typewriterText</span>
+            </p>
+        </h4>
         <p><NavLink href="/login">Login</NavLink> or <NavLink href="/register">Register</NavLink> to use your SmartCollection!</p>
     </NotAuthorized>
     <Authorized>
-        <h4 class="display-4">Hello again!</h4>
-        <p>Below is example of database connection.</p>
+        <h4 class="typewriter display-4 text-center" style="text-align: center; font-size: 5vw; margin-top: 35vh; margin-bottom: 45vh;">
+            <p>
+                <span class="typewriter-text">@typewriterText</span>
+            </p>
+        </h4>
     </Authorized>
 </AuthorizeView>
+
