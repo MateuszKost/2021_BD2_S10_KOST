@@ -10,7 +10,7 @@ namespace SmartCollection.Client.Pages.Images
     public partial class Images
     {
         [Parameter]
-        public string AlbumId { get; set; }
+        public int AlbumId { get; set; }
 
         [Parameter]
         public IEnumerable<Tag> Tags { get; set; }
@@ -24,8 +24,8 @@ namespace SmartCollection.Client.Pages.Images
 
         protected override async Task OnInitializedAsync()
         {
-            images = await ImageService.GetImagesFromAlbum(int.Parse(AlbumId));
-            Tags = await TagService.GetTags(int.Parse(AlbumId));
+            images = await ImageService.GetImagesFromAlbum(AlbumId);
+            Tags = await TagService.GetTags(AlbumId);
             StateHasChanged();
         }
 
@@ -50,7 +50,7 @@ namespace SmartCollection.Client.Pages.Images
 
         private async Task Delete(int imageId)
         {
-            await ImageService.DeleteImage(imageId, int.Parse(AlbumId));
+            await ImageService.DeleteImage(imageId, AlbumId);
             StateHasChanged();
         }
     }

@@ -57,17 +57,15 @@ namespace SmartCollection.Server.Controllers
                 foreach (var image in imagesList)
                 {
                     var imageDetails = _unitOfWork.ImageDetails.Find(details => details.ImageId == image.ImageId).FirstOrDefault();
-
-                    // get file from blob by its hash
-                    byte[] imageFile = await _storageContext.GetAsync(new ImageContainer(), image.ImageSha1);
-
+                    var tags = _tagManager.GetTags(image.ImageId);
                     SingleImageViewModel singleImageViewModel = new SingleImageViewModel()
                     {
                         Id = image.ImageId,
                         Name = imageDetails.Name,
                         Description = imageDetails.Description,
                         Date = imageDetails.Date.ToString(),
-                        Data = Convert.ToBase64String(imageFile)
+                        Sha1 = image.ImageSha1,
+                        Tags = tags.Select(x => x.Name)
                     };
 
                     imageViewModelList.Add(singleImageViewModel);
@@ -97,9 +95,7 @@ namespace SmartCollection.Server.Controllers
                 {
                     var image = _unitOfWork.Images.Find(image => image.ImageId == ia.ImagesAlbumId).FirstOrDefault();
                     var imageDetails = _unitOfWork.ImageDetails.Find(details => details.ImageId == ia.ImagesAlbumId).FirstOrDefault();
-
-                    // get file from blob by its hash
-                    byte[] imageFile = await _storageContext.GetAsync(new ImageContainer(), image.ImageSha1);
+                    var tags = _tagManager.GetTags(image.ImageId);
 
                     SingleImageViewModel singleImageViewModel = new SingleImageViewModel
                     {
@@ -107,7 +103,8 @@ namespace SmartCollection.Server.Controllers
                         Name = imageDetails.Name,
                         Description = imageDetails.Description,
                         Date = imageDetails.Date.ToString(),
-                        Data = Convert.ToBase64String(imageFile)
+                        Sha1 = image.ImageSha1,
+                        Tags = tags.Select(x => x.Name)
                     };
 
                     imagesViewModelList.Add(singleImageViewModel);
@@ -142,9 +139,6 @@ namespace SmartCollection.Server.Controllers
                 {
                     try
                     {
-                        var file = await _storageContext.GetAsync(new ImageContainer(), image.ImageSha1);
-                        var base64 = _imageConverter.ImageBytesToBase64(file);
-
                         var tags = _tagManager.GetTags(id);
 
                         return Ok(new SingleImageViewModel()
@@ -153,7 +147,7 @@ namespace SmartCollection.Server.Controllers
                             Name = imageDetails.Name,
                             Description = imageDetails.Description,
                             Date = imageDetails.Date.ToString(),
-                            Data = base64,
+                            Sha1 = image.ImageSha1,
                             Tags = tags.Select(x => x.Name)
                         });
                     }

@@ -9,10 +9,10 @@ namespace SmartCollection.Utilities.ImageConverter
 {
     public interface IImageConverter
     {
-        public Task<string> IBrowserFileImageToBase64Async(IBrowserFile file);
+        string IBrowserFileImageToBase64Async(IBrowserFile file);
 
-        public string ImageBytesToBase64(byte[] file);
+        string ImageBytesToBase64(byte[] file);
 
-        public byte[] Base64ToImage(string base64);
+        byte[] Base64ToImage(string base64);
     }
 }

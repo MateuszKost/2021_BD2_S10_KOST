@@ -14,5 +14,6 @@ namespace SmartCollection.Models.ViewModels.ImagesViewModel
         public string Data { get; set; }
         public int? AlbumId { get; set; }
         public IEnumerable<string> Tags { get; set; }
+        public string Sha1 { get; set; }
     }
 }

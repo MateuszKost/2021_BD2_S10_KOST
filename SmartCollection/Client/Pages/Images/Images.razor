@@ -1,5 +1,5 @@
 ﻿@page "/images"
-@page "/images/{AlbumId}"
+@page "/images/{AlbumId:int}"
 
 <div class="container">
 
@@ -56,7 +56,6 @@
         {
             foreach (var image in images)
             {
-                var imgUrl = "data:image;base64," + image.Data;
                 var imgName = image.Name;
                 var imgData = image.Date;
                 var imgDescription = image.Description;
@@ -66,7 +65,7 @@
                     <a style="text-decoration:none" class="text-black-50">
                         <div class="col-12">
                             <picture>
-                                <img src="@imgUrl" class="rounded img-fluid img-thumbnail" style="width:100%">
+                                <img src="@(Http.BaseAddress+"thumbnail/"+image.Sha1)" class="rounded img-fluid img-thumbnail" style="width:100%">
                             </picture>
                             <div class="information">
                                 Name: <label>"@imgName"</label><br />

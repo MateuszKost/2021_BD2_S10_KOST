@@ -1,9 +1,7 @@
-﻿using Microsoft.AspNetCore.Components.Forms;
-using System.IO;
+﻿using ImageMagick;
+using Microsoft.AspNetCore.Components.Forms;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace SmartCollection.Utilities.ImageConverter
@@ -12,7 +10,7 @@ namespace SmartCollection.Utilities.ImageConverter
     {
         public long MaxFileSize { get; set; }
 
-        public async Task<string> IBrowserFileImageToBase64Async(IBrowserFile file)
+        public string IBrowserFileImageToBase64Async(IBrowserFile file)
         {
             var contentType = file.ContentType;
 
@@ -20,29 +18,23 @@ namespace SmartCollection.Utilities.ImageConverter
             if (contentType.Contains("jpeg") || contentType.Contains("png"))
             {
                 using Stream fileStream = file.OpenReadStream(MaxFileSize);
-                using MemoryStream ms = new();
-
-                await fileStream.CopyToAsync(ms);
-                var base64 = Convert.ToBase64String(ms.ToArray());
-
-                return base64;
+                using var image = new MagickImage(fileStream);
+                return image.ToBase64();
             }
             else
-            {
                 throw new BadImageFormatException();
-            }
-
-           
         }
 
         public string ImageBytesToBase64(byte[] file)
         {
-            return file != null ? Convert.ToBase64String(file) : null;
+            using var image = new MagickImage(file);
+            return image.ToBase64();
         }
 
         public byte[] Base64ToImage(string base64)
         {
-            return base64 != null ? Convert.FromBase64String(base64) : null;
+            using var image = new MagickImage(base64);
+            return image.ToByteArray();
         }
     }
 }

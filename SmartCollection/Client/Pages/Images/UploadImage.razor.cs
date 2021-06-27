@@ -38,7 +38,7 @@ namespace SmartCollection.Client.Pages.Images
             StateHasChanged();
         }
 
-        private async Task LoadImage(InputFileChangeEventArgs eventArgs)
+        private void LoadImage(InputFileChangeEventArgs eventArgs)
         {
             isLoaded = false;
             imageCount = 0;
@@ -51,7 +51,7 @@ namespace SmartCollection.Client.Pages.Images
 
                 foreach (var file in fileList)
                 {
-                    images.Add((await GetImageUrl(file), file.Name));
+                    images.Add((GetImageUrl(file), file.Name));
                 }
 
                 imageCount = eventArgs.FileCount;
@@ -64,9 +64,9 @@ namespace SmartCollection.Client.Pages.Images
             }
         }
 
-        private async Task<string> GetImageUrl(IBrowserFile file)
+        private string GetImageUrl(IBrowserFile file)
         {
-            string base64 = await imageConverter.IBrowserFileImageToBase64Async(file);
+            string base64 = imageConverter.IBrowserFileImageToBase64Async(file);
             string uri = "data:" + file.ContentType+ ";base64," + base64;
 
             return uri;
@@ -104,7 +104,7 @@ namespace SmartCollection.Client.Pages.Images
                 SingleImageViewModel image = new SingleImageViewModel()
                 {
                     Name = file.Name,
-                    Data = await imageConverter.IBrowserFileImageToBase64Async(file),
+                    Data = imageConverter.IBrowserFileImageToBase64Async(file),
                     Date = DateTime.Now.ToString(),
                     AlbumId = SelectedAlbumId,
                     Description = "Describe your picture"
