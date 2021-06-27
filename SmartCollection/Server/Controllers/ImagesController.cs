@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SmartCollection.DataAccess.RepositoryPattern;
 using SmartCollection.Models.DBModels;
+using SmartCollection.Models.ViewModels;
 using SmartCollection.Models.ViewModels.ImagesViewModel;
 using SmartCollection.Server.User;
 using SmartCollection.StorageManager.Containers;
@@ -90,32 +91,42 @@ namespace SmartCollection.Server.Controllers
                 return await GetAllImages() ?? new ImagesViewModel();
             }
 
+            var requestedAlbum = await _unitOfWork.Albums.GetAsync(albumId);
+
+            if (requestedAlbum == null)
+                return null;
+
+            var userId = _currentUser.UserId; //id z requestu
+
+            if(userId == requestedAlbum.UserId || requestedAlbum.PrivacyId.Equals(1))
+            {
             // list of images from db, from specified album
             var imageAlbums = _unitOfWork.ImagesAlbums.Find(ia => ia.AlbumsAlbumId == albumId).ToList();
             List<SingleImageViewModel> imagesViewModelList = new();
 
-            if (imageAlbums.Any())
-            {
-                foreach (var ia in imageAlbums)
+                if (imageAlbums.Any())
                 {
-                    var image = _unitOfWork.Images.Find(image => image.ImageId == ia.ImagesAlbumId).FirstOrDefault();
-                    var imageDetails = _unitOfWork.ImageDetails.Find(details => details.ImageId == ia.ImagesAlbumId).FirstOrDefault();
-                    var tags = _tagManager.GetTags(image.ImageId);
-
-                    SingleImageViewModel singleImageViewModel = new SingleImageViewModel
+                    foreach (var ia in imageAlbums)
                     {
-                        Id = image.ImageId,
-                        Name = imageDetails.Name,
-                        Description = imageDetails.Description,
-                        Date = imageDetails.Date.ToString(),
-                        Sha1 = image.ImageSha1,
-                        Tags = tags.Select(x => x.Name)
-                    };
+                        var image = _unitOfWork.Images.Find(image => image.ImageId == ia.ImagesAlbumId).FirstOrDefault();
+                        var imageDetails = _unitOfWork.ImageDetails.Find(details => details.ImageId == ia.ImagesAlbumId).FirstOrDefault();
+                        var tags = _tagManager.GetTags(image.ImageId);
 
-                    imagesViewModelList.Add(singleImageViewModel);
+                        SingleImageViewModel singleImageViewModel = new SingleImageViewModel
+                        {
+                            Id = image.ImageId,
+                            Name = imageDetails.Name,
+                            Description = imageDetails.Description,
+                            Date = imageDetails.Date.ToString(),
+                            Sha1 = image.ImageSha1,
+                            Tags = tags.Select(x => x.Name)
+                        };
+
+                        imagesViewModelList.Add(singleImageViewModel);
+                    }
+
+                    return new ImagesViewModel { Images = imagesViewModelList };
                 }
-
-                return new ImagesViewModel { Images = imagesViewModelList };
             }
             return new ImagesViewModel();
         }
