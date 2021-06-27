@@ -14,13 +14,6 @@ namespace SmartCollection.Models.ViewModels.ImagesViewModel
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
 
-        public FilterParameters()
-        {
-            AlbumId = -1;
-            ImageName = null;
-            TagId = -1;
-            DateFrom = default(DateTime);
-            DateTo = default(DateTime);
-        }
+
     }
 }
