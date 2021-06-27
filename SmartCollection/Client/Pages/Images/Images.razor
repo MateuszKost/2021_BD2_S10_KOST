@@ -56,11 +56,6 @@
         {
             foreach (var image in images)
             {
-                var imgName = image.Name;
-                var imgData = image.Date;
-                var imgDescription = image.Description;
-
-
                 <div class="pic col-lg-3 mb-1">
                     <a style="text-decoration:none" class="text-black-50">
                         <div class="col-12">
@@ -68,10 +63,10 @@
                                 <img src="@(Http.BaseAddress+"thumbnail/"+image.Sha1)" class="rounded img-fluid img-thumbnail" style="width:100%">
                             </picture>
                             <div class="information">
-                                Name: <label>"@imgName"</label><br />
-                                Description: <label>@imgDescription</label><br />
-                                Data: <label>@imgData</label><br />
-                                Tags: <label>"no nie ma jeszcze"</label>
+                                Name: <label>"@image.Name"</label><br />
+                                Description: <label>@image.Description</label><br />
+                                Data: <label>@image.Date</label><br />
+                                Tags: <label>@string.Join(" ", image.Tags.Select(x => "#" + x.ToLower()))</label>
                             </div>
                         </div>
                         <div class="buttons">

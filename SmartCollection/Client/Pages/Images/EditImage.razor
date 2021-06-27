@@ -15,7 +15,7 @@
                         <br />
                         <div class="h-75">
                             <div class="col-12 col-lg-6 card mb-3 mx-auto">
-                                <img class="card-img-top h-100" src="@("data:image;base64," + image.Data)" alt="@image.Name">
+                                <img class="card-img-top h-100" src="@(Http.BaseAddress + "thumbnail/" + image.Sha1)" alt="@image.Name">
                             </div>
                         </div>
                         <br /><br />
