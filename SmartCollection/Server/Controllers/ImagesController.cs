@@ -74,7 +74,6 @@ namespace SmartCollection.Server.Controllers
 
                     imageViewModelList.Add(singleImageViewModel);
                 }
-
                 return new ImagesViewModel { Images = imageViewModelList };
             }
 
@@ -316,7 +315,7 @@ namespace SmartCollection.Server.Controllers
             {
                 _unitOfWork.Images.Remove(result);
                 _unitOfWork.Save();
-                _storageContext.DeleteAsync(new ImageContainer(), result.ImageSha1);
+                _storageContext.DeleteAsync(new ImageContainer(), new[] { result.ImageSha1 });
                 return Ok();
             }
             else
