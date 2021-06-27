@@ -22,9 +22,9 @@ namespace SmartCollection.Server.Controllers
 
         [HttpGet]
         [Route("get/{albumId}")]
-        public async Task<TagsViewModel> GetTagsFromAlbum(int albumId)
+        public TagsViewModel GetTagsFromAlbum(int albumId)
         {
-            var tags = await _tagManager.DownloadTagForAlbumAsync(albumId);
+            var tags = _tagManager.DownloadTagForAlbumAsync(albumId);
 
             if(tags.Any())
             {
