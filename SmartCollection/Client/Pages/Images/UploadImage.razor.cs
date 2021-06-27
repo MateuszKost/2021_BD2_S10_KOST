@@ -106,7 +106,7 @@ namespace SmartCollection.Client.Pages.Images
                 SingleImageViewModel image = new SingleImageViewModel()
                 {
                     Name = file.Name,
-                    Data = await imageConverter.IBrowserFileImageToBase64Async(file),
+                    Data = imageConverter.IBrowserFileImageToBase64Async(file),
                     Date = DateTime.Now.ToString(),
                     AlbumId = SelectedAlbumId,
                     Description = "Describe your picture"

@@ -11,6 +11,8 @@ namespace SmartCollection.Client.Services
     {
         public Task<IEnumerable<T>> GetImagesFromAlbum(int albumId);
 
+        Task<bool> CheckPermissions(int albumId);
+
         public Task<IEnumerable<T>> GetFilteredImages(FilterParameters filter);
 
         public Task<Result> UploadImages(IEnumerable<T> images);

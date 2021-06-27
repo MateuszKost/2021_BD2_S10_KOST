@@ -101,5 +101,15 @@ namespace SmartCollection.Client.Services
                 return null;
         }
 
+        public async Task<bool> CheckPermissions(int albumId)
+        {
+            var result = await _httpClient.GetAsync("albums/" + albumId);
+
+            if(result.StatusCode == System.Net.HttpStatusCode.OK)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

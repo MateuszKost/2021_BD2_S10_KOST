@@ -28,19 +28,16 @@ namespace SmartCollection.Server.Controllers
         //TODO UTILITY
         private readonly IStorageContext<IStorageContainer> _storageContext;
         private readonly IImageConverter _imageConverter;
-        private readonly IDataProtector _protector;
 
         public AlbumsController(ICurrentUser currentUser, 
             IUnitOfWork unitOfWork, 
             IStorageContext<IStorageContainer> storageContext,
-            IImageConverter imageConverter,
-            IDataProtectionProvider provider)
+            IImageConverter imageConverter)
         {
             _currentUser = currentUser;
             _unitOfWork = unitOfWork;
             _storageContext = storageContext;
             _imageConverter = imageConverter;
-            _protector = provider.CreateProtector(nameof(AlbumsController));
         }
 
         [HttpGet]
@@ -109,27 +106,22 @@ namespace SmartCollection.Server.Controllers
             return albumViewModel;
         }
 
-        //[HttpGet("{hash}")]
-        //public async Task<AlbumViewModel> GetPublicAlbum(string hash)
-        //{
-        //    var albumList = _unitOfWork.Albums.Find(x => x.UserId.Equals(userId)).ToList();
+        [HttpGet("{albumId}")]
+        public async Task<ActionResult> CheckPermissions(int albumId)
+        {
+            var requestedAlbum = await _unitOfWork.Albums.GetAsync(albumId);
 
-        //    List<SingleAlbumViewModel> albumViewModelList = new();
+            if (requestedAlbum == null)
+                return BadRequest();
 
-        //    if (albumList != null && albumList.Any())
-        //    {
-        //        foreach (var album in albumList)
-        //        {
-        //            SingleAlbumViewModel singleAlbumViewModel = await GetAlbumById(album.AlbumId);
-        //            albumViewModelList.Add(singleAlbumViewModel);
-        //        }
-        //    }
+            var userId = _currentUser.UserId;
 
-        //    AlbumViewModel albumViewModel = new();
-        //    albumViewModel.AlbumViewModelList = albumViewModelList;
-
-        //    return albumViewModel;
-        //}
+            if (userId == requestedAlbum.UserId)
+            {
+                return Ok();
+            }
+            return Forbid();
+        }
 
         [HttpPost]
         [Route("edit")]
