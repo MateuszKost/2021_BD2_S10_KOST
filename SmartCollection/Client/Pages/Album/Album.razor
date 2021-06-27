@@ -40,7 +40,7 @@
                         @if (album.AlbumId != 0)
                          {
                             <div class="col-12 text-center">
-                                <i class="bi bi-trash"></i>
+                                <i class="bi bi-trash" @onclick="@( () => Delete(album.AlbumId) )"></i>
                                 <i class="bi bi-pencil-square" @onclick="@( () => NavigateToAlbum(album.AlbumId) )"></i>
                             </div>
                          }

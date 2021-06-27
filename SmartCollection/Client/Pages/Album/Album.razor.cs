@@ -24,11 +24,14 @@ namespace SmartCollection.Client.Pages.Album
 
         protected override async Task OnInitializedAsync()
         {
-            var result = await Http.GetFromJsonAsync<AlbumViewModel>("albums");
-            albums = result.AlbumViewModelList;
+            albums = await AlbumService.GetAlbums();
             StateHasChanged();
         }
-
+        private async Task Delete(int albumId)
+        {
+            await AlbumService.DeleteAlbum(albumId);
+            albums = await AlbumService.GetAlbums();
+            StateHasChanged();
+        }
     }
-
 }

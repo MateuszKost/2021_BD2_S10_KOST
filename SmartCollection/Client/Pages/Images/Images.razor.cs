@@ -39,11 +39,6 @@ namespace SmartCollection.Client.Pages.Images
             var filteredImages = await ImageService.GetFilteredImages(FilterModel);
             images = filteredImages;
             StateHasChanged();
-
-            Console.WriteLine("Filtering called");
-            Console.WriteLine("DateFrom: " + FilterModel.DateFrom);
-            Console.WriteLine("DateTo: " + FilterModel.DateTo);
-            Console.WriteLine("Selected tag: " + FilterModel.TagId);
         }
 
         private void OnTagSelected(ChangeEventArgs e)
@@ -60,6 +55,7 @@ namespace SmartCollection.Client.Pages.Images
         private async Task Delete(int imageId)
         {
             await ImageService.DeleteImage(imageId, AlbumId);
+            images = await ImageService.GetImagesFromAlbum(AlbumId);
             StateHasChanged();
         }
     }

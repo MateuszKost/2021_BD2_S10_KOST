@@ -12,5 +12,7 @@ namespace SmartCollection.Client.Services
         public Task<IEnumerable<SingleAlbumViewModel>> GetAlbums();
         public Task <SingleAlbumViewModel> GetAlbum(int Id);
         public Task<Result> UpdateAlbum(SingleAlbumViewModel album);
+
+        public Task<Result> DeleteAlbum(int id);
     }
 }
