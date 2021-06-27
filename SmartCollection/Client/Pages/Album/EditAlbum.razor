@@ -1,0 +1,51 @@
+﻿@page "/editalbum"
+@page "/editalbum/{AlbumId}"
+
+<h1 id="title"> Editing Album </h1>
+
+<div class="container">
+
+    @if (album != null)
+    {
+        string cover = album.AlbumCoverPicture != null ? @"data:image;base64," + album.AlbumCoverPicture : @"\picture\dog.jpg";
+        
+        <div class="picture col-md-7 col-lg-6">
+            <img class="object-fit-cover" src="@cover" alt="pic" /> <!-- tutaj wstaw model i zdjecie z modelu-->
+        </div>
+
+        <div class="editing col-md-7 col-lg-6">
+            Name:<label>"@album.AlbumName"</label><br />
+            New name: <br />
+            <input @bind=@nName><br /> 
+            Description:<label>"@album.Description"</label><br />
+            New description: <br />
+            <input @bind=@nDescrption><br />
+            <div class="form-group">
+                <div class="mt-4">
+                    <h1 class="h6 text-gray-900">Decide if you want to share it to someone!</h1>
+                </div>
+                <div class="row custom-control custom-radio">
+                    <div class="col-sm-12 col-md-6">
+                        <input type="radio" name="privacy" class="custom-control-input" id="private" checked
+                               @onchange="@(() => status = false)" />
+                        <label class="custom-control-label" for="private">
+                            Private
+                        </label>
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <input type="radio" name="privacy" class="custom-control-input" id="public"
+                               @onchange="@(() => status = true)" />
+                        <label class="custom-control-label" for="public">
+                            Public
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+            <button class="btn btn-primary" @onclick="(() => update(nName, nDescrption, status, album.AlbumCoverPicture, album.ImagesCount, album.AlbumId))">
+                Save
+            </button>
+        </div>
+    }
+
+</div>

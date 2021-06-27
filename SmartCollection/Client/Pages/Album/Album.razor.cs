@@ -16,6 +16,11 @@ namespace SmartCollection.Client.Pages.Album
         {
             NavigationManager.NavigateTo("images/"+albumId);
         }
+        private void NavigateToAlbum(int albumId)
+        {
+            NavigationManager.NavigateTo("editalbum/"+albumId);
+        }
+
 
         protected override async Task OnInitializedAsync()
         {

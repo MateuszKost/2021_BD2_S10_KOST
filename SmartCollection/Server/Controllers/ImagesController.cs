@@ -151,7 +151,8 @@ namespace SmartCollection.Server.Controllers
                             Name = imageDetails.Name,
                             Description = imageDetails.Description,
                             Date = imageDetails.Date.ToString(),
-                            Data = base64
+                            Data = base64,
+                            
                         };
 
                     }

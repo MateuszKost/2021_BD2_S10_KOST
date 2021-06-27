@@ -5,7 +5,7 @@
         <div class="container">
             <br />
             <br />
-            <button class="col btn btn-info ">Edit Albums</button>
+            <h1 style="color: black ">Here's your albums</h1>
             <br />
             <br />
             <div class="d-flex flex-wrap">
@@ -15,36 +15,43 @@
                     {
                         string cover = album.AlbumCoverPicture != null ? @"data:image;base64," + album.AlbumCoverPicture : @"\picture\dog.jpg";
 
-                        <div class="col-lg-3">
-                            <a @onclick="@( () => Navigate(album.AlbumId) )" style="text-decoration:none" class="text-black-50">
-                                <div class="col-12">
-                                    <picture>
-                                        <img src="@cover" class="rounded img-fluid img-thumbnail" />
-                                    </picture>
+                    <div class="col-lg-3">
+                        <a @onclick="@( () => Navigate(album.AlbumId) )" style="text-decoration:none" class="text-black-50">
+                            <div class="col-12" style="text-align: center">
+                                <picture>
+                                    <img src="@cover" class="rounded img-fluid img-thumbnail" style=" width: 200px; height: 200px; object-fit: cover;" />
+                                </picture>
+                            </div>
+                            <div class="col">
+                                <div class="col-12 text-center">
+                                    <span text-info>@album.AlbumName</span>
                                 </div>
-                                <div class="col">
-                                    <div class="col-12 text-center">
-                                        <span text-info>@album.AlbumName</span>
-                                    </div>
-                                    <div class="col-12 text-center">
-                                        <span text-info>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
-                                                <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
-                                                <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z" />
-                                            </svg>
-                                            @album.ImagesCount
-                                        </span>
-                                    </div>
+                                <div class="col-12 text-center">
+                                    <span text-info>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
+                                            <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
+                                            <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12z" />
+                                        </svg>
+                                        @album.ImagesCount
+                                    </span><br />
                                 </div>
-                            </a>
-                        </div>
+                            </div>
+                        </a>
+                        @if (album.AlbumId != 0)
+                         {
+                            <div class="col-12 text-center">
+                                <i class="bi bi-trash"></i>
+                                <i class="bi bi-pencil-square" @onclick="@( () => NavigateToAlbum(album.AlbumId) )"></i>
+                            </div>
+                         }
+                    </div>
                     }
-                }
-                else
-                {
+                 }
+                 else
+                 {
                     <p>Nothing to display...</p>
-                }
-                @*single album*@
+                 }
+                 @*single album*@
             </div>
         </div>
     </Authorized>
