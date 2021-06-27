@@ -38,18 +38,13 @@ namespace SmartCollection.Utilities.ImageFilter
                   .ToList();
         }
 
-        public async Task<IEnumerable<ImageDetail>> FilterAsync(
-        string userId,
-        int tagId = -1,
-        string imageName = null,
-        DateTime dateFrom = default(DateTime),
-        DateTime dateTo = default(DateTime))
+        public async Task<IEnumerable<ImageDetail>> FilterAsync(string userId,FilterParameters filterParameters, List<ImageDetail> imageDetails)
         {
             //get all user's images.
             var images = _unitOfWork.Images.Find(p => p.UserId == userId).ToList();
 
-            if (tagId >= 0)
-                images = FilterByTag(tagId, images);
+            if (filterParameters.TagId >= 0)
+                images = FilterByTag((int)filterParameters.TagId, images);
 
             var imgDtList = new List<ImageDetail>();
 
@@ -57,12 +52,12 @@ namespace SmartCollection.Utilities.ImageFilter
                 imgDtList.Add(
                     _unitOfWork.ImageDetails.Find(p => p.ImageId == img.ImageId).FirstOrDefault());
 
-            if (imageName != null)
-                    imgDtList = FilterByImageName(imageName, imgDtList);
+            if (filterParameters.ImageName != null)
+                    imgDtList = FilterByImageName(filterParameters.ImageName, imgDtList);
 
-            if (dateFrom != default(DateTime) && dateTo != default(DateTime))
+            if (filterParameters.DateFrom != default(DateTime) && filterParameters.DateTo != default(DateTime))
             {
-                return imgDtList.Where(p => p.Date >= dateFrom && p.Date <= dateTo);
+                return imgDtList.Where(p => p.Date >= filterParameters.DateFrom && p.Date <= filterParameters.DateTo);
             }
 
 

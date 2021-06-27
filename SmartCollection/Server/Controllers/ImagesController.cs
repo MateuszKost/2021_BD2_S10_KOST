@@ -115,11 +115,13 @@ namespace SmartCollection.Server.Controllers
             return new ImagesViewModel();
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("filter")]
-        public async Task<IActionResult> FilterImages(FilterImagesViewModel filterModel)
+        public async Task<ImagesViewModel> FilterImages(FilterImagesViewModel filterModel)
         {
-            return Ok();
+            var imagesFromAlbum = GetImagesFromAlbum(filterModel.AlbumId);
+
+            return new ImagesViewModel();
         }
 
         [HttpGet]
@@ -159,39 +161,6 @@ namespace SmartCollection.Server.Controllers
                 }
             }
             return new SingleImageViewModel();
-        }
-
-        [HttpGet]
-        [Route("test")]
-        public async Task<ImagesViewModel> Get()
-        {
-            //getting data from db
-            var imageName = _unitOfWork.ImageDetails.GetAll().FirstOrDefault();
-            //example view model
-            List<SingleImageViewModel> images = new List<SingleImageViewModel>();
-
-            var singleImage = new SingleImageViewModel()
-            {
-                Name = "MyPhoto",
-                Date = "DateAsString",
-                Description = "This is Description"
-            };
-
-            images.Add(singleImage);
-
-            #region _storageContext example use
-
-            //byte[] myFile = new byte[420];
-            //  _storageContext.AddAsync(new ImageContainer(), myFile, "fileFile").ConfigureAwait(false);
-
-            //byte[] receivedFile = await _storageContext.GetAsync(new ImageContainer(), "fileFile").ConfigureAwait(false);
-
-            //_storageContext.DeleteAsync(new ImageContainer(), "fileFile");
-            //byte[] receivedFile = await _storageContext.GetAsync(new ImageContainer(), "fileFile").ConfigureAwait(false);
-
-            #endregion _storageContext example use
-
-            return new ImagesViewModel() { Images = images };
         }
 
         [HttpPost]
@@ -344,6 +313,39 @@ namespace SmartCollection.Server.Controllers
                 Console.WriteLine("No image found");
                 return BadRequest();
             }
+        }
+
+        [HttpGet]
+        [Route("test")]
+        public async Task<ImagesViewModel> Get()
+        {
+            //getting data from db
+            var imageName = _unitOfWork.ImageDetails.GetAll().FirstOrDefault();
+            //example view model
+            List<SingleImageViewModel> images = new List<SingleImageViewModel>();
+
+            var singleImage = new SingleImageViewModel()
+            {
+                Name = "MyPhoto",
+                Date = "DateAsString",
+                Description = "This is Description"
+            };
+
+            images.Add(singleImage);
+
+            #region _storageContext example use
+
+            //byte[] myFile = new byte[420];
+            //  _storageContext.AddAsync(new ImageContainer(), myFile, "fileFile").ConfigureAwait(false);
+
+            //byte[] receivedFile = await _storageContext.GetAsync(new ImageContainer(), "fileFile").ConfigureAwait(false);
+
+            //_storageContext.DeleteAsync(new ImageContainer(), "fileFile");
+            //byte[] receivedFile = await _storageContext.GetAsync(new ImageContainer(), "fileFile").ConfigureAwait(false);
+
+            #endregion _storageContext example use
+
+            return new ImagesViewModel() { Images = images };
         }
     }
 }

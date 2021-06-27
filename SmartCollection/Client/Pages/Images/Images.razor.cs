@@ -3,6 +3,7 @@ using SmartCollection.Models.DBModels;
 using SmartCollection.Models.ViewModels.ImagesViewModel;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SmartCollection.Client.Pages.Images
@@ -15,10 +16,7 @@ namespace SmartCollection.Client.Pages.Images
         [Parameter]
         public IEnumerable<Tag> Tags { get; set; }
 
-        [Parameter]
-        public int SelectedTagId { get; set; }
-
-        private readonly FilterImagesViewModel FilterModel = new();
+        private readonly FilterParameters FilterModel = new();
 
         private IEnumerable<SingleImageViewModel> images;
 
@@ -29,17 +27,21 @@ namespace SmartCollection.Client.Pages.Images
             StateHasChanged();
         }
 
-        private void OnFilter()
+        private async void OnFilter()
         {
-            //TODO
-            // filter method sending request from service to server
-            // return is a new list of filtered images or empty list
+            var filteredImages = await ImageService.GetFilteredImages(FilterModel);
+            StateHasChanged();
+
             Console.WriteLine("Filtering called");
+            Console.WriteLine("DateFrom: " + FilterModel.DateFrom);
+            Console.WriteLine("DateTo: " + FilterModel.DateTo);
+            Console.WriteLine("Selected tag: " + FilterModel.TagId);
         }
 
         private void OnTagSelected(ChangeEventArgs e)
         {
-            SelectedTagId = int.Parse(e.Value.ToString());
+            //FilterModel.AlbumId = int.Parse(AlbumId);
+            FilterModel.TagId = int.Parse(e.Value.ToString());
             StateHasChanged();
         }
 

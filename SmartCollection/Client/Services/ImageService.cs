@@ -7,6 +7,7 @@ using System.Net.Http.Json;
 using System.Net.Http;
 using SmartCollection.Models.ViewModels;
 using SmartCollection.Models.DBModels;
+using Newtonsoft.Json;
 
 namespace SmartCollection.Client.Services
 {
@@ -14,7 +15,7 @@ namespace SmartCollection.Client.Services
          
     {
         private readonly HttpClient _httpClient;
-        private readonly string controller = "images";
+        private readonly string api = "images";
 
         public ImageService(HttpClient httpClient)
         {
@@ -23,7 +24,7 @@ namespace SmartCollection.Client.Services
 
         public async Task<IEnumerable<SingleImageViewModel>> GetImagesFromAlbum(int albumId)
         {
-            var result = await _httpClient.GetFromJsonAsync<ImagesViewModel>(controller + "/getimages/" + albumId);
+            var result = await _httpClient.GetFromJsonAsync<ImagesViewModel>(api + "/getimages/" + albumId);
 
             if(result.Images != null)
             {
@@ -35,14 +36,14 @@ namespace SmartCollection.Client.Services
             }
         }
 
-        public async Task<IEnumerable<SingleImageViewModel>> GetFilteredImages(
-            string? tagName, 
-            string? imageName, 
-            DateTime? dateFrom, 
-            DateTime? dateTo)
+        public async Task<IEnumerable<SingleImageViewModel>> GetFilteredImages(FilterParameters filter)
         {
+            var response = await _httpClient.PostAsJsonAsync<FilterParameters>(api + "/filter", filter);
+            var result = await response.Content.ReadAsStringAsync();
 
-            return null;
+            var filteredImages = JsonConvert.DeserializeObject<ImagesViewModel>(result);
+            
+            return filteredImages.Images;
         }
 
         public async Task<Result> UploadImages(IEnumerable<SingleImageViewModel> images)
@@ -51,7 +52,7 @@ namespace SmartCollection.Client.Services
             {
                 ImagesViewModel imagesViewModel = new ImagesViewModel { Images = images };
 
-                var result = await _httpClient.PostAsJsonAsync(controller + "/uploadimages", imagesViewModel);
+                var result = await _httpClient.PostAsJsonAsync(api + "/uploadimages", imagesViewModel);
 
                 if (result.IsSuccessStatusCode)
                     return Result.Success;
@@ -73,12 +74,12 @@ namespace SmartCollection.Client.Services
             if (albumId != 0)
             {
                 targetPath = "/" + albumId + "/" + imageId;
-                result = await _httpClient.DeleteAsync(controller + "/deletefromalbum" + targetPath);
+                result = await _httpClient.DeleteAsync(api + "/deletefromalbum" + targetPath);
             }
             else
             {
                 targetPath = "/" + imageId;
-                result = await _httpClient.DeleteAsync(controller + "/deleteimage" + targetPath);
+                result = await _httpClient.DeleteAsync(api + "/deleteimage" + targetPath);
             }
 
             return result.IsSuccessStatusCode ? Result.Success : Result.Failure(errors: new[] { result.Content.ToString() });
@@ -87,7 +88,7 @@ namespace SmartCollection.Client.Services
 
         public async Task<Result> UpdateImage(SingleImageViewModel image)
         {
-            var result = await _httpClient.PostAsJsonAsync<SingleImageViewModel>(controller + "/update", image);
+            var result = await _httpClient.PostAsJsonAsync<SingleImageViewModel>(api + "/update", image);
             return result.IsSuccessStatusCode ? Result.Success : Result.Failure(errors: new[] { "Update failed" });
         }
 
