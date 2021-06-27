@@ -16,7 +16,7 @@ namespace SmartCollection.Client.Pages.Images
         [Parameter]
         public IEnumerable<Tag> Tags { get; set; }
 
-        private readonly FilterImagesViewModel FilterModel = new();
+        private readonly FilterParameters FilterModel = new();
 
         private IEnumerable<SingleImageViewModel> images;
 

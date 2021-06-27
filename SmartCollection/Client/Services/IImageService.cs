@@ -11,7 +11,7 @@ namespace SmartCollection.Client.Services
     {
         public Task<IEnumerable<T>> GetImagesFromAlbum(int albumId);
 
-        public Task<IEnumerable<T>> GetFilteredImages(FilterImagesViewModel filter);
+        public Task<IEnumerable<T>> GetFilteredImages(FilterParameters filter);
 
         public Task<Result> UploadImages(IEnumerable<T> images);
 

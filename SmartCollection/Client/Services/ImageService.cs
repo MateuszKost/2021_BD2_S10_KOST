@@ -36,9 +36,9 @@ namespace SmartCollection.Client.Services
             }
         }
 
-        public async Task<IEnumerable<SingleImageViewModel>> GetFilteredImages(FilterImagesViewModel filter)
+        public async Task<IEnumerable<SingleImageViewModel>> GetFilteredImages(FilterParameters filter)
         {
-            var response = await _httpClient.PostAsJsonAsync<FilterImagesViewModel>(api + "/filter", filter);
+            var response = await _httpClient.PostAsJsonAsync<FilterParameters>(api + "/filter", filter);
             var result = await response.Content.ReadAsStringAsync();
 
             var filteredImages = JsonConvert.DeserializeObject<ImagesViewModel>(result);
