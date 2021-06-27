@@ -33,15 +33,15 @@ namespace SmartCollection.Utilities.ImageFilter
         private List<ImageDetail> FilterByImageName(string imageName, List<ImageDetail> imagesDetailList)
         {
             return imagesDetailList
-                  .Where(p => p.OriginalName
+                  .Where(p => p.Name
                   .Contains(imageName, StringComparison.OrdinalIgnoreCase))
                   .ToList();
         }
 
-        public async Task<IEnumerable<ImageDetail>> FilterAsync(string userId,FilterParameters filterParameters, List<ImageDetail> imageDetails)
+        public async Task<IEnumerable<ImageDetail>> FilterAsync(FilterParameters filterParameters, List<Image> imagesList)
         {
             //get all user's images.
-            var images = _unitOfWork.Images.Find(p => p.UserId == userId).ToList();
+            var images = imagesList;
 
             if (filterParameters.TagId >= 0)
                 images = FilterByTag((int)filterParameters.TagId, images);

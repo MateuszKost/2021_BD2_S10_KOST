@@ -10,6 +10,6 @@ namespace SmartCollection.Utilities.ImageFilter
 {
     public interface IImageFilter<T> where T : class
     {
-        public Task<IEnumerable<T>> FilterAsync(string userId, FilterParameters filterParameters, List<ImageDetail> imageDetails);
+        public Task<IEnumerable<T>> FilterAsync(FilterParameters filterParameters, List<Image> imagesList);
     }
 }
