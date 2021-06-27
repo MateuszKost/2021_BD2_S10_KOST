@@ -1,4 +1,5 @@
 ﻿using SmartCollection.Models.ViewModels.AlbumViewModel;
+using SmartCollection.Models.ViewModels.ImagesViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ namespace SmartCollection.Client.Pages.Album
     public partial class Album
     {
         private IEnumerable<SingleAlbumViewModel> albums;
+
         private void Navigate(int albumId)
         {
             NavigationManager.NavigateTo("images/"+albumId);

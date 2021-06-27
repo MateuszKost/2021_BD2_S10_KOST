@@ -19,12 +19,15 @@
                 <p class="text-muted">Filters</p>
                 <!-- Filtering by taglist -->
                 <div class="col-md-2 d-flex">
-                    <select class="btn btn-light m-1 flex-fill">
-                        <option selected>none</option>
-                        <option value=1>Tag1</option>
-                        <option value=2>Dog</option>
-                        <option value=3>Antyhing</option>
-                        <option value=4>Test</option>
+                    <select @onchange="OnTagSelected" class="btn btn-light m-1 flex-fill">
+                        <option value="0" selected>none</option>
+                        @if(Tags != null)
+                        {
+                            foreach(var tag in Tags)
+                            {
+                                <option value="@tag.TagId">@tag.Name</option>
+                            }
+                        }
                     </select>
                 </div>
                 <!-- End of Filtering by taglist -->
@@ -74,7 +77,7 @@
                         </div>
                         <div class="buttons">
                             <button class="btn btn-primary" @onclick="@( () => Navigate(image.Id) )">Edit</button>
-                            <button class="btn btn-danger" @onclick="@( () => delete(image.Id))"> Delete </button>
+                            <button class="btn btn-danger" @onclick="@( () => Delete(image.Id) )"> Delete </button>
                         </div>
                     </a>
                 </div>

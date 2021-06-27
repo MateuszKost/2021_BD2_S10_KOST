@@ -7,7 +7,7 @@ namespace SmartCollection.Client.Services
 {
     public interface ITagService<T> where T : class
     {
-        public IEnumerable<T> GetTags(int albumId);
+        public Task<IEnumerable<T>> GetTags(int albumId);
 
         //public void UploadTags(IEnumerable<T> tags);
     }

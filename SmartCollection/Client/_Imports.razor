@@ -14,6 +14,7 @@
 @using SmartCollection.Client.Authentication
 @using SmartCollection.Client.Services
 @using SmartCollection.Models.ViewModels.ImagesViewModel
+@using SmartCollection.Models.DBModels
 
 @inject ApiAuthenticationStateProvider AuthState
 @inject NavigationManager NavigationManager
@@ -21,3 +22,4 @@
 @inject IAuthService AuthService
 @inject IImageService<SingleImageViewModel> ImageService
 @inject IAlbumService AlbumService
+@inject ITagService<Tag> TagService

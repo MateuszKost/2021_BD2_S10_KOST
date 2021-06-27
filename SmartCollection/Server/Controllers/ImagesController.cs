@@ -74,7 +74,6 @@ namespace SmartCollection.Server.Controllers
 
                     imageViewModelList.Add(singleImageViewModel);
                 }
-
                 return new ImagesViewModel { Images = imageViewModelList };
             }
 
