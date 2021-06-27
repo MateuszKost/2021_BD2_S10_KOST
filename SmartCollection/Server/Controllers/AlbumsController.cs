@@ -52,7 +52,7 @@ namespace SmartCollection.Server.Controllers
             var privacy = await _unitOfWork.Privacies.GetAsync((int)album.PrivacyId);
 
             var imageId = _unitOfWork.ImagesAlbums.Find(ia => ia.AlbumsAlbumId == album.AlbumId)
-                        .First()
+                        .FirstOrDefault()?
                         .ImagesAlbumId;
 
             var coverImage = (imageId != null) ? await _unitOfWork.Images.GetAsync((int)imageId) : null;
