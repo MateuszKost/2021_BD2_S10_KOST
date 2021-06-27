@@ -1,9 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Components.Forms;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using SmartCollection.DataAccess.Context;
 using SmartCollection.DataAccess.RepositoryPattern;
 using SmartCollection.Models.ViewModels.ImagesViewModel;
 using SmartCollection.Server.User;
@@ -11,11 +7,10 @@ using SmartCollection.StorageManager.Containers;
 using SmartCollection.StorageManager.Context;
 using SmartCollection.Utilities.HashGenerator;
 using SmartCollection.Utilities.ImageConverter;
+using SmartCollection.Utilities.TagManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SmartCollection.Server.Controllers
@@ -30,18 +25,21 @@ namespace SmartCollection.Server.Controllers
         private readonly IHashGenerator _hashGenerator;
         private readonly IImageConverter _imageConverter;
         private readonly ICurrentUser _currentUser;
+        private readonly ITagManager _tagManager;
 
         public ImagesController(IUnitOfWork unitOfWork,
             IStorageContext<IStorageContainer> storageContext,
             IHashGenerator hashGenerator,
             IImageConverter imageConverter,
-            ICurrentUser currentUser)
+            ICurrentUser currentUser,
+            ITagManager tagManager)
         {
             _unitOfWork = unitOfWork;
             _storageContext = storageContext;
             _hashGenerator = hashGenerator;
             _imageConverter = imageConverter;
             _currentUser = currentUser;
+            _tagManager = tagManager;
         }
 
         [HttpGet]
@@ -50,8 +48,8 @@ namespace SmartCollection.Server.Controllers
         {
             var userId = _currentUser.UserId;
 
-             // list of images from db
-             var imagesList = _unitOfWork.Images.Find(image => image.UserId.Equals(userId)).ToList();
+            // list of images from db
+            var imagesList = _unitOfWork.Images.Find(image => image.UserId.Equals(userId)).ToList();
             List<SingleImageViewModel> imageViewModelList = new();
 
             if (imagesList.Any())
@@ -124,16 +122,18 @@ namespace SmartCollection.Server.Controllers
         [Route("filter")]
         public async Task<IActionResult> FilterImages(FilterImagesViewModel filterModel)
         {
-
             return Ok();
         }
 
         [HttpGet]
         [Route("getimage/{id}")]
-        public async Task<SingleImageViewModel> GetImageById([FromRoute] int id)
+        public async Task<ActionResult<SingleImageViewModel>> GetImageById([FromRoute] int id)
         {
             var image = await _unitOfWork.Images.GetAsync(id);
-
+            if (image.UserId != _currentUser.UserId)
+            {
+                return Forbid();
+            }
             if (image != null)
             {
                 var imageDetails = _unitOfWork.ImageDetails.Find(details => details.ImageId == id).First();
@@ -145,22 +145,24 @@ namespace SmartCollection.Server.Controllers
                         var file = await _storageContext.GetAsync(new ImageContainer(), image.ImageSha1);
                         var base64 = _imageConverter.ImageBytesToBase64(file);
 
-                        return new SingleImageViewModel()
+                        var tags = _tagManager.GetTags(id);
+
+                        return Ok(new SingleImageViewModel()
                         {
                             Id = id,
                             Name = imageDetails.Name,
                             Description = imageDetails.Description,
                             Date = imageDetails.Date.ToString(),
-                            Data = base64
-                        };
-
+                            Data = base64,
+                            Tags = tags.Select(x => x.Name)
+                        });
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         Console.WriteLine(ex.Message);
-                        return new SingleImageViewModel();
+                        return NotFound(ex.Message);
                     }
-                }               
+                }
             }
             return new SingleImageViewModel();
         }
@@ -184,6 +186,7 @@ namespace SmartCollection.Server.Controllers
             images.Add(singleImage);
 
             #region _storageContext example use
+
             //byte[] myFile = new byte[420];
             //  _storageContext.AddAsync(new ImageContainer(), myFile, "fileFile").ConfigureAwait(false);
 
@@ -191,7 +194,8 @@ namespace SmartCollection.Server.Controllers
 
             //_storageContext.DeleteAsync(new ImageContainer(), "fileFile");
             //byte[] receivedFile = await _storageContext.GetAsync(new ImageContainer(), "fileFile").ConfigureAwait(false);
-            #endregion
+
+            #endregion _storageContext example use
 
             return new ImagesViewModel() { Images = images };
         }
@@ -200,7 +204,6 @@ namespace SmartCollection.Server.Controllers
         [Route("update")]
         public async Task<IActionResult> UpdateImage(SingleImageViewModel imageModel)
         {
-
             var imageDetails = _unitOfWork.ImageDetails.Find(d => d.ImageId == imageModel.Id).First();
 
             if (imageDetails == null) return BadRequest();
@@ -208,6 +211,9 @@ namespace SmartCollection.Server.Controllers
             imageDetails.Name = imageModel.Name;
             imageDetails.Description = imageModel.Description;
             imageDetails.Date = Convert.ToDateTime(imageModel.Date);
+
+            var insertedTagsIds =_tagManager.InsertTags(imageModel.Tags);
+            _tagManager.UpsertImageTags(insertedTagsIds, imageModel.Id);
 
             try
             {
@@ -221,7 +227,6 @@ namespace SmartCollection.Server.Controllers
                 Console.WriteLine(ex.Message);
                 return BadRequest();
             }
-
         }
 
         [HttpPost]
@@ -323,7 +328,6 @@ namespace SmartCollection.Server.Controllers
                 Console.WriteLine("No image found");
                 return BadRequest();
             }
-
         }
 
         [HttpDelete]
@@ -347,8 +351,5 @@ namespace SmartCollection.Server.Controllers
                 return BadRequest();
             }
         }
-
-
-
     }
 }

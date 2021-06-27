@@ -41,7 +41,8 @@ namespace SmartCollection.Server.Controllers
 
         [HttpGet]
         [Route("getalbum/{id}")]
-        public async Task<SingleAlbumViewModel> GetAlbumById(int id)
+        public async Task<SingleAlbumViewModel> GetAlbumById(
+        [FromRoute] int id)
         {
             var album = await _unitOfWork.Albums.GetAsync(id);
 

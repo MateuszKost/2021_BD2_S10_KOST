@@ -1,12 +1,8 @@
 ﻿using Microsoft.AspNetCore.Components;
-using SmartCollection.Client.Services;
 using SmartCollection.Models.DBModels;
 using SmartCollection.Models.ViewModels.ImagesViewModel;
-using SmartCollection.Utilities.TagManagement.TagDownloader;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace SmartCollection.Client.Pages.Images
@@ -68,6 +64,5 @@ namespace SmartCollection.Client.Pages.Images
             await ImageService.DeleteImage(imageId, int.Parse(AlbumId));
             StateHasChanged();
         }
-
     }
 }
