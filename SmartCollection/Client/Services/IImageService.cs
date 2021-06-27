@@ -1,4 +1,5 @@
 ﻿using SmartCollection.Models.ViewModels;
+using SmartCollection.Models.ViewModels.ImagesViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +11,7 @@ namespace SmartCollection.Client.Services
     {
         public Task<IEnumerable<T>> GetImagesFromAlbum(int albumId);
 
-        public Task<IEnumerable<T>> GetFilteredImages(
-            string? tagName,
-            string? imageName,
-            DateTime? dateFrom,
-            DateTime? dateTo);
+        public Task<IEnumerable<T>> GetFilteredImages(FilterImagesViewModel filter);
 
         public Task<Result> UploadImages(IEnumerable<T> images);
 
