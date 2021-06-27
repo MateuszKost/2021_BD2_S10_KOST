@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -27,16 +28,19 @@ namespace SmartCollection.Server.Controllers
         //TODO UTILITY
         private readonly IStorageContext<IStorageContainer> _storageContext;
         private readonly IImageConverter _imageConverter;
+        private readonly IDataProtector _protector;
 
         public AlbumsController(ICurrentUser currentUser, 
             IUnitOfWork unitOfWork, 
             IStorageContext<IStorageContainer> storageContext,
-            IImageConverter imageConverter)
+            IImageConverter imageConverter,
+            IDataProtectionProvider provider)
         {
             _currentUser = currentUser;
             _unitOfWork = unitOfWork;
             _storageContext = storageContext;
             _imageConverter = imageConverter;
+            _protector = provider.CreateProtector(nameof(AlbumsController));
         }
 
         [HttpGet]
@@ -68,7 +72,6 @@ namespace SmartCollection.Server.Controllers
                 IsPublic = privacy.Name.Equals("public"),
                 AlbumCoverPicture = coverImageBase64
             };
-
         }
 
         //[Authorize]
@@ -105,6 +108,28 @@ namespace SmartCollection.Server.Controllers
 
             return albumViewModel;
         }
+
+        //[HttpGet("{hash}")]
+        //public async Task<AlbumViewModel> GetPublicAlbum(string hash)
+        //{
+        //    var albumList = _unitOfWork.Albums.Find(x => x.UserId.Equals(userId)).ToList();
+
+        //    List<SingleAlbumViewModel> albumViewModelList = new();
+
+        //    if (albumList != null && albumList.Any())
+        //    {
+        //        foreach (var album in albumList)
+        //        {
+        //            SingleAlbumViewModel singleAlbumViewModel = await GetAlbumById(album.AlbumId);
+        //            albumViewModelList.Add(singleAlbumViewModel);
+        //        }
+        //    }
+
+        //    AlbumViewModel albumViewModel = new();
+        //    albumViewModel.AlbumViewModelList = albumViewModelList;
+
+        //    return albumViewModel;
+        //}
 
         [HttpPost]
         [Route("edit")]

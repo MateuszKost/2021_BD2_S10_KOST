@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Json;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SmartCollection.Client.Pages.Album
@@ -33,5 +34,25 @@ namespace SmartCollection.Client.Pages.Album
             albums = await AlbumService.GetAlbums();
             StateHasChanged();
         }
+
+        CancellationTokenSource cts = new();
+        State state = new("Copy link", "oi oi-clipboard");
+
+        async Task CopyToClipboard(string address)
+        {
+            var temp = state;
+            state = new("Copied", "oi oi-check", IsDisabled: true);
+            await ClipboardService.WriteTextAsync(address);
+            await Task.Delay(TimeSpan.FromSeconds(2), cts.Token);
+            state = temp;
+        }
+
+        public void Dispose()
+        {
+            cts.Cancel(); // Cancel Task.Delay
+            cts.Dispose();
+        }
+
+        record State(string Text, string ClassName, bool IsDisabled = false);
     }
 }
