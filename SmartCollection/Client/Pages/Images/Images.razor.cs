@@ -40,7 +40,7 @@ namespace SmartCollection.Client.Pages.Images
 
         private void OnTagSelected(ChangeEventArgs e)
         {
-            FilterModel.AlbumId = int.Parse(AlbumId);
+            //FilterModel.AlbumId = int.Parse(AlbumId);
             FilterModel.TagId = int.Parse(e.Value.ToString());
             StateHasChanged();
         }

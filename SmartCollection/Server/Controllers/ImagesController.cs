@@ -120,7 +120,7 @@ namespace SmartCollection.Server.Controllers
 
         [HttpPost]
         [Route("filter")]
-        public async Task<ImagesViewModel> FilterImages(FilterParameters filterModel)
+        public async Task<ImagesViewModel> FilterImages(FilterImagesViewModel filterModel)
         {
             var imagesFromAlbum = GetImagesFromAlbum(filterModel.AlbumId);
 
