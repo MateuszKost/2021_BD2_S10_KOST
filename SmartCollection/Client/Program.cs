@@ -9,6 +9,8 @@ using SmartCollection.Client.Authentication;
 using SmartCollection.Client.Services;
 using SmartCollection.Models.DBModels;
 using SmartCollection.Models.ViewModels.ImagesViewModel;
+using SmartCollection.Utilities.TagManagement.TagCreator;
+using SmartCollection.Utilities.TagManagement.TagSender;
 
 namespace SmartCollection.Client
 {
@@ -34,6 +36,8 @@ namespace SmartCollection.Client
                .AddTransient<IImageService<SingleImageViewModel>, ImageService>()
                .AddTransient<IAlbumService, AlbumService>()
                .AddTransient<ITagService<Tag>, TagService>()
+               .AddTransient<ITagCreator, TagCreator>()
+               .AddTransient<ITagSender, TagSender>()
                .AddHttpClient(
                    ClientName,
                    client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))

@@ -25,14 +25,14 @@
             Name:<label>"@imgName"</label><br />
             Description: <label>@imgDescription</label><br />
             Data: <label>@imgDate</label><br />
-            Tags: <label>"no nie ma jeszcze"</label>
+            Tags: <label>"no nie ma jeszcze"</label><br />
             New name: <br />
             <input @bind=@nName><br />
             New description: <br />
             <input @bind="nDescription"><br />
             New tags: <br />
             <input @bind="ntagsString"><br />
-            <button class="btn btn-primary" @onclick="(() => update(image.Id, nName, image.Date, nDescription, image.Data, image.AlbumId, nTags))">
+            <button class="btn btn-primary" @onclick="(() => update(image.Id, nName, image.Date, nDescription, image.Data, image.AlbumId, ntagsString))">
                 Save
             </button>
         </div>

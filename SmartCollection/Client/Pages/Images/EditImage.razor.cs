@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using SmartCollection.Models.ViewModels.ImagesViewModel;
 using SmartCollection.Models.DBModels;
+using SmartCollection.Utilities.TagManagement.TagCreator;
 
 namespace SmartCollection.Client.Pages.Images
 {
@@ -14,6 +15,10 @@ namespace SmartCollection.Client.Pages.Images
         public string ImageId { get; set; }
 
         private SingleImageViewModel image;
+        private readonly ITagCreator _tagCreator;
+        public EditImage(ITagCreator tagCreator)   
+            => _tagCreator = tagCreator;
+        
         protected override async Task OnInitializedAsync()
         {
             image = await ImageService.GetImage(int.Parse(ImageId));
@@ -23,11 +28,16 @@ namespace SmartCollection.Client.Pages.Images
         // temp edit image
 
         string nName, nDescription, ntagsString;
-        IEnumerable<Tag> nTags;
+        IEnumerable<string> nTags;
 
-        private async Task update(int imageId, string name, string date, string description, string data, int? albumId, IEnumerable<Tag> tags)
+        List<Tag> Tags;
+
+        private async Task update(int imageId, string name, string date, string description, string data, int? albumId, string tags)
         {
-            tags = null; // tymczasowo, aby uniknac bledu przy updatowaniu zdjecia
+            nTags = _tagCreator.CreateTagList(tags);
+            //tutaj ma byc przesylanie tagow do bazy danych
+
+            
 
             SingleImageViewModel image = new SingleImageViewModel {
                 Id = imageId,
@@ -36,7 +46,6 @@ namespace SmartCollection.Client.Pages.Images
                 Description = description,
                 Data = data,
                 AlbumId = albumId,
-                Tags = tags
             };
             await ImageService.UpdateImage(image);
             StateHasChanged();
