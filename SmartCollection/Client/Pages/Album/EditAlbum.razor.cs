@@ -1,44 +1,43 @@
 ﻿using Microsoft.AspNetCore.Components;
 using SmartCollection.Models.ViewModels.AlbumViewModel;
+using SmartCollection.Models.ViewModels.ImagesViewModel;
+using SmartCollection.Utilities.TagManagement;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SmartCollection.Models.ViewModels.CreateAlbumViewModel;
 
 namespace SmartCollection.Client.Pages.Album
 {
     public partial class EditAlbum
     {
         [Parameter]
-        public string AlbumId { get; set; }
+        public int AlbumId { get; set; }
 
-        //private CreateAlbumViewModel _createAlbumModel = new();
+        private SingleAlbumViewModel album = new();
+        private bool status = false;
 
-        private SingleAlbumViewModel album;
+        private bool Success = false;
+        private List<string> Errors = new();
+
+
         protected override async Task OnInitializedAsync()
         {
-            album = await AlbumService.GetAlbum(int.Parse(AlbumId));
-            StateHasChanged();
+            album = await AlbumService.GetAlbum(AlbumId);
+            status = album.IsPublic;
         }
 
-        // temp edit image
-
-        string nName, nDescrption;
-        bool status;
-
-        private async Task update(string albumName, string description, bool isPublic ,string coverPic, int imgCount, int albumId)
+        private async Task SubmitChangesAsync()
         {
-            SingleAlbumViewModel album = new SingleAlbumViewModel
+            album.IsPublic = status;
+            var result = await AlbumService.UpdateAlbum(album);
+            if (result.Succeeded)
+                Success = true;
+            else
             {
-                AlbumName = albumName,
-                Description = description,
-                IsPublic = isPublic,
-                AlbumCoverPicture = coverPic,
-                ImagesCount = imgCount,
-                AlbumId = albumId
-            };
-            await AlbumService.UpdateAlbum(album);
+                Success = false;
+                Errors = result.Errors;
+            }
             StateHasChanged();
         }
     }
