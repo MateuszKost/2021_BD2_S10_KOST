@@ -69,7 +69,7 @@
                                 Tags: <label>@string.Join(" ", image.Tags.Select(x => "#" + x.ToLower()))</label>
                             </div>
                         </div>
-                        @if (canEndit)
+                        @if (canEdit)
                         {
                         <div class="buttons">
                             <button class="btn btn-primary" @onclick="@( () => Navigate(image.Id) )">Edit</button>

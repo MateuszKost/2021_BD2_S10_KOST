@@ -21,13 +21,13 @@ namespace SmartCollection.Client.Pages.Images
 
         private IEnumerable<SingleImageViewModel> images;
 
-        private bool canEndit;
+        private bool canEdit;
 
         protected override async Task OnInitializedAsync()
         {
             images = await ImageService.GetImagesFromAlbum(AlbumId);
             Tags = await TagService.GetTags(AlbumId);
-            canEndit = await ImageService.CheckPermissions(AlbumId);
+            canEdit = await ImageService.CheckPermissions(AlbumId) || AlbumId == 0;
             StateHasChanged();
         }
 

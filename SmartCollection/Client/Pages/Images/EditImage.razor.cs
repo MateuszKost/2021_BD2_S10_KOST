@@ -14,7 +14,7 @@ namespace SmartCollection.Client.Pages.Images
         public int ImageId { get; set; }
 
         private string _tags = string.Empty;
-        private DateTime _date = DateTime.Now;
+        private DateTime _date;
 
         private SingleImageViewModel image = new();
 
@@ -27,7 +27,14 @@ namespace SmartCollection.Client.Pages.Images
             image = await ImageService.GetImage(ImageId);
             if (image.Tags?.Any() == true)
                 _tags = string.Join(" ", image.Tags.Select(x => "#" + x));
-            _date = DateTime.Parse(image.Date);
+            if(DateTime.TryParse(image.Date, out var parsed))
+            {
+                _date = parsed;
+            }
+            else
+            {
+                _date = DateTime.Now;
+            }
         }
 
         private async Task SubmitChangesAsync()
