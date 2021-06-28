@@ -18,9 +18,17 @@ namespace SmartCollection.Utilities.ImageConverter
             if (contentType.Contains("jpeg") || contentType.Contains("png"))
             {
                 using Stream fileStream = file.OpenReadStream(MaxFileSize);
-                using var ms = new MemoryStream();
+                using MemoryStream ms = new();
+
                 await fileStream.CopyToAsync(ms);
-                return Convert.ToBase64String(ms.ToArray());
+                var base64 = Convert.ToBase64String(ms.ToArray());
+
+                return base64;
+                //using var ms = new MemoryStream();
+                //fileStream.CopyTo(ms);
+                //using var image = new MagickImage(fileStream);
+                //return image.ToBase64();
+                //return Convert.ToBase64String(ms.ToArray());
             }
             else
                 throw new BadImageFormatException();
